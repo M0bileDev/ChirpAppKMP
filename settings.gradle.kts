@@ -2,6 +2,8 @@ rootProject.name = "ChirpAppKMP"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
+    //included build -> another Gradle project "build-logic"
+    includeBuild("build-logic")
     repositories {
         google {
             mavenContent {
