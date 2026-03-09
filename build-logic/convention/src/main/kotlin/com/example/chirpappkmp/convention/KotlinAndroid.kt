@@ -28,6 +28,8 @@ internal fun Project.configureKotlinAndroid(
             isCoreLibraryDesugaringEnabled = true
         }
 
+        configureKotlin()
+
         //automatically applied when function will be called
         dependencies {
             //equivalent to implementation from the normal Gradle module
@@ -41,6 +43,7 @@ internal fun Project.configureKotlinAndroid(
     }
 }
 
+//available to use in regular kotlin module
 internal fun Project.configureKotlin() {
     tasks.withType<KotlinCompile>().configureEach {
         compilerOptions {
