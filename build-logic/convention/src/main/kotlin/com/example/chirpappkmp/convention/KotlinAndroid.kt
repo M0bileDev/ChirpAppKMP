@@ -4,6 +4,9 @@ import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.withType
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 //Configure Kotlin language for the Android side
 internal fun Project.configureKotlinAndroid(
@@ -34,6 +37,18 @@ internal fun Project.configureKotlinAndroid(
             )
             //alternative
             //"coreLibraryDesugaring"(libs.findLibrary("android-desugarJdkLibs").get())
+        }
+    }
+}
+
+internal fun Project.configureKotlin() {
+    tasks.withType<KotlinCompile>().configureEach {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+
+            freeCompilerArgs.add(
+                "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+            )
         }
     }
 }
