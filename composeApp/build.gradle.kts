@@ -68,7 +68,7 @@ android {
     compileSdk = libs.versions.projectCompileSdkVersion.get().toInt()
 
     defaultConfig {
-        applicationId = "com.plcoding.chirp"
+        applicationId = "com.example.chirpappkmp"
         minSdk = libs.versions.projectMinSdkVersion.get().toInt()
         targetSdk = libs.versions.projectTargetSdkVersion.get().toInt()
         versionCode = 1
