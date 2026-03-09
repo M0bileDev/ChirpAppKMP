@@ -29,3 +29,22 @@ kotlin {
         jvmTarget = JvmTarget.JVM_17
     }
 }
+
+tasks{
+    //variation of lint task
+    validatePlugins{
+        enableStricterValidation = true
+        failOnWarning = true
+    }
+}
+
+//register own plugins
+gradlePlugin {
+    plugins {
+        //reference plugin in project
+        register("androidApplication"){
+            id = "com.example.chirpappkmp.convention.android.application"
+            implementationClass = "AndroidApplicationConventionPlugin"
+        }
+    }
+}
