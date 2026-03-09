@@ -1,6 +1,6 @@
 import com.android.build.api.dsl.ApplicationExtension
+import com.example.chirpappkmp.convention.configureKotlinAndroid
 import com.example.chirpappkmp.convention.libs
-import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -24,7 +24,6 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             //configure android root block -> android{}
             extensions.configure<ApplicationExtension> {
                 namespace = "com.example.chirpappkmp"
-                compileSdk = libs.findVersion("projectCompileSdkVersion").get().toString().toInt()
 
                 defaultConfig {
                     applicationId = libs.findVersion("projectApplicationId").get().toString()
@@ -42,10 +41,9 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                         isMinifyEnabled = false
                     }
                 }
-                compileOptions {
-                    sourceCompatibility = JavaVersion.VERSION_11
-                    targetCompatibility = JavaVersion.VERSION_11
-                }
+
+                //this -> application extension or KMP android library extension
+                configureKotlinAndroid(this)
             }
         }
     }
