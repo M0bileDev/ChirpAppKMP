@@ -11,6 +11,7 @@ internal fun Project.configureIosTargets() {
             iosSimulatorArm64()
         ).forEach { iosTarget ->
             iosTarget.binaries.framework {
+                //name of generated framework for iOS
                 baseName = "ComposeApp"
                 isStatic = true
             }
