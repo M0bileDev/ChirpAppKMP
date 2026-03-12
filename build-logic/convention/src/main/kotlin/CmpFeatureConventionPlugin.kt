@@ -8,7 +8,7 @@ class CmpFeatureConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target){
             with(pluginManager){
-                apply("com.example.chirpappkmp.cmp.library")
+                apply("com.example.chirpappkmp.convention.cmp.library")
             }
 
             dependencies{
