@@ -177,6 +177,7 @@ convention-kmp-library = { id = "com.example.chirpappkmp.convention.kmp.library"
 convention-cmp-library = { id = "com.example.chirpappkmp.convention.cmp.library", version = "unspecified" }
 convention-cmp-feature = { id = "com.example.chirpappkmp.convention.cmp.feature", version = "unspecified" }
 convention-buildkonfig = { id = "com.example.chirpappkmp.convention.buildkonfig", version = "unspecified" }
+convention-room = { id = "com.example.chirpappkmp.convention.room", version = "unspecified" }
 
 # Android
 android-application = { id = "com.android.application", version.ref = "agp" }
