@@ -16,6 +16,8 @@ dependencies {
     compileOnly(libs.android.tools.common)
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.compose.gradlePlugin)
+    implementation(libs.buildkonfig.compiler)
+    implementation(libs.buildkonfig.gradlePlugin)
 }
 
 //jdk target - version of java that can be used here
@@ -65,6 +67,10 @@ gradlePlugin {
         register("cmpFeature"){
             id = "com.example.chirpappkmp.convention.cmp.feature"
             implementationClass = "CmpFeatureConventionPlugin"
+        }
+        register("buildKonfig"){
+            id = "com.example.chirpappkmp.convention.buildkonfig"
+            implementationClass = "BuildKonfigConventionPlugin"
         }
     }
 }
