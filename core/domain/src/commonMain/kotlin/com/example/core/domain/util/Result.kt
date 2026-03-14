@@ -34,3 +34,9 @@ inline fun <T, E : Error> Result<T, E>.onFailure(action: (E) -> Unit): Result<T,
         }
     }
 }
+
+fun <T, E : Error> Result<T, E>.asEmptyResult(): EmptyResult<E> {
+    return map { }
+}
+
+typealias EmptyResult<E> = Result<Unit, E>
