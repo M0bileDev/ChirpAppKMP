@@ -21,3 +21,16 @@ inline fun <T, E : Error> Result<T, E>.onSuccess(action: (T) -> Unit): Result<T,
         }
     }
 }
+
+inline fun <T, E : Error> Result<T, E>.onFailure(action: (E) -> Unit): Result<T, E> {
+    return when (this) {
+        is Result.Failure -> {
+            action(error)
+            this
+        }
+
+        is Result.Success -> {
+            this
+        }
+    }
+}
