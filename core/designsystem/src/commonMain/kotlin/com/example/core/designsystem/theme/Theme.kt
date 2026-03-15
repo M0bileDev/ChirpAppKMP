@@ -1,5 +1,6 @@
 package com.example.core.designsystem.theme
 
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 
 val LightColorScheme = lightColorScheme(
@@ -32,4 +33,36 @@ val LightColorScheme = lightColorScheme(
 
     outline = ChirpBase1000Alpha8,
     outlineVariant = ChirpBase200,
+)
+
+val DarkColorScheme = darkColorScheme(
+    primary = ChirpBrand500,
+    onPrimary = ChirpBrand1000,
+    primaryContainer = ChirpBrand900,
+    onPrimaryContainer = ChirpBrand500,
+
+    secondary = ChirpBase400,
+    onSecondary = ChirpBase1000,
+    secondaryContainer = ChirpBase900,
+    onSecondaryContainer = ChirpBase150,
+
+    tertiary = ChirpBrand500,
+    onTertiary = ChirpBase1000,
+    tertiaryContainer = ChirpBrand900,
+    onTertiaryContainer = ChirpBrand500,
+
+    error = ChirpRed500,
+    onError = ChirpBase0,
+    errorContainer = ChirpRed600,
+    onErrorContainer = ChirpRed200,
+
+    background = ChirpBase1000,
+    onBackground = ChirpBase0,
+    surface = ChirpBase950,
+    onSurface = ChirpBase0,
+    surfaceVariant = ChirpBase900,
+    onSurfaceVariant = ChirpBase150,
+
+    outline = ChirpBase100Alpha10,
+    outlineVariant = ChirpBase800,
 )
