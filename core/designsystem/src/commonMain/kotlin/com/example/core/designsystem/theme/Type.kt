@@ -101,3 +101,17 @@ val Typography
             lineHeight = 14.sp
         ),
     )
+
+//custom text styles
+val Typography.labelXSmall: TextStyle @Composable get() = TextStyle(
+    fontFamily = PlusJakartaSans,
+    fontWeight = FontWeight.SemiBold,
+    fontSize = 11.sp,
+    lineHeight = 14.sp
+)
+val Typography.titleXSmall: TextStyle @Composable get() = TextStyle(
+    fontFamily = PlusJakartaSans,
+    fontWeight = FontWeight.SemiBold,
+    fontSize = 14.sp,
+    lineHeight = 18.sp
+)
