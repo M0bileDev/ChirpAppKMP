@@ -1,7 +1,20 @@
 package com.example.core.designsystem.theme
 
+import androidx.compose.material3.ColorScheme
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+
+//LightExtendedColors -> default value
+val LocalExtendedColors = staticCompositionLocalOf { LightExtendedColors }
+
+val ColorScheme.extended: ExtendedColors
+    @ReadOnlyComposable
+    @Composable
+    get() = LocalExtendedColors.current
+
 
 @Immutable
 data class ExtendedColors(
