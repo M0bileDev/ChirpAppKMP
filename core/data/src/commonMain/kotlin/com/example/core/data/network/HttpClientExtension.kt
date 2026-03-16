@@ -17,6 +17,21 @@ fun constructRoute(route: String): String {
     }
 }
 
+suspend inline fun <reified T> safeCall(
+    noinline execute: suspend () -> HttpResponse
+): Result<T, DataError.Remote> {
+    return platformSafeCall(
+        execute = execute
+    ) { response ->
+        responseToResult(response)
+    }
+}
+
+expect suspend fun <T> platformSafeCall(
+    execute: suspend () -> HttpResponse,
+    handleResponse: suspend (HttpResponse) -> Result<T, DataError.Remote>
+): Result<T, DataError.Remote>
+
 suspend inline fun <reified T> responseToResult(response: HttpResponse): Result<T, DataError.Remote> {
     return when (response.status.value) {
         in 200..299 -> {
@@ -26,6 +41,7 @@ suspend inline fun <reified T> responseToResult(response: HttpResponse): Result<
                 Result.Failure(DataError.Remote.SERIALIZATION)
             }
         }
+
         400 -> Result.Failure(DataError.Remote.BAD_REQUEST)
         401 -> Result.Failure(DataError.Remote.UNAUTHORIZED)
         403 -> Result.Failure(DataError.Remote.FORBIDDEN)
