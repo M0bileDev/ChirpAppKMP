@@ -40,3 +40,4 @@ fun <T, E : Error> Result<T, E>.asEmptyResult(): EmptyResult<E> {
 }
 
 typealias EmptyResult<E> = Result<Unit, E>
+typealias ExceptionResult<E> = Result<Nothing, E>
