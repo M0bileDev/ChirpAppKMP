@@ -14,6 +14,7 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.stdlib)
                 implementation(projects.core.domain)
+                implementation(libs.bundles.ktor.common)
             }
         }
 
