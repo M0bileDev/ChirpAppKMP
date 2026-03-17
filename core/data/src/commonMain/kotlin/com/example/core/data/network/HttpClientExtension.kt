@@ -2,8 +2,14 @@ package com.example.core.data.network
 
 import com.example.core.domain.util.DataError
 import com.example.core.domain.util.Result
+import io.ktor.client.HttpClient
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
+import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.parameter
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
 
 //full url or relative paths (api)
@@ -14,6 +20,24 @@ fun constructRoute(route: String): String {
         //relative path was used
         route.startsWith("/") -> "${UrlConstants.BASE_URL_HTTPS}$route"
         else -> "${UrlConstants.BASE_URL_HTTPS}/$route"
+    }
+}
+
+suspend inline fun <reified Request, reified Response : Any> HttpClient.post(
+    route: String,
+    queryParams: Map<String, String> = mapOf(),
+    body: Request,
+    crossinline builder: HttpRequestBuilder.() -> Unit = {}
+): Result<Response, DataError.Remote> {
+    return safeCall {
+        post {
+            url(constructRoute(route))
+            queryParams.forEach { (key, value) ->
+                parameter(key, value)
+            }
+            setBody(body)
+            builder()
+        }
     }
 }
 
