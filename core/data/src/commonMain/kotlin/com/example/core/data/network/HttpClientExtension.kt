@@ -43,7 +43,7 @@ suspend inline fun <reified Request, reified Response : Any> HttpClient.post(
     }
 }
 
-suspend inline fun <reified Request, reified Response : Any> HttpClient.get(
+suspend inline fun <reified Response : Any> HttpClient.get(
     route: String,
     queryParams: Map<String, String> = mapOf(),
     crossinline builder: HttpRequestBuilder.() -> Unit = {}
@@ -59,7 +59,7 @@ suspend inline fun <reified Request, reified Response : Any> HttpClient.get(
     }
 }
 
-suspend inline fun <reified Request, reified Response : Any> HttpClient.delete(
+suspend inline fun <reified Response : Any> HttpClient.delete(
     route: String,
     queryParams: Map<String, String> = mapOf(),
     crossinline builder: HttpRequestBuilder.() -> Unit = {}
