@@ -6,6 +6,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
 import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -36,6 +37,22 @@ suspend inline fun <reified Request, reified Response : Any> HttpClient.post(
                 parameter(key, value)
             }
             setBody(body)
+            builder()
+        }
+    }
+}
+
+suspend inline fun <reified Request, reified Response : Any> HttpClient.get(
+    route: String,
+    queryParams: Map<String, String> = mapOf(),
+    crossinline builder: HttpRequestBuilder.() -> Unit = {}
+): Result<Response, DataError.Remote> {
+    return safeCall {
+        get {
+            url(constructRoute(route))
+            queryParams.forEach { (key, value) ->
+                parameter(key, value)
+            }
             builder()
         }
     }
