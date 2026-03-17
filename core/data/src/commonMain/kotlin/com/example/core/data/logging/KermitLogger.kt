@@ -12,6 +12,10 @@ object KermitLogger : ChirpLogger {
         Logger.w(message)
     }
 
+    override fun debug(message: String) {
+        Logger.d(message)
+    }
+
     override fun error(message: String, throwable: Throwable?) {
         Logger.e(message, throwable)
     }
