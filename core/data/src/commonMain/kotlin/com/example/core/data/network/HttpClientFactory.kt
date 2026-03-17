@@ -1,18 +1,29 @@
 package com.example.core.data.network
 
 import com.example.core.data.BuildKonfig
+import com.example.core.domain.logging.ChirpLogger
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-class HttpClientFactory {
+class HttpClientFactory(
+    private val chirpLogger: ChirpLogger
+) {
+
+    companion object {
+        const val DEFAULT_TIMEOUT = 20_000L
+    }
 
     fun create(engine: HttpClientEngine): HttpClient {
         return HttpClient(engine) {
@@ -25,9 +36,20 @@ class HttpClientFactory {
             }
             install(HttpTimeout) {
                 //websocket connection
-                socketTimeoutMillis = 20_000L
+                socketTimeoutMillis = DEFAULT_TIMEOUT
                 //ongoing http request
-                requestTimeoutMillis = 20_000L
+                requestTimeoutMillis = DEFAULT_TIMEOUT
+            }
+            install(Logging) {
+                logger = object : Logger {
+                    override fun log(message: String) {
+                        chirpLogger.debug(message)
+                    }
+                }
+                level = LogLevel.ALL
+            }
+            install(WebSockets) {
+                pingIntervalMillis = DEFAULT_TIMEOUT
             }
             //attach headers to each request
             defaultRequest {
