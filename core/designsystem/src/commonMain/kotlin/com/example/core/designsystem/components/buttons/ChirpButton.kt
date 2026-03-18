@@ -191,3 +191,72 @@ fun PreviewTextChirpButton() {
         )
     }
 }
+
+@Preview
+@Composable
+fun PreviewDarkPrimaryChirpButton() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChirpButton(
+            text = "Lorem ipsum",
+            onClick = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkDestructivePrimaryChirpButton() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChirpButton(
+            text = "Lorem ipsum",
+            onClick = {},
+            style = ChirpButtonStyle.DESTRUCTIVE_PRIMARY
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkSecondaryChirpButton() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChirpButton(
+            text = "Lorem ipsum",
+            onClick = {},
+            style = ChirpButtonStyle.SECONDARY
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkDestructiveSecondaryChirpButton() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChirpButton(
+            text = "Lorem ipsum",
+            onClick = {},
+            style = ChirpButtonStyle.DESTRUCTIVE_SECONDARY
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkTextChirpButton() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChirpButton(
+            text = "Lorem ipsum",
+            onClick = {},
+            style = ChirpButtonStyle.TEXT
+        )
+    }
+}
