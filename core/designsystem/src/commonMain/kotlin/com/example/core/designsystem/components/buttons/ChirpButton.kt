@@ -76,12 +76,37 @@ fun ChirpButton(
         )
     }
 
+    val defaultBorderStroke = BorderStroke(
+        width = 1.dp,
+        color = MaterialTheme.colorScheme.extended.disabledOutline
+    )
+
+    val border = when {
+        style == ChirpButtonStyle.PRIMARY && !enabled -> defaultBorderStroke
+        style == ChirpButtonStyle.SECONDARY -> defaultBorderStroke
+        style == ChirpButtonStyle.DESTRUCTIVE_PRIMARY && !enabled -> defaultBorderStroke
+        style == ChirpButtonStyle.DESTRUCTIVE_SECONDARY -> {
+            val borderColor = if (enabled) {
+                MaterialTheme.colorScheme.extended.destructiveSecondaryOutline
+            } else {
+                MaterialTheme.colorScheme.extended.disabledOutline
+            }
+            BorderStroke(
+                width = 1.dp,
+                color = borderColor
+            )
+        }
+
+        else -> null
+    }
+
     Button(
         onClick = onClick,
         modifier = modifier,
         enabled = enabled,
         shape = RoundedCornerShape(8.dp),
-        colors = colors
+        colors = colors,
+        border = border
     ) {
         Box(contentAlignment = Alignment.Center) {
             CircularProgressIndicator(
