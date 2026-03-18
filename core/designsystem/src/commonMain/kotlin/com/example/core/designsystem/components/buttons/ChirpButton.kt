@@ -1,11 +1,13 @@
 package com.example.core.designsystem.components.buttons
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -13,8 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.core.designsystem.theme.ChirpTheme
+import com.example.core.designsystem.theme.extended
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 enum class ChirpButtonStyle {
@@ -35,11 +39,49 @@ fun ChirpButton(
     isLoading: Boolean = false,
     leadingIcon: @Composable (() -> Unit)? = null
 ) {
+    val colors = when (style) {
+        ChirpButtonStyle.PRIMARY -> ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+            disabledContainerColor = MaterialTheme.colorScheme.extended.disabledFill,
+            disabledContentColor = MaterialTheme.colorScheme.extended.textDisabled
+        )
+
+        ChirpButtonStyle.DESTRUCTIVE_PRIMARY -> ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.error,
+            contentColor = MaterialTheme.colorScheme.onError,
+            disabledContainerColor = MaterialTheme.colorScheme.extended.disabledFill,
+            disabledContentColor = MaterialTheme.colorScheme.extended.textDisabled
+        )
+
+        ChirpButtonStyle.SECONDARY -> ButtonDefaults.buttonColors(
+            containerColor = Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.extended.textSecondary,
+            disabledContainerColor = Color.Transparent,
+            disabledContentColor = MaterialTheme.colorScheme.extended.textDisabled
+        )
+
+        ChirpButtonStyle.DESTRUCTIVE_SECONDARY -> ButtonDefaults.buttonColors(
+            containerColor = Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.error,
+            disabledContainerColor = Color.Transparent,
+            disabledContentColor = MaterialTheme.colorScheme.extended.textDisabled
+        )
+
+        ChirpButtonStyle.TEXT -> ButtonDefaults.buttonColors(
+            containerColor = Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.tertiary,
+            disabledContainerColor = Color.Transparent,
+            disabledContentColor = MaterialTheme.colorScheme.extended.textDisabled
+        )
+    }
+
     Button(
         onClick = onClick,
         modifier = modifier,
         enabled = enabled,
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(8.dp),
+        colors = colors
     ) {
         Box(contentAlignment = Alignment.Center) {
             CircularProgressIndicator(
