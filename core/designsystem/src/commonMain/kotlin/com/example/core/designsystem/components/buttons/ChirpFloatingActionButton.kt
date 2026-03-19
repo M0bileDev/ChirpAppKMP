@@ -15,8 +15,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun ChirpFloatingActionButton(
     onClick: () -> Unit,
-    content: @Composable () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
 ) {
     FloatingActionButton(
         modifier = modifier,
