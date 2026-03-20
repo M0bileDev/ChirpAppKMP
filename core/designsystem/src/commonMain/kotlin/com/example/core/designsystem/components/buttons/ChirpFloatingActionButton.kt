@@ -30,7 +30,7 @@ fun ChirpFloatingActionButton(
 
 @Composable
 @Preview
-fun PreviewChirpFloatingActionButton() {
+private fun PreviewChirpFloatingActionButton() {
     ChirpTheme {
         ChirpFloatingActionButton(
             onClick = {},
@@ -46,7 +46,7 @@ fun PreviewChirpFloatingActionButton() {
 
 @Composable
 @Preview
-fun PreviewDarkChirpFloatingActionButton() {
+private fun PreviewDarkChirpFloatingActionButton() {
     ChirpTheme(
         darkTheme = true
     ) {
