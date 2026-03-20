@@ -40,7 +40,7 @@ fun ChirpIconButton(
 
 @Preview
 @Composable
-fun PreviewChirpButton() {
+private fun PreviewChirpButton() {
     ChirpTheme {
         ChirpIconButton(
             onClick = {},
@@ -53,7 +53,7 @@ fun PreviewChirpButton() {
 
 @Preview
 @Composable
-fun PreviewDarkChirpButton() {
+private fun PreviewDarkChirpButton() {
     ChirpTheme(
         darkTheme = true
     ) {

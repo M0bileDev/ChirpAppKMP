@@ -135,7 +135,7 @@ fun ChirpButton(
 
 @Preview
 @Composable
-fun PreviewPrimaryChirpButton() {
+private fun PreviewPrimaryChirpButton() {
     ChirpTheme {
         ChirpButton(
             text = "Lorem ipsum",
@@ -146,7 +146,7 @@ fun PreviewPrimaryChirpButton() {
 
 @Preview
 @Composable
-fun PreviewDestructivePrimaryChirpButton() {
+private fun PreviewDestructivePrimaryChirpButton() {
     ChirpTheme {
         ChirpButton(
             text = "Lorem ipsum",
@@ -158,7 +158,7 @@ fun PreviewDestructivePrimaryChirpButton() {
 
 @Preview
 @Composable
-fun PreviewSecondaryChirpButton() {
+private fun PreviewSecondaryChirpButton() {
     ChirpTheme {
         ChirpButton(
             text = "Lorem ipsum",
@@ -170,7 +170,7 @@ fun PreviewSecondaryChirpButton() {
 
 @Preview
 @Composable
-fun PreviewDestructiveSecondaryChirpButton() {
+private fun PreviewDestructiveSecondaryChirpButton() {
     ChirpTheme {
         ChirpButton(
             text = "Lorem ipsum",
@@ -182,7 +182,7 @@ fun PreviewDestructiveSecondaryChirpButton() {
 
 @Preview
 @Composable
-fun PreviewTextChirpButton() {
+private fun PreviewTextChirpButton() {
     ChirpTheme {
         ChirpButton(
             text = "Lorem ipsum",
@@ -194,7 +194,7 @@ fun PreviewTextChirpButton() {
 
 @Preview
 @Composable
-fun PreviewDarkPrimaryChirpButton() {
+private fun PreviewDarkPrimaryChirpButton() {
     ChirpTheme(
         darkTheme = true
     ) {
@@ -207,7 +207,7 @@ fun PreviewDarkPrimaryChirpButton() {
 
 @Preview
 @Composable
-fun PreviewDarkDestructivePrimaryChirpButton() {
+private fun PreviewDarkDestructivePrimaryChirpButton() {
     ChirpTheme(
         darkTheme = true
     ) {
@@ -221,7 +221,7 @@ fun PreviewDarkDestructivePrimaryChirpButton() {
 
 @Preview
 @Composable
-fun PreviewDarkSecondaryChirpButton() {
+private fun PreviewDarkSecondaryChirpButton() {
     ChirpTheme(
         darkTheme = true
     ) {
@@ -235,7 +235,7 @@ fun PreviewDarkSecondaryChirpButton() {
 
 @Preview
 @Composable
-fun PreviewDarkDestructiveSecondaryChirpButton() {
+private fun PreviewDarkDestructiveSecondaryChirpButton() {
     ChirpTheme(
         darkTheme = true
     ) {
@@ -249,7 +249,7 @@ fun PreviewDarkDestructiveSecondaryChirpButton() {
 
 @Preview
 @Composable
-fun PreviewDarkTextChirpButton() {
+private fun PreviewDarkTextChirpButton() {
     ChirpTheme(
         darkTheme = true
     ) {

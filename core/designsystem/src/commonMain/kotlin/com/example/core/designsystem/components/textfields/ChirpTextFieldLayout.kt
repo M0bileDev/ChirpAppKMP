@@ -99,7 +99,7 @@ private fun ChirpTextFieldSupportingText(supportingText: String?, isError: Boole
 
 @Composable
 @Preview(showBackground = true)
-fun PreviewChirpTextFieldLayout() {
+private fun PreviewChirpTextFieldLayout() {
     ChirpTheme {
         ChirpTextFieldLayout(
             title = "Lorem ipsum",
@@ -113,7 +113,7 @@ fun PreviewChirpTextFieldLayout() {
 
 @Composable
 @Preview(backgroundColor = 0xFF000000, showBackground = true)
-fun PreviewDarkChirpTextFieldLayout() {
+private fun PreviewDarkChirpTextFieldLayout() {
     ChirpTheme(darkTheme = true) {
         ChirpTextFieldLayout(
             title = "Lorem ipsum",
