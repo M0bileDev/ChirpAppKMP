@@ -97,15 +97,15 @@ private fun ChirpTextFieldBody(
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
+                innerBox()
             }
-            innerBox()
         }
     )
 }
 
 @Composable
 @Preview(showBackground = true)
-fun PreviewEmptyChirpTextField() {
+private fun PreviewEmptyChirpTextField() {
     ChirpTheme {
         ChirpTextField(
             state = rememberTextFieldState(),
@@ -119,7 +119,7 @@ fun PreviewEmptyChirpTextField() {
 
 @Composable
 @Preview(showBackground = true)
-fun PreviewFilledChirpTextField() {
+private fun PreviewFilledChirpTextField() {
     ChirpTheme {
         ChirpTextField(
             state = rememberTextFieldState(
@@ -135,7 +135,7 @@ fun PreviewFilledChirpTextField() {
 
 @Composable
 @Preview(showBackground = true)
-fun PreviewDisabledChirpTextField() {
+private fun PreviewDisabledChirpTextField() {
     ChirpTheme {
         ChirpTextField(
             state = rememberTextFieldState(),
@@ -150,7 +150,7 @@ fun PreviewDisabledChirpTextField() {
 
 @Composable
 @Preview(showBackground = true)
-fun PreviewErrorChirpTextField() {
+private fun PreviewErrorChirpTextField() {
     ChirpTheme {
         ChirpTextField(
             state = rememberTextFieldState(),
@@ -165,7 +165,7 @@ fun PreviewErrorChirpTextField() {
 
 @Composable
 @Preview(backgroundColor = 0xFF000000, showBackground = true)
-fun PreviewEmptyDarkChirpTextField() {
+private fun PreviewEmptyDarkChirpTextField() {
     ChirpTheme(darkTheme = true) {
         ChirpTextField(
             state = rememberTextFieldState(),
@@ -179,7 +179,7 @@ fun PreviewEmptyDarkChirpTextField() {
 
 @Composable
 @Preview(backgroundColor = 0xFF000000, showBackground = true)
-fun PreviewFilledDarkChirpTextField() {
+private fun PreviewFilledDarkChirpTextField() {
     ChirpTheme(darkTheme = true) {
         ChirpTextField(
             state = rememberTextFieldState(
@@ -195,7 +195,7 @@ fun PreviewFilledDarkChirpTextField() {
 
 @Composable
 @Preview(backgroundColor = 0xFF000000, showBackground = true)
-fun PreviewDisabledDarkChirpTextField() {
+private fun PreviewDisabledDarkChirpTextField() {
     ChirpTheme(darkTheme = true) {
         ChirpTextField(
             state = rememberTextFieldState(),
@@ -210,7 +210,7 @@ fun PreviewDisabledDarkChirpTextField() {
 
 @Composable
 @Preview(backgroundColor = 0xFF000000, showBackground = true)
-fun PreviewErrorDarkChirpTextField() {
+private fun PreviewErrorDarkChirpTextField() {
     ChirpTheme(darkTheme = true) {
         ChirpTextField(
             state = rememberTextFieldState(),
