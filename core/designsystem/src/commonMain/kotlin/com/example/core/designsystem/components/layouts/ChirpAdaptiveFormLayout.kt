@@ -31,7 +31,21 @@ fun ChirpAdaptiveFormLayout(
     }
 
     when (configuration) {
-        DeviceConfiguration.MOBILE_PORTRAIT -> {}
+        DeviceConfiguration.MOBILE_PORTRAIT -> {
+            ChirpSurface(
+                modifier = Modifier
+                    .consumeWindowInsets(WindowInsets.navigationBars)
+                    .consumeWindowInsets(WindowInsets.displayCutout),
+                header = {
+                    Spacer(modifier = Modifier.height(32.dp))
+                    logo()
+                    Spacer(modifier = Modifier.height(32.dp))
+                },
+                content = {
+
+                }
+            )
+        }
         DeviceConfiguration.MOBILE_LANDSCAPE -> TODO()
         DeviceConfiguration.TABLET_PORTRAIT,
         DeviceConfiguration.TABLET_LANDSCAPE,
