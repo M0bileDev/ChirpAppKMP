@@ -47,7 +47,14 @@ fun ChirpAdaptiveFormLayout(
                     Spacer(modifier = Modifier.height(32.dp))
                 },
                 content = {
-
+                    Spacer(modifier = Modifier.height(24.dp))
+                    AuthHeaderSection(
+                        headerText = headerText,
+                        headerColor = headerColor,
+                        errorText = errorText
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    formContent()
                 }
             )
         }
