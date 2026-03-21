@@ -1,11 +1,15 @@
 package com.example.core.designsystem.components.layouts
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
@@ -62,7 +66,33 @@ fun ChirpAdaptiveFormLayout(
             )
         }
 
-        DeviceConfiguration.MOBILE_LANDSCAPE -> TODO()
+        DeviceConfiguration.MOBILE_LANDSCAPE -> {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.fillMaxSize()
+                    .consumeWindowInsets(WindowInsets.displayCutout)
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(24.dp)
+                ) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    logo()
+                    AuthHeaderSection(
+                        headerText = headerText,
+                        headerColor = headerColor,
+                        errorText = errorText
+                    )
+                }
+                ChirpSurface(
+                    modifier = Modifier.weight(1f),
+                    content = {
+                        formContent()
+                    }
+                )
+            }
+        }
+
         DeviceConfiguration.TABLET_PORTRAIT,
         DeviceConfiguration.TABLET_LANDSCAPE,
         DeviceConfiguration.DESKTOP -> {
