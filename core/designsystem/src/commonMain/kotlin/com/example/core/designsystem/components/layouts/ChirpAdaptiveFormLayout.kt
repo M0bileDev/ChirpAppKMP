@@ -97,3 +97,39 @@ fun ColumnScope.AuthHeaderSection(
         }
     }
 }
+
+@Composable
+@Preview
+fun PreviewChirpAdaptiveFormLayout() {
+    ChirpTheme {
+        ChirpAdaptiveFormLayout(
+            headerText = "Lorem ipsum",
+            errorText = "Lorem ipsum",
+            logo = {
+                ChirpBrandLogo()
+            },
+            formContent = {
+                Text(text = "Lorem ipsum")
+            }
+        )
+    }
+}
+
+@Composable
+@Preview
+fun PreviewDarkChirpAdaptiveFormLayout() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChirpAdaptiveFormLayout(
+            headerText = "Lorem ipsum",
+            errorText = "Lorem ipsum",
+            logo = {
+                ChirpBrandLogo()
+            },
+            formContent = {
+                Text(text = "Lorem ipsum")
+            }
+        )
+    }
+}
