@@ -1,6 +1,7 @@
 package com.example.core.designsystem.components.layouts
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -13,10 +14,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -45,7 +51,7 @@ fun ChirpAdaptiveFormLayout(
     when (configuration) {
         DeviceConfiguration.MOBILE_PORTRAIT -> {
             ChirpSurface(
-                modifier = Modifier
+                modifier = modifier
                     .consumeWindowInsets(WindowInsets.navigationBars)
                     .consumeWindowInsets(WindowInsets.displayCutout),
                 header = {
@@ -69,7 +75,7 @@ fun ChirpAdaptiveFormLayout(
         DeviceConfiguration.MOBILE_LANDSCAPE -> {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.fillMaxSize()
+                modifier = modifier.fillMaxSize()
                     .consumeWindowInsets(WindowInsets.displayCutout)
             ) {
                 Column(
@@ -96,6 +102,34 @@ fun ChirpAdaptiveFormLayout(
         DeviceConfiguration.TABLET_PORTRAIT,
         DeviceConfiguration.TABLET_LANDSCAPE,
         DeviceConfiguration.DESKTOP -> {
+            Column(
+                modifier = modifier.fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(top = 32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(32.dp)
+            ) {
+                logo()
+                Column(
+                    modifier = Modifier
+                        .widthIn(max = 480.dp)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(32.dp))
+                        .background(MaterialTheme.colorScheme.surface)
+                        .padding(horizontal = 24.dp, vertical = 32.dp),
+                    verticalArrangement = Arrangement.spacedBy(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Spacer(modifier = Modifier.height(24.dp))
+                    AuthHeaderSection(
+                        headerText = headerText,
+                        headerColor = headerColor,
+                        errorText = errorText
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    formContent()
+                }
+            }
         }
     }
 }
@@ -139,7 +173,7 @@ fun PreviewChirpAdaptiveFormLayout() {
                 ChirpBrandLogo()
             },
             formContent = {
-                Text(text = "Lorem ipsum")
+                Text(text = "Lorem ipsum", color = MaterialTheme.colorScheme.onSurface)
             }
         )
     }
@@ -158,7 +192,7 @@ fun PreviewDarkChirpAdaptiveFormLayout() {
                 ChirpBrandLogo()
             },
             formContent = {
-                Text(text = "Lorem ipsum")
+                Text(text = "Lorem ipsum", color = MaterialTheme.colorScheme.onSurface)
             }
         )
     }
