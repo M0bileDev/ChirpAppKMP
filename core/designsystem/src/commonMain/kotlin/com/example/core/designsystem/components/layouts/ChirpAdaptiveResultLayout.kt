@@ -15,14 +15,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.example.core.designsystem.components.brand.ChirpBrandLogo
+import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.presentation.composableUtil.currentDeviceConfiguration
 import com.example.core.presentation.util.DeviceConfiguration
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ChirpAdaptiveResultLayout(
@@ -50,14 +53,16 @@ fun ChirpAdaptiveResultLayout(
                     .padding(innerPadding)
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
-                    .padding(top = 32.dp)
+                    .padding(top = 32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(32.dp)
             ) {
                 if (configuration != DeviceConfiguration.MOBILE_LANDSCAPE) {
                     ChirpBrandLogo()
                 }
                 Column(
                     modifier = Modifier
-                        .widthIn(480.dp)
+                        .widthIn(max = 480.dp)
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(32.dp))
                         .background(MaterialTheme.colorScheme.surface)
@@ -69,6 +74,26 @@ fun ChirpAdaptiveResultLayout(
                     content()
                 }
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewChirpAdaptiveResultLayout() {
+    ChirpTheme {
+        ChirpAdaptiveResultLayout(modifier = Modifier.fillMaxSize()) {
+            Text("Lorem ipsum", color = MaterialTheme.colorScheme.onSurface)
+        }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkChirpAdaptiveResultLayout() {
+    ChirpTheme(darkTheme = true) {
+        ChirpAdaptiveResultLayout(modifier = Modifier.fillMaxSize()) {
+            Text("Lorem ipsum", color = MaterialTheme.colorScheme.onSurface)
         }
     }
 }
