@@ -5,37 +5,38 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import chirpappkmp.core.designsystem.generated.resources.Res
-import chirpappkmp.core.designsystem.generated.resources.logo_chirp
+import chirpappkmp.core.designsystem.generated.resources.success_checkmark
 import com.example.core.designsystem.theme.ChirpTheme
+import com.example.core.designsystem.theme.extended
 import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ChirpBrandLogo(
+fun ChirpSuccessIcon(
     modifier: Modifier = Modifier
 ) {
     Icon(
-        modifier = modifier,
-        imageVector = vectorResource(Res.drawable.logo_chirp),
+        imageVector = vectorResource(Res.drawable.success_checkmark),
         contentDescription = null,
-        tint = MaterialTheme.colorScheme.primary
+        tint = MaterialTheme.colorScheme.extended.success,
+        modifier = modifier
     )
 }
 
 @Preview
 @Composable
-fun PreviewChirpBrandLogo(){
+fun PreviewChirpSuccessIcon(){
     ChirpTheme {
-        ChirpBrandLogo()
+        ChirpSuccessIcon()
     }
 }
 
 @Preview
 @Composable
-fun PreviewDarkChirpBrandLogo(){
+fun PreviewDarkChirpSuccessIcon(){
     ChirpTheme(
         darkTheme = true
     ) {
-        ChirpBrandLogo()
+        ChirpSuccessIcon()
     }
 }
