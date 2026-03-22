@@ -5,7 +5,12 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun ChirpSimpleSuccessLayout(
-    modifier: Modifier = Modifier
+    title: String,
+    description: String,
+    icon: @Composable () -> Unit,
+    primaryButton: @Composable () -> Unit,
+    secondaryButton: @Composable (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
 ) {
 
 }
