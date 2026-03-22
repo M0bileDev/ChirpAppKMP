@@ -13,7 +13,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.core.designsystem.components.brand.ChirpSuccessIcon
+import com.example.core.designsystem.components.buttons.ChirpButton
+import com.example.core.designsystem.components.buttons.ChirpButtonStyle
+import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ChirpSimpleSuccessLayout(
@@ -54,5 +59,61 @@ fun ChirpSimpleSuccessLayout(
             }
             Spacer(modifier = Modifier.height(8.dp))
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewChirpSimpleSuccessLayout() {
+    ChirpTheme {
+        ChirpSimpleSuccessLayout(
+            title = "Lorem ipsum",
+            description = "Lorem ipsum",
+            icon = {
+                ChirpSuccessIcon()
+            },
+            primaryButton = {
+                ChirpButton(
+                    text = "Lorem ipsum",
+                    onClick = {}
+                )
+            },
+            secondaryButton = {
+                ChirpButton(
+                    text = "Lorem ipsum",
+                    style = ChirpButtonStyle.SECONDARY,
+                    onClick = {}
+                )
+            }
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF000000)
+@Composable
+fun PreviewDarkChirpSimpleSuccessLayout() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChirpSimpleSuccessLayout(
+            title = "Lorem ipsum",
+            description = "Lorem ipsum",
+            icon = {
+                ChirpSuccessIcon()
+            },
+            primaryButton = {
+                ChirpButton(
+                    text = "Lorem ipsum",
+                    onClick = {}
+                )
+            },
+            secondaryButton = {
+                ChirpButton(
+                    text = "Lorem ipsum",
+                    style = ChirpButtonStyle.SECONDARY,
+                    onClick = {}
+                )
+            }
+        )
     }
 }
