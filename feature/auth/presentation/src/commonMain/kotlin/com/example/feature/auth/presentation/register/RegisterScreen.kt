@@ -10,5 +10,17 @@ fun RegisterRoot(
     viewModel: RegisterViewModel = viewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    RegisterScreen(
+        state = state,
+        onAction = viewModel::onAction
+    )
 }
 
+@Composable
+fun RegisterScreen(
+    state: RegisterState,
+    onAction: (RegisterAction) -> Unit
+) {
+
+}
