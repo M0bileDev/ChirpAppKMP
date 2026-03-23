@@ -1,5 +1,10 @@
 package com.example.feature.auth.presentation.register
 
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
-class RegisterViewModel : ViewModel()
+class RegisterViewModel : ViewModel() {
+    private val _state = MutableStateFlow(RegisterState())
+    val state = _state.asStateFlow()
+}
