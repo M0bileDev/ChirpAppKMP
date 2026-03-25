@@ -3,6 +3,7 @@ package com.example.feature.auth.presentation.register
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import chirpappkmp.feature.auth.presentation.generated.resources.Res
@@ -31,9 +32,11 @@ fun RegisterRoot(
     viewModel: RegisterViewModel = viewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     RegisterScreen(
         state = state,
+        snackbarHostState = snackbarHostState,
         onAction = viewModel::onAction
     )
 }
@@ -114,6 +117,7 @@ private fun PreviewRegisterScreen() {
     ChirpTheme {
         RegisterScreen(
             state = RegisterState(),
+            snackbarHostState = SnackbarHostState(),
             onAction = {}
         )
     }
