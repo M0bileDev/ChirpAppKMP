@@ -35,7 +35,7 @@ import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ChirpPasswordTextFieldComponent(
+fun ChirpPasswordTextField(
     state: TextFieldState,
     modifier: Modifier = Modifier,
     isPasswordVisible: Boolean = false,
@@ -124,9 +124,9 @@ fun ChirpPasswordTextFieldComponent(
 
 @Composable
 @Preview(showBackground = true)
-private fun PreviewEmptyChirpPasswordTextFieldComponent() {
+private fun PreviewEmptyChirpPasswordTextField() {
     ChirpTheme {
-        ChirpPasswordTextFieldComponent(
+        ChirpPasswordTextField(
             state = rememberTextFieldState(),
             modifier = Modifier.width(300.dp),
             isPasswordVisible = true,
@@ -140,9 +140,9 @@ private fun PreviewEmptyChirpPasswordTextFieldComponent() {
 
 @Composable
 @Preview(showBackground = true)
-private fun PreviewFilledChirpPasswordTextFieldComponent() {
+private fun PreviewFilledChirpPasswordTextField() {
     ChirpTheme {
-        ChirpPasswordTextFieldComponent(
+        ChirpPasswordTextField(
             state = rememberTextFieldState(
                 initialText = "Lorem ipsum initial text"
             ),
@@ -158,9 +158,9 @@ private fun PreviewFilledChirpPasswordTextFieldComponent() {
 
 @Composable
 @Preview(showBackground = true)
-private fun PreviewDisabledChirpPasswordTextFieldComponent() {
+private fun PreviewDisabledChirpPasswordTextField() {
     ChirpTheme {
-        ChirpPasswordTextFieldComponent(
+        ChirpPasswordTextField(
             state = rememberTextFieldState(),
             modifier = Modifier.width(300.dp),
             isPasswordVisible = true,
@@ -175,9 +175,9 @@ private fun PreviewDisabledChirpPasswordTextFieldComponent() {
 
 @Composable
 @Preview(showBackground = true)
-private fun PreviewErrorChirpPasswordTextFieldComponent() {
+private fun PreviewErrorChirpPasswordTextField() {
     ChirpTheme {
-        ChirpPasswordTextFieldComponent(
+        ChirpPasswordTextField(
             state = rememberTextFieldState(),
             modifier = Modifier.width(300.dp),
             isPasswordVisible = true,
@@ -192,9 +192,9 @@ private fun PreviewErrorChirpPasswordTextFieldComponent() {
 
 @Composable
 @Preview(backgroundColor = 0xFF000000, showBackground = true)
-private fun PreviewEmptyDarkChirpPasswordTextFieldComponent() {
+private fun PreviewEmptyDarkChirpPasswordTextField() {
     ChirpTheme(darkTheme = true) {
-        ChirpPasswordTextFieldComponent(
+        ChirpPasswordTextField(
             state = rememberTextFieldState(),
             modifier = Modifier.width(300.dp),
             isPasswordVisible = true,
@@ -208,9 +208,9 @@ private fun PreviewEmptyDarkChirpPasswordTextFieldComponent() {
 
 @Composable
 @Preview(backgroundColor = 0xFF000000, showBackground = true)
-private fun PreviewFilledDarkChirpPasswordTextFieldComponent() {
+private fun PreviewFilledDarkChirpPasswordTextField() {
     ChirpTheme(darkTheme = true) {
-        ChirpPasswordTextFieldComponent(
+        ChirpPasswordTextField(
             state = rememberTextFieldState(
                 initialText = "Lorem ipsum initial text"
             ),
@@ -226,9 +226,9 @@ private fun PreviewFilledDarkChirpPasswordTextFieldComponent() {
 
 @Composable
 @Preview(backgroundColor = 0xFF000000, showBackground = true)
-private fun PreviewDisabledDarkChirpPasswordTextFieldComponent() {
+private fun PreviewDisabledDarkChirpPasswordTextField() {
     ChirpTheme(darkTheme = true) {
-        ChirpPasswordTextFieldComponent(
+        ChirpPasswordTextField(
             state = rememberTextFieldState(),
             modifier = Modifier.width(300.dp),
             isPasswordVisible = true,
@@ -243,9 +243,9 @@ private fun PreviewDisabledDarkChirpPasswordTextFieldComponent() {
 
 @Composable
 @Preview(backgroundColor = 0xFF000000, showBackground = true)
-private fun PreviewErrorDarkChirpPasswordTextFieldComponent() {
+private fun PreviewErrorDarkChirpPasswordTextField() {
     ChirpTheme(darkTheme = true) {
-        ChirpPasswordTextFieldComponent(
+        ChirpPasswordTextField(
             state = rememberTextFieldState(),
             modifier = Modifier.width(300.dp),
             isPasswordVisible = true,
