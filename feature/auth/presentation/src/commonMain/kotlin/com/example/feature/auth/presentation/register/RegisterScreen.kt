@@ -136,3 +136,17 @@ private fun PreviewRegisterScreen() {
         )
     }
 }
+
+@Preview
+@Composable
+private fun PreviewDarkRegisterScreen() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        RegisterScreen(
+            state = RegisterState(),
+            snackbarHostState = SnackbarHostState(),
+            onAction = {}
+        )
+    }
+}
