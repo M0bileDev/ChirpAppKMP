@@ -10,7 +10,7 @@ class RegisterViewModel : ViewModel() {
 
     fun onAction(registerAction: RegisterAction){
         when(registerAction){
-            else -> TODO("handle actions")
+            else -> Unit
         }
     }
 }
