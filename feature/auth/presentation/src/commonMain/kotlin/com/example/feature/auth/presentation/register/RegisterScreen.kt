@@ -1,9 +1,14 @@
 package com.example.feature.auth.presentation.register
 
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import chirpappkmp.feature.auth.presentation.generated.resources.Res
@@ -19,6 +24,7 @@ import chirpappkmp.feature.auth.presentation.generated.resources.username_placeh
 import chirpappkmp.feature.auth.presentation.generated.resources.welcome_to_chirp
 import com.example.core.designsystem.components.brand.ChirpBrandLogo
 import com.example.core.designsystem.components.buttons.ChirpButton
+import com.example.core.designsystem.components.buttons.ChirpButtonStyle
 import com.example.core.designsystem.components.layouts.ChirpAdaptiveFormLayout
 import com.example.core.designsystem.components.layouts.ChirpSnackbarScaffoldLayout
 import com.example.core.designsystem.components.textfields.ChirpPasswordTextField
@@ -66,6 +72,7 @@ fun RegisterScreen(
                         onAction(RegisterAction.OnInputTextFocusGain)
                     }
                 )
+                Spacer(modifier = Modifier.height(16.dp))
                 ChirpTextField(
                     state = emailTextState,
                     placeholder = stringResource(Res.string.email_placeholder),
@@ -76,6 +83,7 @@ fun RegisterScreen(
                         onAction(RegisterAction.OnInputTextFocusGain)
                     }
                 )
+                Spacer(modifier = Modifier.height(16.dp))
                 ChirpPasswordTextField(
                     state = passwordTextState,
                     placeholder = stringResource(Res.string.password),
@@ -91,7 +99,10 @@ fun RegisterScreen(
                     },
                     isPasswordVisible = isPasswordVisible
                 )
+                Spacer(modifier = Modifier.height(16.dp))
+
                 ChirpButton(
+                    modifier = Modifier.fillMaxWidth(),
                     text = stringResource(Res.string.register),
                     onClick = {
                         onAction(RegisterAction.OnRegisterClick)
@@ -99,7 +110,10 @@ fun RegisterScreen(
                     enabled = canRegister,
                     isLoading = isRegistering
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 ChirpButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    style = ChirpButtonStyle.SECONDARY,
                     text = stringResource(Res.string.login),
                     onClick = {
                         onAction(RegisterAction.OnLoginClick)
