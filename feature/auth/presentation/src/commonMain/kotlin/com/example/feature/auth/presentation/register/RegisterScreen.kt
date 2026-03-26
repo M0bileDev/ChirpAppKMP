@@ -35,7 +35,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun RegisterRoot(
-    viewModel: RegisterViewModel = viewModel()
+    viewModel: RegisterViewModel = viewModel { RegisterViewModel() }
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
