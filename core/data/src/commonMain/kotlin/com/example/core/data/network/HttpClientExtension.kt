@@ -28,8 +28,8 @@ fun constructRoute(route: String): String {
 
 suspend inline fun <reified Request, reified Response : Any> HttpClient.post(
     route: String,
-    queryParams: Map<String, String> = mapOf(),
     body: Request,
+    queryParams: Map<String, String> = mapOf(),
     crossinline builder: HttpRequestBuilder.() -> Unit = {}
 ): Result<Response, DataError.Remote> {
     return safeCall {
