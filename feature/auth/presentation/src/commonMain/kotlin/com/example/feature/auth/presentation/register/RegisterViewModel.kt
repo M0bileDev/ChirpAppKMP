@@ -19,7 +19,19 @@ class RegisterViewModel : ViewModel() {
     fun onAction(registerAction: RegisterAction) {
         when (registerAction) {
             is RegisterAction.OnLoginClick -> validateFormInputs()
+            is RegisterAction.OnInputTextFocusGain -> clearAllTextFieldErrors()
             else -> Unit
+        }
+    }
+
+    private fun clearAllTextFieldErrors() {
+        _state.update {
+            it.copy(
+                emailError = null,
+                usernameError = null,
+                passwordError = null,
+                registrationError = null
+            )
         }
     }
 
