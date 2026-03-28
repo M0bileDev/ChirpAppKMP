@@ -18,6 +18,7 @@ class RegisterViewModel : ViewModel() {
 
     fun onAction(registerAction: RegisterAction) {
         when (registerAction) {
+            is RegisterAction.OnLoginClick -> validateFormInputs()
             else -> Unit
         }
     }
