@@ -3,13 +3,16 @@ package com.example.feature.auth.presentation.register
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import chirpappkmp.feature.auth.presentation.generated.resources.Res
+import chirpappkmp.feature.auth.presentation.generated.resources.error_account_exists
 import chirpappkmp.feature.auth.presentation.generated.resources.error_invalid_email
 import chirpappkmp.feature.auth.presentation.generated.resources.error_invalid_password
 import chirpappkmp.feature.auth.presentation.generated.resources.error_invalid_username
 import com.example.core.domain.auth.AuthService
+import com.example.core.domain.util.DataError
 import com.example.core.domain.util.onFailure
 import com.example.core.domain.util.onSuccess
 import com.example.core.domain.validation.PasswordValidator
+import com.example.core.presentation.ext.toUiText
 import com.example.core.presentation.util.UiText
 import com.example.feature.auth.domain.EmailValidator
 import kotlinx.coroutines.channels.Channel
@@ -66,10 +69,15 @@ class RegisterViewModel(
                     )
                 }
 
-            }.onFailure {
+            }.onFailure { error ->
+                val registrationError = when (error) {
+                    DataError.Remote.CONFLICT -> UiText.Resource(Res.string.error_account_exists)
+                    else -> error.toUiText()
+                }
                 _state.update {
                     it.copy(
-                        isRegistering = false
+                        isRegistering = false,
+                        registrationError = registrationError
                     )
                 }
             }
