@@ -36,7 +36,15 @@ class RegisterViewModel(
             RegisterAction.OnLoginClick -> validateFormInputs()
             RegisterAction.OnInputTextFocusGain -> clearAllTextFieldErrors()
             RegisterAction.OnRegisterClick -> register()
-            RegisterAction.OnTogglePasswordVisibilityClick -> {}
+            RegisterAction.OnTogglePasswordVisibilityClick -> togglePasswordVisibility()
+        }
+    }
+
+    private fun togglePasswordVisibility() {
+        _state.update {
+            it.copy(
+                isPasswordVisible = !it.isPasswordVisible
+            )
         }
     }
 
