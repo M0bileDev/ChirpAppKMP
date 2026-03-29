@@ -1,26 +1,73 @@
 package com.example.feature.auth.presentation.register
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import chirpappkmp.feature.auth.presentation.generated.resources.Res
 import chirpappkmp.feature.auth.presentation.generated.resources.error_invalid_email
 import chirpappkmp.feature.auth.presentation.generated.resources.error_invalid_password
 import chirpappkmp.feature.auth.presentation.generated.resources.error_invalid_username
+import com.example.core.domain.auth.AuthService
+import com.example.core.domain.util.onFailure
+import com.example.core.domain.util.onSuccess
 import com.example.core.domain.validation.PasswordValidator
 import com.example.core.presentation.util.UiText
 import com.example.feature.auth.domain.EmailValidator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class RegisterViewModel : ViewModel() {
+class RegisterViewModel(
+    private val authService: AuthService
+) : ViewModel() {
     private val _state = MutableStateFlow(RegisterState())
     val state = _state.asStateFlow()
 
     fun onAction(registerAction: RegisterAction) {
         when (registerAction) {
-            is RegisterAction.OnLoginClick -> validateFormInputs()
-            is RegisterAction.OnInputTextFocusGain -> clearAllTextFieldErrors()
-            else -> Unit
+            RegisterAction.OnLoginClick -> validateFormInputs()
+            RegisterAction.OnInputTextFocusGain -> clearAllTextFieldErrors()
+            RegisterAction.OnRegisterClick -> register()
+            RegisterAction.OnTogglePasswordVisibilityClick -> {}
+        }
+    }
+
+    private fun register() {
+        if (!validateFormInputs()) {
+            return
+        }
+
+        _state.update {
+            it.copy(
+                isRegistering = true
+            )
+        }
+
+        viewModelScope.launch {
+
+            val currentState = state.value
+            val email = currentState.emailTextState.text.toString()
+            val username = currentState.usernameTextState.text.toString()
+            val password = currentState.passwordTextState.text.toString()
+
+            authService.register(
+                email = email,
+                username = username,
+                password = password
+            ).onSuccess {
+                _state.update {
+                    it.copy(
+                        isRegistering = false
+                    )
+                }
+
+            }.onFailure {
+                _state.update {
+                    it.copy(
+                        isRegistering = false
+                    )
+                }
+            }
         }
     }
 
