@@ -12,8 +12,10 @@ import com.example.core.domain.util.onSuccess
 import com.example.core.domain.validation.PasswordValidator
 import com.example.core.presentation.util.UiText
 import com.example.feature.auth.domain.EmailValidator
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -22,6 +24,9 @@ class RegisterViewModel(
 ) : ViewModel() {
     private val _state = MutableStateFlow(RegisterState())
     val state = _state.asStateFlow()
+
+    private val eventChannel = Channel<RegisterEvent>()
+    val events = eventChannel.receiveAsFlow()
 
     fun onAction(registerAction: RegisterAction) {
         when (registerAction) {
