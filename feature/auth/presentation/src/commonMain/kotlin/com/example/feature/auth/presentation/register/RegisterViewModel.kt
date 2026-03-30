@@ -1,5 +1,6 @@
 package com.example.feature.auth.presentation.register
 
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import chirpappkmp.feature.auth.presentation.generated.resources.Res
@@ -17,19 +18,62 @@ import com.example.core.presentation.util.UiText
 import com.example.feature.auth.domain.EmailValidator
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(
     private val authService: AuthService
 ) : ViewModel() {
-    private val _state = MutableStateFlow(RegisterState())
-    val state = _state.asStateFlow()
-
     private val eventChannel = Channel<RegisterEvent>()
     val events = eventChannel.receiveAsFlow()
+    private var hasLoadedInitialData = false
+
+    private val _state = MutableStateFlow(RegisterState())
+    val state = _state
+        .onStart {
+            if (!hasLoadedInitialData) {
+                observeValidationState()
+                hasLoadedInitialData = true
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = RegisterState()
+        )
+
+    private val isEmailValidFlow = snapshotFlow { state.value.emailTextState.text.toString() }
+        .map { email -> EmailValidator.validate(email) }
+        .distinctUntilChanged()
+    private val isUsernameValidFlow = snapshotFlow { state.value.usernameTextState.text.toString() }
+        .map { username -> username.length in 3..20 }
+        .distinctUntilChanged()
+    private val isPasswordValidFlow = snapshotFlow { state.value.passwordTextState.text.toString() }
+        .map { password -> PasswordValidator.validate(password) }
+        .distinctUntilChanged()
+
+    private fun observeValidationState() {
+        combine(
+            isEmailValidFlow,
+            isUsernameValidFlow,
+            isPasswordValidFlow
+        ) { isEmailValid, isUsernameValid, isPasswordValid ->
+
+            val isFormValid = isEmailValid && isUsernameValid && isPasswordValid.isValidPassword
+            _state.update {
+                it.copy(
+                    canRegister = !it.isRegistering && isFormValid,
+                )
+            }
+        }.launchIn(viewModelScope)
+    }
 
     fun onAction(registerAction: RegisterAction) {
         when (registerAction) {
