@@ -66,7 +66,7 @@ fun ChirpAdaptiveFormLayout(
                         headerText = headerText,
                         headerColor = headerColor,
                         errorText = errorText,
-                        headerTextAlignment = TextAlign.Start
+                        headerTextAlignment = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                     formContent()
