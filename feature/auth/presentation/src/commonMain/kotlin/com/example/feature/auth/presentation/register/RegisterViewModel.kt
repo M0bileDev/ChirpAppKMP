@@ -125,7 +125,7 @@ class RegisterViewModel(
                         isRegistering = false
                     )
                 }
-
+                eventChannel.send(RegisterEvent.Success(email))
             }.onFailure { error ->
                 val registrationError = when (error) {
                     DataError.Remote.CONFLICT -> UiText.Resource(Res.string.error_account_exists)
