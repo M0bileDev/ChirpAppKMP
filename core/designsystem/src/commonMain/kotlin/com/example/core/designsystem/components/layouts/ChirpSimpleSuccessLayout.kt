@@ -24,6 +24,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun ChirpSimpleSuccessLayout(
     title: String,
     description: String,
+    error: String? = null,
     icon: @Composable () -> Unit,
     primaryButton: @Composable () -> Unit,
     secondaryButton: @Composable (() -> Unit)? = null,
@@ -57,6 +58,16 @@ fun ChirpSimpleSuccessLayout(
                 Spacer(modifier = Modifier.height(8.dp))
                 secondaryButton()
             }
+            if (error != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = error,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
@@ -89,6 +100,34 @@ fun PreviewChirpSimpleSuccessLayout() {
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun PreviewChirpSimpleSuccessLayoutError() {
+    ChirpTheme {
+        ChirpSimpleSuccessLayout(
+            title = "Lorem ipsum",
+            description = "Lorem ipsum",
+            error = "Lorem ipsum",
+            icon = {
+                ChirpSuccessIcon()
+            },
+            primaryButton = {
+                ChirpButton(
+                    text = "Lorem ipsum",
+                    onClick = {}
+                )
+            },
+            secondaryButton = {
+                ChirpButton(
+                    text = "Lorem ipsum",
+                    style = ChirpButtonStyle.SECONDARY,
+                    onClick = {}
+                )
+            }
+        )
+    }
+}
+
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 @Composable
 fun PreviewDarkChirpSimpleSuccessLayout() {
@@ -98,6 +137,36 @@ fun PreviewDarkChirpSimpleSuccessLayout() {
         ChirpSimpleSuccessLayout(
             title = "Lorem ipsum",
             description = "Lorem ipsum",
+            icon = {
+                ChirpSuccessIcon()
+            },
+            primaryButton = {
+                ChirpButton(
+                    text = "Lorem ipsum",
+                    onClick = {}
+                )
+            },
+            secondaryButton = {
+                ChirpButton(
+                    text = "Lorem ipsum",
+                    style = ChirpButtonStyle.SECONDARY,
+                    onClick = {}
+                )
+            }
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF000000)
+@Composable
+fun PreviewDarkChirpSimpleSuccessLayoutError() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChirpSimpleSuccessLayout(
+            title = "Lorem ipsum",
+            description = "Lorem ipsum",
+            error = "Lorem ipsum",
             icon = {
                 ChirpSuccessIcon()
             },
