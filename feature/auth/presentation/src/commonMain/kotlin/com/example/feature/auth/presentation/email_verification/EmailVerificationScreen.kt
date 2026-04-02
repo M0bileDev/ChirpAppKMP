@@ -148,3 +148,83 @@ fun PreviewDarkVerifyingContent() {
         VerifyingContent()
     }
 }
+
+@Preview
+@Composable
+fun PreviewEmailVerificationScreenFailed() {
+    ChirpTheme {
+        EmailVerificationScreen(
+            state = EmailVerificationState(),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewEmailVerificationScreenSuccess() {
+    ChirpTheme {
+        EmailVerificationScreen(
+            state = EmailVerificationState(
+                isVerified = true
+            ),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewEmailVerificationScreenVerifying() {
+    ChirpTheme {
+        EmailVerificationScreen(
+            state = EmailVerificationState(
+                isVerifying = true
+            ),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkEmailVerificationScreenFailed() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        EmailVerificationScreen(
+            state = EmailVerificationState(),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkEmailVerificationScreenSuccess() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        EmailVerificationScreen(
+            state = EmailVerificationState(
+                isVerified = true
+            ),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkEmailVerificationScreenVerifying() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        EmailVerificationScreen(
+            state = EmailVerificationState(
+                isVerifying = true
+            ),
+            onAction = {}
+        )
+    }
+}
