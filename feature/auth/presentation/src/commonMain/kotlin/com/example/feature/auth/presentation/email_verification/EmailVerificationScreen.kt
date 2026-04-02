@@ -19,8 +19,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import chirpappkmp.feature.auth.presentation.generated.resources.Res
 import chirpappkmp.feature.auth.presentation.generated.resources.verifying_account
 import com.example.core.designsystem.components.layouts.ChirpAdaptiveResultLayout
+import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -49,9 +51,9 @@ fun EmailVerificationScreen(
 }
 
 @Composable
-fun VerifyingContent(modifier: Modifier) {
+fun VerifyingContent(modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .heightIn(min = 200.dp)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(
@@ -69,5 +71,21 @@ fun VerifyingContent(modifier: Modifier) {
             color = MaterialTheme.colorScheme.extended.textSecondary,
             style = MaterialTheme.typography.bodySmall
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewVerifyingContent() {
+    ChirpTheme {
+        VerifyingContent()
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF000000)
+@Composable
+fun PreviewDarkVerifyingContent() {
+    ChirpTheme {
+        VerifyingContent()
     }
 }
