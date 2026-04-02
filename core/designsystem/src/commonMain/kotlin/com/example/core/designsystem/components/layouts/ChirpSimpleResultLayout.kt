@@ -21,7 +21,7 @@ import com.example.core.designsystem.theme.extended
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ChirpSimpleSuccessLayout(
+fun ChirpSimpleResultLayout(
     title: String,
     description: String,
     error: String? = null,
@@ -75,9 +75,9 @@ fun ChirpSimpleSuccessLayout(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewChirpSimpleSuccessLayout() {
+fun PreviewChirpSimpleResultLayout() {
     ChirpTheme {
-        ChirpSimpleSuccessLayout(
+        ChirpSimpleResultLayout(
             title = "Lorem ipsum",
             description = "Lorem ipsum",
             icon = {
@@ -102,9 +102,9 @@ fun PreviewChirpSimpleSuccessLayout() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewChirpSimpleSuccessLayoutError() {
+fun PreviewChirpSimpleResultLayoutError() {
     ChirpTheme {
-        ChirpSimpleSuccessLayout(
+        ChirpSimpleResultLayout(
             title = "Lorem ipsum",
             description = "Lorem ipsum",
             error = "Lorem ipsum",
@@ -130,11 +130,11 @@ fun PreviewChirpSimpleSuccessLayoutError() {
 
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 @Composable
-fun PreviewDarkChirpSimpleSuccessLayout() {
+fun PreviewDarkChirpSimpleResultLayout() {
     ChirpTheme(
         darkTheme = true
     ) {
-        ChirpSimpleSuccessLayout(
+        ChirpSimpleResultLayout(
             title = "Lorem ipsum",
             description = "Lorem ipsum",
             icon = {
@@ -159,11 +159,11 @@ fun PreviewDarkChirpSimpleSuccessLayout() {
 
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 @Composable
-fun PreviewDarkChirpSimpleSuccessLayoutError() {
+fun PreviewDarkChirpSimpleResultLayoutError() {
     ChirpTheme(
         darkTheme = true
     ) {
-        ChirpSimpleSuccessLayout(
+        ChirpSimpleResultLayout(
             title = "Lorem ipsum",
             description = "Lorem ipsum",
             error = "Lorem ipsum",
