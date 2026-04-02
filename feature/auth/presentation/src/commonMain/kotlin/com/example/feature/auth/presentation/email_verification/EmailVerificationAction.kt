@@ -1,0 +1,3 @@
+package com.example.feature.auth.presentation.email_verification
+
+sealed interface EmailVerificationAction
