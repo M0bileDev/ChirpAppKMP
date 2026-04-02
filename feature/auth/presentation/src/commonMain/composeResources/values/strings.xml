@@ -18,4 +18,10 @@
     <string name="error_invalid_email">This is not a valid email</string>
     <string name="error_invalid_username">The username must be between 3 and 20 characters</string>
     <string name="resent_verification_email">Successfully resent verification email</string>
+    <string name="verifying_account">Verifying account...</string>
+    <string name="email_verified_successfully">Email verified successfully!</string>
+    <string name="email_verified_successfully_description">Your email has been verified. You can now log in with your credentials.</string>
+    <string name="email_verified_failed">Failed to verify your email!</string>
+    <string name="email_verified_failed_description">Unable to verify your email. Maybe the link is invalid or has expired.</string>
+    <string name="close">Close</string>
 </resources>
