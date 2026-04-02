@@ -2,7 +2,7 @@ package com.example.feature.auth.presentation.email_verification
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -18,8 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import chirpappkmp.feature.auth.presentation.generated.resources.Res
+import chirpappkmp.feature.auth.presentation.generated.resources.email_verified_successfully
+import chirpappkmp.feature.auth.presentation.generated.resources.email_verified_successfully_description
+import chirpappkmp.feature.auth.presentation.generated.resources.login
 import chirpappkmp.feature.auth.presentation.generated.resources.verifying_account
+import com.example.core.designsystem.components.brand.ChirpSuccessIcon
+import com.example.core.designsystem.components.buttons.ChirpButton
 import com.example.core.designsystem.components.layouts.ChirpAdaptiveResultLayout
+import com.example.core.designsystem.components.layouts.ChirpSimpleResultLayout
 import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import org.jetbrains.compose.resources.stringResource
@@ -50,6 +56,26 @@ fun EmailVerificationScreen(
         when {
             isVerifying -> {
                 VerifyingContent()
+            }
+
+            isVerified -> {
+                ChirpSimpleResultLayout(
+                    title = stringResource(Res.string.email_verified_successfully),
+                    description = stringResource(Res.string.email_verified_successfully_description),
+                    icon = {
+                        ChirpSuccessIcon()
+                    },
+                    primaryButton = {
+                        ChirpButton(
+                            text = stringResource(Res.string.login),
+                            onClick = {
+                                onAction(EmailVerificationAction.OnLoginClick)
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+
+                )
             }
         }
     }
