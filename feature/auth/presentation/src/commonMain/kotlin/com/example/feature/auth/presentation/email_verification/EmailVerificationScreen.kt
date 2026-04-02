@@ -2,6 +2,7 @@ package com.example.feature.auth.presentation.email_verification
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -46,7 +47,11 @@ fun EmailVerificationScreen(
     onAction: (EmailVerificationAction) -> Unit
 ) = with(state) {
     ChirpAdaptiveResultLayout {
-
+        when {
+            isVerifying -> {
+                VerifyingContent()
+            }
+        }
     }
 }
 
