@@ -1,7 +1,8 @@
 package com.example.core.data.auth
 
-import com.example.core.data.dto.register_success.EmailRequest
 import com.example.core.data.dto.register.RegisterRequest
+import com.example.core.data.dto.register_success.EmailRequest
+import com.example.core.data.network.get
 import com.example.core.data.network.post
 import com.example.core.domain.auth.AuthService
 import com.example.core.domain.util.DataError
@@ -27,6 +28,13 @@ class KtorAuthService(
         return httpClient.post(
             route = "/auth/resend-verification",
             body = EmailRequest(email)
+        )
+    }
+
+    override suspend fun verifyEmail(token: String): EmptyResult<DataError.Remote> {
+        return httpClient.get(
+            route = "/auth/verify",
+            queryParams = mapOf("token" to token)
         )
     }
 }

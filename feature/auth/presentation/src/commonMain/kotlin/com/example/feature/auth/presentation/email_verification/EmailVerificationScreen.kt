@@ -45,7 +45,7 @@ fun EmailVerificationRoot(
 
     EmailVerificationScreen(
         state = state,
-        onAction = viewModel::onAction
+        onAction = {}
     )
 }
 
