@@ -79,8 +79,16 @@ class LoginViewModel(
     fun onAction(loginAction: LoginAction) {
         when (loginAction) {
             LoginAction.OnLoginClick -> login()
-            LoginAction.OnTogglePasswordVisibilityClick -> TODO()
+            LoginAction.OnTogglePasswordVisibilityClick -> togglePasswordVisibility()
             else -> Unit
+        }
+    }
+
+    private fun togglePasswordVisibility() {
+        _state.update {
+            it.copy(
+                isPasswordVisible = !it.isPasswordVisible
+            )
         }
     }
 
