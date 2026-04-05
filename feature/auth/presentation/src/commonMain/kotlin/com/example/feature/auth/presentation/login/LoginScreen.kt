@@ -30,7 +30,10 @@ import com.example.core.designsystem.components.layouts.ChirpAdaptiveFormLayout
 import com.example.core.designsystem.components.layouts.ChirpSnackbarScaffoldLayout
 import com.example.core.designsystem.components.textfields.ChirpPasswordTextField
 import com.example.core.designsystem.components.textfields.ChirpTextField
+import com.example.core.designsystem.theme.ChirpTheme
+import com.example.core.presentation.util.UiText
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -123,6 +126,116 @@ fun LoginScreen(
                     }
                 )
             }
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewLoginScreen() {
+    ChirpTheme {
+        LoginScreen(
+            state = LoginState(),
+            snackbarHostState = SnackbarHostState(),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewLoginScreenCanLogin() {
+    ChirpTheme {
+        LoginScreen(
+            state = LoginState(
+                canLogin = true
+            ),
+            snackbarHostState = SnackbarHostState(),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewLoginScreenCanLoggingIn() {
+    ChirpTheme {
+        LoginScreen(
+            state = LoginState(
+                isLoggingIn = true
+            ),
+            snackbarHostState = SnackbarHostState(),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewLoginScreenError() {
+    ChirpTheme {
+        LoginScreen(
+            state = LoginState(
+                error = UiText.DynamicString("Lorem ipsum")
+            ),
+            snackbarHostState = SnackbarHostState(),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkLoginScreen() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        LoginScreen(
+            state = LoginState(),
+            snackbarHostState = SnackbarHostState(),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkLoginScreenCanLogin() {
+    ChirpTheme(darkTheme = true) {
+        LoginScreen(
+            state = LoginState(
+                canLogin = true
+            ),
+            snackbarHostState = SnackbarHostState(),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkLoginScreenCanLoggingIn() {
+    ChirpTheme(darkTheme = true) {
+        LoginScreen(
+            state = LoginState(
+                isLoggingIn = true
+            ),
+            snackbarHostState = SnackbarHostState(),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkLoginScreenError() {
+    ChirpTheme(darkTheme = true) {
+        LoginScreen(
+            state = LoginState(
+                error = UiText.DynamicString("Lorem ipsum")
+            ),
+            snackbarHostState = SnackbarHostState(),
+            onAction = {}
         )
     }
 }
