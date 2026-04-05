@@ -1,12 +1,18 @@
 package com.example.core.data.auth
 
+import com.example.core.data.dto.AuthInfoSerializable
+import com.example.core.data.dto.login.LoginRequest
 import com.example.core.data.dto.register.RegisterRequest
 import com.example.core.data.dto.register_success.EmailRequest
+import com.example.core.data.mappers.toDomain
 import com.example.core.data.network.get
 import com.example.core.data.network.post
+import com.example.core.domain.auth.AuthInfo
 import com.example.core.domain.auth.AuthService
 import com.example.core.domain.util.DataError
 import com.example.core.domain.util.EmptyResult
+import com.example.core.domain.util.Result
+import com.example.core.domain.util.map
 import io.ktor.client.HttpClient
 
 class KtorAuthService(
@@ -36,5 +42,17 @@ class KtorAuthService(
             route = "/auth/verify",
             queryParams = mapOf("token" to token)
         )
+    }
+
+    override suspend fun login(
+        email: String,
+        password: String
+    ): Result<AuthInfo, DataError.Remote> {
+        return httpClient.post<LoginRequest, AuthInfoSerializable>(
+            route = "/auth/login",
+            body = LoginRequest(email, password)
+        ).map { authInfoSerializable ->
+            authInfoSerializable.toDomain()
+        }
     }
 }
