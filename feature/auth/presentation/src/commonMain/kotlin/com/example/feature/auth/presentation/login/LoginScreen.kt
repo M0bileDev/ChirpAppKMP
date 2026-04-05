@@ -94,7 +94,7 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 ChirpPasswordTextField(
                     modifier = Modifier.fillMaxWidth(),
-                    state = emailTextFieldState,
+                    state = passwordTextFieldState,
                     title = stringResource(Res.string.password),
                     placeholder = stringResource(Res.string.password),
                     onToggleVisibilityClick = {
