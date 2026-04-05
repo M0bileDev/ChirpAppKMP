@@ -82,10 +82,10 @@ class RegisterViewModel(
 
     fun onAction(registerAction: RegisterAction) {
         when (registerAction) {
-            RegisterAction.OnLoginClick -> validateFormInputs()
             RegisterAction.OnInputTextFocusGain -> clearAllTextFieldErrors()
             RegisterAction.OnRegisterClick -> register()
             RegisterAction.OnTogglePasswordVisibilityClick -> togglePasswordVisibility()
+            else -> Unit
         }
     }
 
