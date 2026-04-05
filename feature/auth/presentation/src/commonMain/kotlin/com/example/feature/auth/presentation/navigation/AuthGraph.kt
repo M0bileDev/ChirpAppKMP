@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import com.example.feature.auth.presentation.email_verification.EmailVerificationRoot
+import com.example.feature.auth.presentation.login.LoginRoot
 import com.example.feature.auth.presentation.register.RegisterRoot
 import com.example.feature.auth.presentation.register_success.RegisterSuccessRoot
 
@@ -14,14 +15,26 @@ fun NavGraphBuilder.authGraph(
     onLoginSuccess: () -> Unit
 ) {
     navigation<AuthGraphRoutes.Graph>(
-        startDestination = AuthGraphRoutes.Register
+        startDestination = AuthGraphRoutes.Login
     ) {
         composable<AuthGraphRoutes.Register> {
-            RegisterRoot(onRegisterSuccess = { email ->
-                navController.navigate(
-                    route = AuthGraphRoutes.RegisterSuccess(email)
-                )
-            })
+            RegisterRoot(
+                onRegisterSuccess = { email ->
+                    navController.navigate(
+                        route = AuthGraphRoutes.RegisterSuccess(email)
+                    )
+                },
+                onLoginClick = {
+                    navController.navigate(AuthGraphRoutes.Login) {
+                        popUpTo(AuthGraphRoutes.Register) {
+                            inclusive = true
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
         }
         composable<AuthGraphRoutes.RegisterSuccess> {
             RegisterSuccessRoot()
@@ -39,6 +52,20 @@ fun NavGraphBuilder.authGraph(
             )
         ) {
             EmailVerificationRoot()
+        }
+        composable<AuthGraphRoutes.Login> {
+            LoginRoot(
+                onLoginSuccess = onLoginSuccess,
+                onForgotPasswordClick = {
+                    navController.navigate(AuthGraphRoutes.ForgotPassword)
+                },
+                onCreateAccountClick = {
+                    navController.navigate(AuthGraphRoutes.Register) {
+                        restoreState = true
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
     }
 }

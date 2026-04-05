@@ -8,9 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import chirpappkmp.feature.auth.presentation.generated.resources.Res
 import chirpappkmp.feature.auth.presentation.generated.resources.email
 import chirpappkmp.feature.auth.presentation.generated.resources.email_placeholder
@@ -38,13 +38,14 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun RegisterRoot(
     viewModel: RegisterViewModel = koinViewModel(),
-    onRegisterSuccess: (String) -> Unit
+    onRegisterSuccess: (String) -> Unit,
+    onLoginClick: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
     ObserveAsEvents(viewModel.events) { event ->
-        when(event){
+        when (event) {
             is RegisterEvent.Success -> {
                 onRegisterSuccess(event.email)
             }
@@ -54,7 +55,13 @@ fun RegisterRoot(
     RegisterScreen(
         state = state,
         snackbarHostState = snackbarHostState,
-        onAction = viewModel::onAction
+        onAction = { action ->
+            when (action) {
+                RegisterAction.OnLoginClick -> onLoginClick()
+                else -> Unit
+            }
+            viewModel.onAction(action)
+        }
     )
 }
 
@@ -75,11 +82,13 @@ fun RegisterScreen(
                 ChirpTextField(
                     state = usernameTextState,
                     placeholder = stringResource(Res.string.username_placeholder),
+                    keyboardType = KeyboardType.Email,
+                    singleLine = true,
                     title = stringResource(Res.string.username),
                     supportingText = usernameError?.asString()
                         ?: stringResource(Res.string.username_hint),
                     isError = usernameError != null,
-                    onFocusChanged = { isFocused ->
+                    onFocusChanged = {
                         onAction(RegisterAction.OnInputTextFocusGain)
                     }
                 )
@@ -87,10 +96,11 @@ fun RegisterScreen(
                 ChirpTextField(
                     state = emailTextState,
                     placeholder = stringResource(Res.string.email_placeholder),
+                    singleLine = true,
                     title = stringResource(Res.string.email),
                     supportingText = emailError?.asString(),
                     isError = emailError != null,
-                    onFocusChanged = { isFocused ->
+                    onFocusChanged = {
                         onAction(RegisterAction.OnInputTextFocusGain)
                     }
                 )
@@ -102,7 +112,7 @@ fun RegisterScreen(
                     supportingText = passwordError?.asString()
                         ?: stringResource(Res.string.password_hint),
                     isError = passwordError != null,
-                    onFocusChanged = { isFocused ->
+                    onFocusChanged = {
                         onAction(RegisterAction.OnInputTextFocusGain)
                     },
                     onToggleVisibilityClick = {
