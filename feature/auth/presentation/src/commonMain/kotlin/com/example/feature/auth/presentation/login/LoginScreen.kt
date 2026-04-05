@@ -31,6 +31,7 @@ import com.example.core.designsystem.components.layouts.ChirpSnackbarScaffoldLay
 import com.example.core.designsystem.components.textfields.ChirpPasswordTextField
 import com.example.core.designsystem.components.textfields.ChirpTextField
 import com.example.core.designsystem.theme.ChirpTheme
+import com.example.core.presentation.util.ObserveAsEvents
 import com.example.core.presentation.util.UiText
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -45,6 +46,12 @@ fun LoginRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            is LoginEvent.SuccessLogin -> onLoginSuccess()
+        }
+    }
 
     LoginScreen(
         state = state,
