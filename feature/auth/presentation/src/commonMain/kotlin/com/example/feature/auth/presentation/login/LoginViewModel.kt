@@ -1,5 +1,6 @@
 package com.example.feature.auth.presentation.login
 
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import chirpappkmp.feature.auth.presentation.generated.resources.Res
@@ -11,9 +12,14 @@ import com.example.core.domain.util.onFailure
 import com.example.core.domain.util.onSuccess
 import com.example.core.presentation.ext.toUiText
 import com.example.core.presentation.util.UiText
+import com.example.feature.auth.domain.EmailValidator
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -33,7 +39,7 @@ class LoginViewModel(
     val state = _state
         .onStart {
             if (!hasLoadedInitialData) {
-                //todo add loading content
+                observeTextStates()
                 hasLoadedInitialData = true
             }
         }.stateIn(
@@ -41,6 +47,34 @@ class LoginViewModel(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = LoginState()
         )
+
+    private val isEmailValidFlow = snapshotFlow { state.value.emailTextFieldState.text.toString() }
+        .map { email -> EmailValidator.validate(email) }
+        .distinctUntilChanged()
+
+    private val isPasswordNotBlankFlow =
+        snapshotFlow { state.value.passwordTextFieldState.text.toString() }
+            .map { password -> password.isNotBlank() }
+            .distinctUntilChanged()
+
+    private val isLoggingFlow = state
+        .map { it.isLoggingIn }
+        .distinctUntilChanged()
+
+    private fun observeTextStates() {
+        combine(
+            isEmailValidFlow,
+            isPasswordNotBlankFlow,
+            isLoggingFlow
+        ) { isEmailValid, isPasswordNotBlank, isLogging ->
+
+            _state.update {
+                it.copy(
+                    canLogin = !isLogging && isEmailValid && isPasswordNotBlank
+                )
+            }
+        }.launchIn(viewModelScope)
+    }
 
     fun onAction(loginAction: LoginAction) {
         when (loginAction) {
