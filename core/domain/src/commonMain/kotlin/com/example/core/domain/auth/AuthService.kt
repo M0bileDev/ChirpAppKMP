@@ -2,6 +2,7 @@ package com.example.core.domain.auth
 
 import com.example.core.domain.util.DataError
 import com.example.core.domain.util.EmptyResult
+import com.example.core.domain.util.Result
 
 interface AuthService {
     suspend fun register(
@@ -17,4 +18,9 @@ interface AuthService {
     suspend fun verifyEmail(
         token: String
     ): EmptyResult<DataError.Remote>
+
+    suspend fun login(
+        email: String,
+        password: String
+    ) : Result<AuthInfo, DataError.Remote>
 }

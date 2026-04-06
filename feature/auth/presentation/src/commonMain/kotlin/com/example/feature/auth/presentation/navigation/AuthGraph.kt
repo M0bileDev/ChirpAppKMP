@@ -37,7 +37,15 @@ fun NavGraphBuilder.authGraph(
             )
         }
         composable<AuthGraphRoutes.RegisterSuccess> {
-            RegisterSuccessRoot()
+            RegisterSuccessRoot(
+                onLoginClick = {
+                    navController.navigate(AuthGraphRoutes.Login) {
+                        popUpTo<AuthGraphRoutes.RegisterSuccess> {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
         }
         // token key used in the uri has to be the same as the parameter in data class EmailVerification
         // same key will be used in view model as navigation result
@@ -51,7 +59,22 @@ fun NavGraphBuilder.authGraph(
                 },
             )
         ) {
-            EmailVerificationRoot()
+            EmailVerificationRoot(
+                onLoginClick = {
+                    navController.navigate(AuthGraphRoutes.Login) {
+                        popUpTo<AuthGraphRoutes.EmailVerification> {
+                            inclusive = true
+                        }
+                    }
+                },
+                onCloseClick = {
+                    navController.navigate(AuthGraphRoutes.Login) {
+                        popUpTo<AuthGraphRoutes.EmailVerification> {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
         }
         composable<AuthGraphRoutes.Login> {
             LoginRoot(

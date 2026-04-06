@@ -28,4 +28,6 @@
     <string name="error_invalid_credentials">The email or password is incorrect</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="create_account">Create account</string>
+    <string name="error_email_not_verified">You can't log in because your email address hasn't been verified yet</string>
+
 </resources>
