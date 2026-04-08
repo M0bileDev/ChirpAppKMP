@@ -1,8 +1,13 @@
 package com.example.core.data.network
 
 import com.example.core.data.BuildKonfig
+import com.example.core.data.dto.AuthInfoSerializable
+import com.example.core.data.dto.token.RefreshTokenRequest
+import com.example.core.data.mappers.toDomain
 import com.example.core.domain.auth.SessionStorage
 import com.example.core.domain.logging.ChirpLogger
+import com.example.core.domain.util.onFailure
+import com.example.core.domain.util.onSuccess
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpTimeout
@@ -16,6 +21,7 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.request.header
+import io.ktor.client.statement.request
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
@@ -75,6 +81,44 @@ class HttpClientFactory(
                                     accessToken = authInfo.accessToken
                                 )
                             }
+                    }
+                    //refresh token mechanism when 401 received
+                    refreshTokens {
+
+                        //skip endpoints that are related to authentication like login or register
+                        if (response.request.url.encodedPath.contains("/auth")) {
+                            return@refreshTokens null
+                        }
+
+                        //read refresh token, if such doesn't exist return
+                        val authInfo = sessionStorage.observeAuthInfo().firstOrNull()
+                        if (authInfo?.refreshToken.isNullOrBlank()) {
+                            sessionStorage.set(null)
+                            return@refreshTokens null
+                        }
+
+                        var bearerTokens: BearerTokens? = null
+                        client.post<RefreshTokenRequest, AuthInfoSerializable>(
+                            route = "/auth/refresh",
+                            body = RefreshTokenRequest(
+                                refreshToken = authInfo.refreshToken
+                            ),
+                            builder = {
+                                //prevent call loop when refreshToken was invalid
+                                markAsRefreshTokenRequest()
+                            }
+                        ).onSuccess { newAuthInfo ->
+                            sessionStorage.set(newAuthInfo.toDomain())
+                            bearerTokens = BearerTokens(
+                                refreshToken = newAuthInfo.refreshToken,
+                                accessToken = newAuthInfo.accessToken
+                            )
+                        }.onFailure { error ->
+                            //failed to receive token because refresh token period 30 days expired
+                            sessionStorage.set(null)
+                        }
+
+                        bearerTokens
                     }
                 }
             }
