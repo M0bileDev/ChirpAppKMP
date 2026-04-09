@@ -10,12 +10,22 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        var displaySplashScreen = true
+
+        installSplashScreen().apply {
+            setKeepOnScreenCondition {
+                displaySplashScreen
+            }
+        }
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         setContent {
-            App()
+            App(
+                onAuthenticationChecked = {
+                    displaySplashScreen = false
+                }
+            )
         }
     }
 }
