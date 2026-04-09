@@ -4,6 +4,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.example.core.data.dto.AuthInfoSerializable
+import com.example.core.data.mappers.toDomain
 import com.example.core.data.mappers.toSerializable
 import com.example.core.domain.auth.AuthInfo
 import com.example.core.domain.auth.SessionStorage
@@ -24,7 +26,7 @@ class DataStoreStorageSession(
         return@with data.map { preferences ->
             val authInfoJson = preferences[authInfoKey]
             authInfoJson?.let {
-                json.decodeFromString(it)
+                json.decodeFromString<AuthInfoSerializable>(it).toDomain()
             }
         }
     }
