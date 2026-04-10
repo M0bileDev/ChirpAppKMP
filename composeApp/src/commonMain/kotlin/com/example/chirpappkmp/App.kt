@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.chirpappkmp.navigation.DeepLinkListener
 import com.example.chirpappkmp.navigation.NavigationRoot
 import com.example.core.designsystem.theme.ChirpTheme
+import com.example.core.presentation.util.ObserveAsEvents
 import com.example.feature.auth.presentation.navigation.AuthGraphRoutes
 import com.example.feature.chat.presentation.chat_list.ChatListRoute
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -25,6 +26,20 @@ fun App(
     LaunchedEffect(state.isCheckingAuth) {
         if (!state.isCheckingAuth) {
             onAuthenticationChecked()
+        }
+    }
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            is MainEvent.OnSessionExpired -> {
+                navController.navigate(
+                    AuthGraphRoutes.Graph
+                ) {
+                    popUpTo(AuthGraphRoutes.Graph) {
+                        inclusive = false
+                    }
+                }
+            }
         }
     }
 
