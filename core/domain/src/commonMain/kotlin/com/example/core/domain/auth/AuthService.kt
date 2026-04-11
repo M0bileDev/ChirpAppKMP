@@ -22,5 +22,7 @@ interface AuthService {
     suspend fun login(
         email: String,
         password: String
-    ) : Result<AuthInfo, DataError.Remote>
+    ): Result<AuthInfo, DataError.Remote>
+
+    suspend fun forgotPassword(email: String): EmptyResult<DataError.Remote>
 }
