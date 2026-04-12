@@ -24,8 +24,11 @@ import com.example.core.designsystem.components.buttons.ChirpButton
 import com.example.core.designsystem.components.layouts.ChirpAdaptiveFormLayout
 import com.example.core.designsystem.components.layouts.ChirpSnackbarScaffoldLayout
 import com.example.core.designsystem.components.textfields.ChirpPasswordTextField
+import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
+import com.example.core.presentation.util.UiText
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -90,6 +93,92 @@ fun ResetPasswordScreen(
                     )
                 }
             }
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewResetPasswordScreen() {
+    ChirpTheme {
+        ResetPasswordScreen(
+            state = ResetPasswordState(),
+            snackbarHostState = SnackbarHostState(),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewResetPasswordScreenSuccess() {
+    ChirpTheme {
+        ResetPasswordScreen(
+            state = ResetPasswordState(
+                isResetSuccessful = true
+            ),
+            snackbarHostState = SnackbarHostState(),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewResetPasswordScreenError() {
+    ChirpTheme {
+        ResetPasswordScreen(
+            state = ResetPasswordState(
+                errorText = UiText.DynamicString("Lorem ipsum")
+            ),
+            snackbarHostState = SnackbarHostState(),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkResetPasswordScreen() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ResetPasswordScreen(
+            state = ResetPasswordState(),
+            snackbarHostState = SnackbarHostState(),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkResetPasswordScreenSuccess() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ResetPasswordScreen(
+            state = ResetPasswordState(
+                isResetSuccessful = true
+            ),
+            snackbarHostState = SnackbarHostState(),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkResetPasswordScreenError() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ResetPasswordScreen(
+            state = ResetPasswordState(
+                errorText = UiText.DynamicString("Lorem ipsum")
+            ),
+            snackbarHostState = SnackbarHostState(),
+            onAction = {}
         )
     }
 }
