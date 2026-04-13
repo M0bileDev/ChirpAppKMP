@@ -56,7 +56,7 @@ class RegisterViewModel(
         .map { username -> username.length in 3..20 }
         .distinctUntilChanged()
     private val isPasswordValidFlow = snapshotFlow { state.value.passwordTextState.text.toString() }
-        .map { password -> PasswordValidator.validate(password) }
+        .map { password -> PasswordValidator.validate(password).isValidPassword }
         .distinctUntilChanged()
 
     private val isRegisteringFlow = state
@@ -71,7 +71,7 @@ class RegisterViewModel(
             isRegisteringFlow
         ) { isEmailValid, isUsernameValid, isPasswordValid, isRegistering ->
 
-            val isFormValid = isEmailValid && isUsernameValid && isPasswordValid.isValidPassword
+            val isFormValid = isEmailValid && isUsernameValid && isPasswordValid
             _state.update {
                 it.copy(
                     canRegister = !isRegistering && isFormValid,
