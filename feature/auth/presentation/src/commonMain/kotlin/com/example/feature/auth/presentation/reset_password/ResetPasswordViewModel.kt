@@ -62,7 +62,15 @@ class ResetPasswordViewModel(
     fun onAction(resetPasswordAction: ResetPasswordAction) {
         when (resetPasswordAction) {
             ResetPasswordAction.OnSubmitClick -> resetPassword()
-            ResetPasswordAction.OnTogglePassword -> TODO()
+            ResetPasswordAction.OnTogglePassword -> togglePassword()
+        }
+    }
+
+    private fun togglePassword() {
+        _state.update {
+            it.copy(
+                isPasswordVisible = !state.value.isPasswordVisible
+            )
         }
     }
 
