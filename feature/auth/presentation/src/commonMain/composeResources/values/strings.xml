@@ -35,4 +35,5 @@
     <string name="new_password">New password</string>
     <string name="reset_password_error">It looks like the reset password link is not valid or has expired. Please request a new email message.</string>
     <string name="reset_password_success">Your password has been successfully changed. You can now log in with your new password.</string>
+    <string name="reset_password_error_same_password">The new password can't be equal to the new one.</string>
 </resources>

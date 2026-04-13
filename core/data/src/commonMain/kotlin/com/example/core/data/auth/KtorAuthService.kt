@@ -4,6 +4,7 @@ import com.example.core.data.dto.AuthInfoSerializable
 import com.example.core.data.dto.login.LoginRequest
 import com.example.core.data.dto.register.RegisterRequest
 import com.example.core.data.dto.register_success.EmailRequest
+import com.example.core.data.dto.reset_password.ResetPasswordRequest
 import com.example.core.data.mappers.toDomain
 import com.example.core.data.network.get
 import com.example.core.data.network.post
@@ -60,6 +61,19 @@ class KtorAuthService(
         return httpClient.post<EmailRequest, Unit>(
             route = "/auth/forgot-password",
             body = EmailRequest(email)
+        )
+    }
+
+    override suspend fun resetPassword(
+        newPassword: String,
+        token: String
+    ): EmptyResult<DataError.Remote> {
+        return httpClient.post(
+            route = "/auth/reset-password",
+            body = ResetPasswordRequest(
+                newPassword = newPassword,
+                token = token
+            )
         )
     }
 }
