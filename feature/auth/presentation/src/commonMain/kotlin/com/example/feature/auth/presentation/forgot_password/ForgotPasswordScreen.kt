@@ -4,11 +4,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -37,11 +35,9 @@ fun ForgotPasswordRoot(
     viewModel: ForgotPasswordViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val snackbarHostState = remember { SnackbarHostState() }
 
     ForgotPasswordScreen(
         state = state,
-        snackbarHostState = snackbarHostState,
         onAction = viewModel::onAction
     )
 }
@@ -49,12 +45,9 @@ fun ForgotPasswordRoot(
 @Composable
 fun ForgotPasswordScreen(
     state: ForgotPasswordState,
-    snackbarHostState: SnackbarHostState,
     onAction: (ForgotPasswordAction) -> Unit
 ) = with(state) {
-    ChirpSnackbarScaffoldLayout(
-        snackbarHostState = snackbarHostState
-    ) {
+    ChirpSnackbarScaffoldLayout {
         ChirpAdaptiveFormLayout(
             headerText = stringResource(Res.string.forgot_password),
             errorText = errorText?.asString(),
@@ -101,7 +94,6 @@ private fun PreviewForgotPasswordScreen() {
     ChirpTheme {
         ForgotPasswordScreen(
             state = ForgotPasswordState(),
-            snackbarHostState = SnackbarHostState(),
             onAction = {}
         )
     }
@@ -115,7 +107,6 @@ private fun PreviewForgotPasswordScreenError() {
             state = ForgotPasswordState(
                 errorText = UiText.DynamicString("Lorem ipsum")
             ),
-            snackbarHostState = SnackbarHostState(),
             onAction = {}
         )
     }
@@ -129,7 +120,6 @@ private fun PreviewForgotPasswordScreenEmailError() {
             state = ForgotPasswordState(
                 emailError = UiText.DynamicString("Lorem ipsum")
             ),
-            snackbarHostState = SnackbarHostState(),
             onAction = {}
         )
     }
@@ -143,7 +133,6 @@ private fun PreviewForgotPasswordScreenEnabled() {
             state = ForgotPasswordState(
                 canSubmit = true
             ),
-            snackbarHostState = SnackbarHostState(),
             onAction = {}
         )
     }
@@ -157,7 +146,6 @@ private fun PreviewForgotPasswordScreenEmailSendSuccessfully() {
             state = ForgotPasswordState(
                 isEmailSendSuccessfully = true
             ),
-            snackbarHostState = SnackbarHostState(),
             onAction = {}
         )
     }
@@ -169,7 +157,6 @@ private fun PreviewDarkForgotPasswordScreen() {
     ChirpTheme(darkTheme = true) {
         ForgotPasswordScreen(
             state = ForgotPasswordState(),
-            snackbarHostState = SnackbarHostState(),
             onAction = {}
         )
     }
@@ -183,7 +170,6 @@ private fun PreviewDarkForgotPasswordScreenError() {
             state = ForgotPasswordState(
                 errorText = UiText.DynamicString("Lorem ipsum")
             ),
-            snackbarHostState = SnackbarHostState(),
             onAction = {}
         )
     }
@@ -197,7 +183,6 @@ private fun PreviewDarkForgotPasswordScreenEmailError() {
             state = ForgotPasswordState(
                 emailError = UiText.DynamicString("Lorem ipsum")
             ),
-            snackbarHostState = SnackbarHostState(),
             onAction = {}
         )
     }
@@ -211,7 +196,6 @@ private fun PreviewDarkForgotPasswordScreenEnabled() {
             state = ForgotPasswordState(
                 canSubmit = true
             ),
-            snackbarHostState = SnackbarHostState(),
             onAction = {}
         )
     }
@@ -227,7 +211,6 @@ private fun PreviewDarkForgotPasswordScreenEmailSendSuccessfully() {
             state = ForgotPasswordState(
                 isEmailSendSuccessfully = true
             ),
-            snackbarHostState = SnackbarHostState(),
             onAction = {}
         )
     }
