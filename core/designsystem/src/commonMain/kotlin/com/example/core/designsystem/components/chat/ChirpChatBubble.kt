@@ -23,7 +23,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ChirpChatBubble(
@@ -89,7 +91,6 @@ fun ChirpChatBubble(
             text = messageContent,
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.extended.textPrimary,
-            textAlign = TextAlign.Justify
         )
         messageStatus?.let { status ->
             Spacer(modifier = Modifier.height(16.dp))
@@ -98,6 +99,89 @@ fun ChirpChatBubble(
     }
 }
 
+@Preview
+@Composable
+fun PreviewChirpChatBubble() {
+    ChirpTheme {
+        ChirpChatBubble(
+            messageContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            sender = "Lorem ipsum",
+            formattedDateTime = "Sunday 12:00pm",
+            trianglePosition = TrianglePosition.LEFT,
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewChirpChatBubbleShortText() {
+    ChirpTheme {
+        ChirpChatBubble(
+            messageContent = "Lorem ipsum",
+            sender = "Lorem ipsum",
+            formattedDateTime = "Sunday 12:00pm",
+            trianglePosition = TrianglePosition.LEFT,
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewChirpChatBubbleShortTextPositionRight() {
+    ChirpTheme {
+        ChirpChatBubble(
+            messageContent = "Lorem ipsum",
+            sender = "Lorem ipsum",
+            formattedDateTime = "Sunday 12:00pm",
+            trianglePosition = TrianglePosition.RIGHT,
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkChirpChatBubble() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChirpChatBubble(
+            messageContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            sender = "Lorem ipsum",
+            formattedDateTime = "Sunday 12:00pm",
+            trianglePosition = TrianglePosition.LEFT,
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkChirpChatBubbleShortText() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChirpChatBubble(
+            messageContent = "Lorem ipsum",
+            sender = "Lorem ipsum",
+            formattedDateTime = "Sunday 12:00pm",
+            trianglePosition = TrianglePosition.LEFT,
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkChirpChatBubbleShortTextPositionRight() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChirpChatBubble(
+            messageContent = "Lorem ipsum",
+            sender = "Lorem ipsum",
+            formattedDateTime = "Sunday 12:00pm",
+            trianglePosition = TrianglePosition.RIGHT,
+        )
+    }
+}
 
 
 
