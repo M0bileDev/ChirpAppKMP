@@ -9,7 +9,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
@@ -45,7 +44,6 @@ fun LoginRoot(
     onCreateAccountClick: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val snackbarHostState = remember { SnackbarHostState() }
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
@@ -55,7 +53,6 @@ fun LoginRoot(
 
     LoginScreen(
         state = state,
-        snackbarHostState = snackbarHostState,
         onAction = { action ->
             when (action) {
                 LoginAction.OnSignUpClick -> onCreateAccountClick()
@@ -70,12 +67,9 @@ fun LoginRoot(
 @Composable
 fun LoginScreen(
     state: LoginState,
-    snackbarHostState: SnackbarHostState,
     onAction: (LoginAction) -> Unit
 ) = with(state) {
-    ChirpSnackbarScaffoldLayout(
-        snackbarHostState = snackbarHostState
-    ) {
+    ChirpSnackbarScaffoldLayout {
         ChirpAdaptiveFormLayout(
             headerText = stringResource(Res.string.welcome_back),
             errorText = error?.asString(),
@@ -143,7 +137,6 @@ fun PreviewLoginScreen() {
     ChirpTheme {
         LoginScreen(
             state = LoginState(),
-            snackbarHostState = SnackbarHostState(),
             onAction = {}
         )
     }
@@ -157,7 +150,6 @@ fun PreviewLoginScreenCanLogin() {
             state = LoginState(
                 canLogin = true
             ),
-            snackbarHostState = SnackbarHostState(),
             onAction = {}
         )
     }
@@ -171,7 +163,6 @@ fun PreviewLoginScreenCanLoggingIn() {
             state = LoginState(
                 isLoggingIn = true
             ),
-            snackbarHostState = SnackbarHostState(),
             onAction = {}
         )
     }
@@ -185,7 +176,6 @@ fun PreviewLoginScreenError() {
             state = LoginState(
                 error = UiText.DynamicString("Lorem ipsum")
             ),
-            snackbarHostState = SnackbarHostState(),
             onAction = {}
         )
     }
@@ -199,7 +189,6 @@ fun PreviewDarkLoginScreen() {
     ) {
         LoginScreen(
             state = LoginState(),
-            snackbarHostState = SnackbarHostState(),
             onAction = {}
         )
     }
@@ -213,7 +202,6 @@ fun PreviewDarkLoginScreenCanLogin() {
             state = LoginState(
                 canLogin = true
             ),
-            snackbarHostState = SnackbarHostState(),
             onAction = {}
         )
     }
@@ -227,7 +215,6 @@ fun PreviewDarkLoginScreenCanLoggingIn() {
             state = LoginState(
                 isLoggingIn = true
             ),
-            snackbarHostState = SnackbarHostState(),
             onAction = {}
         )
     }
@@ -241,7 +228,6 @@ fun PreviewDarkLoginScreenError() {
             state = LoginState(
                 error = UiText.DynamicString("Lorem ipsum")
             ),
-            snackbarHostState = SnackbarHostState(),
             onAction = {}
         )
     }
