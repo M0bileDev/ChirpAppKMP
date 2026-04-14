@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -42,7 +41,6 @@ fun RegisterRoot(
     onLoginClick: () -> Unit,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val snackbarHostState = remember { SnackbarHostState() }
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
@@ -54,7 +52,6 @@ fun RegisterRoot(
 
     RegisterScreen(
         state = state,
-        snackbarHostState = snackbarHostState,
         onAction = { action ->
             when (action) {
                 RegisterAction.OnLoginClick -> onLoginClick()
@@ -68,10 +65,9 @@ fun RegisterRoot(
 @Composable
 fun RegisterScreen(
     state: RegisterState,
-    snackbarHostState: SnackbarHostState,
     onAction: (RegisterAction) -> Unit
 ) = with(state) {
-    ChirpSnackbarScaffoldLayout(snackbarHostState = snackbarHostState) {
+    ChirpSnackbarScaffoldLayout {
         ChirpAdaptiveFormLayout(
             headerText = stringResource(Res.string.welcome_to_chirp),
             errorText = registrationError?.asString(),
@@ -152,7 +148,6 @@ private fun PreviewRegisterScreen() {
     ChirpTheme {
         RegisterScreen(
             state = RegisterState(),
-            snackbarHostState = SnackbarHostState(),
             onAction = {}
         )
     }
@@ -166,7 +161,6 @@ private fun PreviewDarkRegisterScreen() {
     ) {
         RegisterScreen(
             state = RegisterState(),
-            snackbarHostState = SnackbarHostState(),
             onAction = {}
         )
     }
