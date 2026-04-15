@@ -7,13 +7,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -48,7 +51,19 @@ fun ChirpAvatarPhoto(
             ),
         contentAlignment = Alignment.Center
     ) {
-
+        Text(
+            text = displayText.uppercase(),
+            style = MaterialTheme.typography.titleMedium,
+            color = textColor
+        )
+        imageUrl?.let {
+            AsyncImage(
+                modifier = Modifier.clip(CircleShape).matchParentSize(),
+                model = it,
+                contentScale = ContentScale.Crop,
+                contentDescription = null
+            )
+        }
     }
 }
 
@@ -56,7 +71,20 @@ fun ChirpAvatarPhoto(
 @Composable
 fun PreviewChirpAvatarPhoto() {
     ChirpTheme {
-        ChirpAvatarPhoto()
+        ChirpAvatarPhoto(
+            displayText = "LI"
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewChirpAvatarPhotoLarge() {
+    ChirpTheme {
+        ChirpAvatarPhoto(
+            displayText = "LI",
+            size = AvatarSize.LARGE
+        )
     }
 }
 
@@ -66,6 +94,21 @@ fun PreviewDarkChirpAvatarPhoto() {
     ChirpTheme(
         darkTheme = true
     ) {
-        ChirpAvatarPhoto()
+        ChirpAvatarPhoto(
+            displayText = "LI"
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkChirpAvatarPhotoLarge() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChirpAvatarPhoto(
+            displayText = "LI",
+            size = AvatarSize.LARGE
+        )
     }
 }
