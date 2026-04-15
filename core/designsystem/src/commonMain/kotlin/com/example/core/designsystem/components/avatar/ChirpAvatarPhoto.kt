@@ -1,25 +1,60 @@
 package com.example.core.designsystem.components.avatar
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.core.designsystem.theme.ChirpTheme
+import com.example.core.designsystem.theme.extended
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-enum class AvatarSize(val dp: Dp){
+enum class AvatarSize(val dp: Dp) {
     REGULAR(40.dp),
     LARGE(60.dp)
 }
 
 @Composable
-fun ChirpAvatarPhoto(modifier: Modifier = Modifier){
+fun ChirpAvatarPhoto(
+    displayText: String,
+    modifier: Modifier = Modifier,
+    size: AvatarSize = AvatarSize.REGULAR,
+    imageUrl: String? = null,
+    onClick: (() -> Unit)? = null,
+    textColor: Color = MaterialTheme.colorScheme.extended.textPlaceholder
+) {
+    Box(
+        modifier = modifier
+            .size(size.dp)
+            .clip(CircleShape)
+            .clickable(
+                enabled = true,
+                onClick = { onClick?.invoke() }
+            )
+            .background(MaterialTheme.colorScheme.extended.secondaryFill)
+            .border(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.outline,
+                shape = CircleShape
+            ),
+        contentAlignment = Alignment.Center
+    ) {
 
+    }
 }
 
 @Preview
 @Composable
-fun PreviewChirpAvatarPhoto(){
+fun PreviewChirpAvatarPhoto() {
     ChirpTheme {
         ChirpAvatarPhoto()
     }
@@ -27,7 +62,7 @@ fun PreviewChirpAvatarPhoto(){
 
 @Preview
 @Composable
-fun PreviewDarkChirpAvatarPhoto(){
+fun PreviewDarkChirpAvatarPhoto() {
     ChirpTheme(
         darkTheme = true
     ) {
