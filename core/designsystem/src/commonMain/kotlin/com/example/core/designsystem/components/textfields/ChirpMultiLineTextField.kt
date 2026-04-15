@@ -1,17 +1,25 @@
 package com.example.core.designsystem.components.textfields
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.core.designsystem.components.buttons.ChirpButton
 import com.example.core.designsystem.theme.ChirpTheme
+import com.example.core.designsystem.theme.extended
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -24,7 +32,25 @@ fun ChirpMultiLineTextField(
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     bottomContent: @Composable (RowScope.() -> Unit)? = null
 ) {
+    Column(
+        modifier = modifier
+            .background(
+                color = MaterialTheme.colorScheme.extended.surfaceLower,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.extended.surfaceOutline,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .padding(
+                vertical = 12.dp,
+                horizontal = 16.dp
+            ),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
 
+    }
 }
 
 @Preview
