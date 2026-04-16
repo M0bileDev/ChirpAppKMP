@@ -6,7 +6,13 @@ import com.example.core.designsystem.theme.ChirpTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ChirpStackedAvatars(modifier: Modifier = Modifier){
+fun ChirpStackedAvatars(
+    avatars: List<AvatarUi>,
+    modifier: Modifier = Modifier,
+    size: AvatarSize = AvatarSize.REGULAR,
+    visibleAvatarsCount: Int = 2,
+    overlapPercentage: Float = 0.4f
+){
 
 }
 
