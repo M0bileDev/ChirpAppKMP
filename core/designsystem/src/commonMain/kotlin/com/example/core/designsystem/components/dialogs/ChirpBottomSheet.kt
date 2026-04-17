@@ -5,12 +5,19 @@ import androidx.compose.ui.Modifier
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ChirpBottomSheet(modifier: Modifier = Modifier){}
+fun ChirpBottomSheet(
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+}
 
 @Preview
 @Composable
-fun PreviewChirpBottomSheet(){}
+fun PreviewChirpBottomSheet() {
+}
 
 @Preview
 @Composable
-fun PreviewDarkChirpBottomSheet(){}
+fun PreviewDarkChirpBottomSheet() {
+}
