@@ -1,6 +1,7 @@
 package com.example.chirpappkmp.di
 
 import com.example.core.data.di.coreDataModule
+import com.example.core.presentation.di.corePresentationModule
 import com.example.feature.auth.presentation.di.authPresentationModule
 import com.example.feature.chat.presentation.di.chatPresentationModule
 import org.koin.core.context.startKoin
@@ -13,7 +14,8 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             coreDataModule,
             authPresentationModule,
             appModule,
-            chatPresentationModule
+            chatPresentationModule,
+            corePresentationModule
         )
     }
 }
