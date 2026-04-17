@@ -6,8 +6,11 @@ import com.example.core.designsystem.theme.ChirpTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ChirpAdaptiveDialogSheetLayout(modifier: Modifier = Modifier) {
-}
+fun ChirpAdaptiveDialogSheetLayout(
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {}
 
 @Preview
 @Composable
