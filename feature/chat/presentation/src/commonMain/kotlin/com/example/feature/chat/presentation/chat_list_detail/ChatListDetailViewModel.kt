@@ -20,10 +20,26 @@ class ChatListDetailViewModel : ViewModel() {
         }
     }
 
-    private fun profileSettings() {
+    private fun chatClick(selectedChatId: String?) {
         _state.update {
             it.copy(
-                dialogState = DialogState.Profile
+                selectedChatId = selectedChatId
+            )
+        }
+    }
+
+    private fun createChat() {
+        _state.update {
+            it.copy(
+                dialogState = DialogState.CreateChat
+            )
+        }
+    }
+
+    private fun dismissDialog() {
+        _state.update {
+            it.copy(
+                dialogState = DialogState.Hidden
             )
         }
     }
@@ -38,26 +54,10 @@ class ChatListDetailViewModel : ViewModel() {
         }
     }
 
-    private fun dismissDialog() {
+    private fun profileSettings() {
         _state.update {
             it.copy(
-                dialogState = DialogState.Hidden
-            )
-        }
-    }
-
-    private fun createChat() {
-        _state.update {
-            it.copy(
-                dialogState = DialogState.CreateChat
-            )
-        }
-    }
-
-    private fun chatClick(selectedChatId: String?) {
-        _state.update {
-            it.copy(
-                selectedChatId = selectedChatId
+                dialogState = DialogState.Profile
             )
         }
     }
