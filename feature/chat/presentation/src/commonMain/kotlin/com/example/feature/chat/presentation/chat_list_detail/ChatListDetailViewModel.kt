@@ -3,6 +3,7 @@ package com.example.feature.chat.presentation.chat_list_detail
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class ChatListDetailViewModel : ViewModel() {
 
@@ -11,7 +12,7 @@ class ChatListDetailViewModel : ViewModel() {
 
     fun onAction(action: ChatListDetailAction) {
         when (action) {
-            is ChatListDetailAction.OnChatClick -> TODO()
+            is ChatListDetailAction.OnChatClick -> chatClick(action.chatId)
             ChatListDetailAction.OnCreateChatClick -> TODO()
             ChatListDetailAction.OnDismissCurrentDialog -> TODO()
             ChatListDetailAction.OnManageChatClick -> TODO()
@@ -19,5 +20,11 @@ class ChatListDetailViewModel : ViewModel() {
         }
     }
 
-
+    private fun chatClick(selectedChatId: String?) {
+        _state.update {
+            it.copy(
+                selectedChatId = selectedChatId
+            )
+        }
+    }
 }
