@@ -13,10 +13,18 @@ class ChatListDetailViewModel : ViewModel() {
     fun onAction(action: ChatListDetailAction) {
         when (action) {
             is ChatListDetailAction.OnChatClick -> chatClick(action.chatId)
-            ChatListDetailAction.OnCreateChatClick -> TODO()
+            ChatListDetailAction.OnCreateChatClick -> createChat()
             ChatListDetailAction.OnDismissCurrentDialog -> TODO()
             ChatListDetailAction.OnManageChatClick -> TODO()
             ChatListDetailAction.OnProfileSettingsClick -> TODO()
+        }
+    }
+
+    private fun createChat() {
+        _state.update {
+            it.copy(
+                dialogState = DialogState.CreateChat
+            )
         }
     }
 
