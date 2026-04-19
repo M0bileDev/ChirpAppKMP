@@ -16,7 +16,15 @@ class ChatListDetailViewModel : ViewModel() {
             ChatListDetailAction.OnCreateChatClick -> createChat()
             ChatListDetailAction.OnDismissCurrentDialog -> dismissDialog()
             ChatListDetailAction.OnManageChatClick -> manageChat()
-            ChatListDetailAction.OnProfileSettingsClick -> TODO()
+            ChatListDetailAction.OnProfileSettingsClick -> profileSettings()
+        }
+    }
+
+    private fun profileSettings() {
+        _state.update {
+            it.copy(
+                dialogState = DialogState.Profile
+            )
         }
     }
 
