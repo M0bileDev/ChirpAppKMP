@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@file:OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalComposeUiApi::class)
 
 package com.example.feature.chat.presentation.chat_list_detail
 
@@ -20,7 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.core.designsystem.theme.extended
@@ -37,6 +39,14 @@ fun ChatListDetailAdaptiveLayout(
         scaffoldDirective = paneScaffoldDirective
     )
     val scope = rememberCoroutineScope()
+
+    BackHandler(
+        enabled = scaffoldNavigator.canNavigateBack()
+    ) {
+        scope.launch {
+            scaffoldNavigator.navigateBack()
+        }
+    }
 
     ListDetailPaneScaffold(
         modifier = Modifier
