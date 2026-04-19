@@ -1,0 +1,64 @@
+package com.example.feature.chat.presentation.chat_list_detail
+
+import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+
+class ChatListDetailViewModel : ViewModel() {
+
+    private var _state = MutableStateFlow(ChatListDetailState())
+    val state = _state.asStateFlow()
+
+    fun onAction(action: ChatListDetailAction) {
+        when (action) {
+            is ChatListDetailAction.OnChatClick -> chatClick(action.chatId)
+            ChatListDetailAction.OnCreateChatClick -> createChat()
+            ChatListDetailAction.OnDismissCurrentDialog -> dismissDialog()
+            ChatListDetailAction.OnManageChatClick -> manageChat()
+            ChatListDetailAction.OnProfileSettingsClick -> profileSettings()
+        }
+    }
+
+    private fun chatClick(selectedChatId: String?) {
+        _state.update {
+            it.copy(
+                selectedChatId = selectedChatId
+            )
+        }
+    }
+
+    private fun createChat() {
+        _state.update {
+            it.copy(
+                dialogState = DialogState.CreateChat
+            )
+        }
+    }
+
+    private fun dismissDialog() {
+        _state.update {
+            it.copy(
+                dialogState = DialogState.Hidden
+            )
+        }
+    }
+
+    private fun manageChat() {
+        state.value.selectedChatId?.let { chatId ->
+            _state.update {
+                it.copy(
+                    dialogState = DialogState.ManageChat(chatId)
+                )
+            }
+        }
+    }
+
+    private fun profileSettings() {
+        _state.update {
+            it.copy(
+                dialogState = DialogState.Profile
+            )
+        }
+    }
+}

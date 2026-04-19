@@ -10,7 +10,7 @@ import com.example.chirpappkmp.navigation.NavigationRoot
 import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.presentation.util.ObserveAsEvents
 import com.example.feature.auth.presentation.navigation.AuthGraphRoutes
-import com.example.feature.chat.presentation.chat_list.ChatListRoute
+import com.example.feature.chat.presentation.navigation.ChatGraphRoutes
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -49,7 +49,7 @@ fun App(
             NavigationRoot(
                 navController = navController,
                 startDestination = if (state.isLoggedIn) {
-                    ChatListRoute
+                    ChatGraphRoutes.Graph
                 } else {
                     AuthGraphRoutes.Graph
                 }
