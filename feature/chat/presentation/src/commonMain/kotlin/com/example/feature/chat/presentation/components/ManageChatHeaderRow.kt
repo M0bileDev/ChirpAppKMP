@@ -14,8 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import chirpappkmp.feature.chat.presentation.generated.resources.Res
 import chirpappkmp.feature.chat.presentation.generated.resources.cancel
+import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ManageChatHeaderRow(
@@ -46,5 +48,29 @@ fun ManageChatHeaderRow(
                 tint = MaterialTheme.colorScheme.extended.textSecondary
             )
         }
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
+@Composable
+fun PreviewManageChatHeaderRow() {
+    ChirpTheme {
+        ManageChatHeaderRow(
+            title = "Lorem ipsum",
+            onCloseClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF000000)
+@Composable
+fun PreviewDarkManageChatHeaderRow() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ManageChatHeaderRow(
+            title = "Lorem ipsum",
+            onCloseClick = {}
+        )
     }
 }
