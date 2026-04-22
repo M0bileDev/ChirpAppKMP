@@ -9,8 +9,8 @@ typealias ChatParticipantUi = AvatarUi
 data class CreateChatState(
     val queryTextState: TextFieldState = TextFieldState(),
     val selectedChatParticipants: List<ChatParticipantUi> = emptyList(),
-    val isAddingParticipants: Boolean = false,
-    val isLoadingParticipants: Boolean = false,
+    val isAddingParticipant: Boolean = false,
+    val isLoadingParticipant: Boolean = false,
     val canAddParticipant: Boolean = false,
     val currentSearchResult: ChatParticipantUi? = null,
     val searchError: UiText? = null
