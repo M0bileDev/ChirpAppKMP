@@ -1,4 +1,4 @@
-package com.example.feature.chat.presentation.create_chat.components
+package com.example.feature.chat.presentation.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
