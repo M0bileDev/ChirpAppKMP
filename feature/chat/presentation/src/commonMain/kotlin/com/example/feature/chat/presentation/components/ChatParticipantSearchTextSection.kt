@@ -15,8 +15,10 @@ import chirpappkmp.feature.chat.presentation.generated.resources.email_or_userna
 import com.example.core.designsystem.components.buttons.ChirpButton
 import com.example.core.designsystem.components.buttons.ChirpButtonStyle
 import com.example.core.designsystem.components.textfields.ChirpTextField
+import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.presentation.util.UiText
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ChatParticipantSearchTextSection(
@@ -53,6 +55,68 @@ fun ChatParticipantSearchTextSection(
             style = ChirpButtonStyle.SECONDARY,
             enabled = isSearchEnabled,
             isLoading = isLoading
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
+@Composable
+fun PreviewChatParticipantSearchTextSection() {
+    ChirpTheme {
+        ChatParticipantSearchTextSection(
+            queryState = TextFieldState(),
+            onAddClick = {},
+            isSearchEnabled = true,
+            isLoading = false,
+            onFocusChanged = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
+@Composable
+fun PreviewChatParticipantSearchTextSectionError() {
+    ChirpTheme {
+        ChatParticipantSearchTextSection(
+            queryState = TextFieldState(),
+            onAddClick = {},
+            isSearchEnabled = true,
+            isLoading = false,
+            error = UiText.DynamicString("Lorem ipsum"),
+            onFocusChanged = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF000000)
+@Composable
+fun PreviewDarkChatParticipantSearchTextSection() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChatParticipantSearchTextSection(
+            queryState = TextFieldState(),
+            onAddClick = {},
+            isSearchEnabled = true,
+            isLoading = false,
+            onFocusChanged = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF000000)
+@Composable
+fun PreviewDarkChatParticipantSearchTextSectionError() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChatParticipantSearchTextSection(
+            queryState = TextFieldState(),
+            onAddClick = {},
+            isSearchEnabled = true,
+            isLoading = false,
+            error = UiText.DynamicString("Lorem ipsum"),
+            onFocusChanged = {}
         )
     }
 }
