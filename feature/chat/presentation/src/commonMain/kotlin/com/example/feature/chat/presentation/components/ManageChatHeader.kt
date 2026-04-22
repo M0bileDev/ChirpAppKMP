@@ -53,7 +53,7 @@ fun ManageChatHeaderRow(
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 @Composable
-fun PreviewManageChatHeaderRow() {
+fun PreviewManageChatHeader() {
     ChirpTheme {
         ManageChatHeaderRow(
             title = "Lorem ipsum",
@@ -64,7 +64,7 @@ fun PreviewManageChatHeaderRow() {
 
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 @Composable
-fun PreviewDarkManageChatHeaderRow() {
+fun PreviewDarkManageChatHeader() {
     ChirpTheme(
         darkTheme = true
     ) {
