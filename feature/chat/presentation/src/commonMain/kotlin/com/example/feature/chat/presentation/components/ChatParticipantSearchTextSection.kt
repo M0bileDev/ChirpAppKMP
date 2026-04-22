@@ -7,13 +7,21 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import chirpappkmp.feature.chat.presentation.generated.resources.Res
+import chirpappkmp.feature.chat.presentation.generated.resources.add
+import chirpappkmp.feature.chat.presentation.generated.resources.email_or_username
+import com.example.core.designsystem.components.buttons.ChirpButton
+import com.example.core.designsystem.components.buttons.ChirpButtonStyle
+import com.example.core.designsystem.components.textfields.ChirpTextField
 import com.example.core.presentation.util.UiText
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ChatParticipantSearchTextSection(
     queryState: TextFieldState,
-    onSearchClick: () -> Unit,
+    onAddClick: () -> Unit,
     isSearchEnabled: Boolean,
     isLoading: Boolean,
     modifier: Modifier = Modifier,
@@ -29,6 +37,22 @@ fun ChatParticipantSearchTextSection(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-
+        ChirpTextField(
+            modifier = Modifier.weight(1f),
+            state = queryState,
+            placeholder = stringResource(Res.string.email_or_username),
+            supportingText = error?.asString(),
+            isError = error != null,
+            singleLine = true,
+            keyboardType = KeyboardType.Email,
+            onFocusChanged = onFocusChanged
+        )
+        ChirpButton(
+            text = stringResource(Res.string.add),
+            onClick = onAddClick,
+            style = ChirpButtonStyle.SECONDARY,
+            enabled = isSearchEnabled,
+            isLoading = isLoading
+        )
     }
 }
