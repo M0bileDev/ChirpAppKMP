@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -23,6 +24,7 @@ import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.presentation.composableUtil.currentDeviceConfiguration
 import com.example.core.presentation.util.DeviceConfiguration
 import com.example.core.presentation.util.clearFocusOnTap
+import com.example.feature.chat.presentation.components.ChatParticipantSearchTextSection
 import com.example.feature.chat.presentation.components.ManageChatHeaderRow
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -46,7 +48,7 @@ fun CreateChatScreen(
     onAction: (CreateChatAction) -> Unit
 ) = with(state) {
 
-    val isTextFieldFocused by remember { mutableStateOf(false) }
+    var isTextFieldFocused by remember { mutableStateOf(false) }
     val imeHeight = WindowInsets.ime.getBottom(LocalDensity.current)
     val isKeyboardVisible = imeHeight > 0
     val configuration = currentDeviceConfiguration()
@@ -54,7 +56,7 @@ fun CreateChatScreen(
     val shouldHideHeader =
         configuration == DeviceConfiguration.MOBILE_LANDSCAPE
                 || (isKeyboardVisible && configuration != DeviceConfiguration.DESKTOP)
-                || isKeyboardVisible
+                || isTextFieldFocused
 
     Column(
         modifier = Modifier
@@ -78,6 +80,19 @@ fun CreateChatScreen(
                 ChirpHorizontalDivider()
             }
         }
+        ChatParticipantSearchTextSection(
+            modifier = Modifier.fillMaxWidth(),
+            queryState = queryTextState,
+            onAddClick = {
+                onAction(CreateChatAction.OnAddClick)
+            },
+            isSearchEnabled = canAddParticipant,
+            isLoading = isAddingParticipant,
+            error = searchError,
+            onFocusChanged = {
+                isTextFieldFocused = it
+            }
+        )
     }
 }
 
