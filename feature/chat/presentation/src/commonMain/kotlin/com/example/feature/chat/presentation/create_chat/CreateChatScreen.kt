@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalUuidApi::class)
+
 package com.example.feature.chat.presentation.create_chat
 
 import androidx.compose.animation.AnimatedVisibility
@@ -25,10 +27,14 @@ import com.example.core.presentation.composableUtil.currentDeviceConfiguration
 import com.example.core.presentation.util.DeviceConfiguration
 import com.example.core.presentation.util.clearFocusOnTap
 import com.example.feature.chat.presentation.components.ChatParticipantSearchTextSection
+import com.example.feature.chat.presentation.components.ChatParticipantsSelectionSection
 import com.example.feature.chat.presentation.components.ManageChatHeaderRow
+import com.example.feature.chat.presentation.type_alias.ChatParticipantUi
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Composable
 fun CreateChatRoot(
@@ -93,6 +99,12 @@ fun CreateChatScreen(
                 isTextFieldFocused = it
             }
         )
+        ChirpHorizontalDivider()
+        ChatParticipantsSelectionSection(
+            modifier = Modifier.fillMaxWidth(),
+            selectedParticipants = selectedChatParticipants,
+            searchResult = currentSearchResult
+        )
     }
 }
 
@@ -101,7 +113,20 @@ fun CreateChatScreen(
 fun PreviewCreateChatScreen() {
     ChirpTheme {
         CreateChatScreen(
-            CreateChatState(),
+            CreateChatState(
+                selectedChatParticipants = listOf(
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum",
+                        initials = "LI"
+                    ),
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum 2",
+                        initials = "LI2"
+                    )
+                )
+            ),
             onAction = {}
         )
     }
@@ -112,7 +137,20 @@ fun PreviewCreateChatScreen() {
 fun PreviewDarkCreateChatScreen() {
     ChirpTheme(darkTheme = true) {
         CreateChatScreen(
-            CreateChatState(),
+            CreateChatState(
+                selectedChatParticipants = listOf(
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum",
+                        initials = "LI"
+                    ),
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum 2",
+                        initials = "LI2"
+                    )
+                )
+            ),
             onAction = {}
         )
     }

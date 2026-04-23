@@ -1,10 +1,8 @@
 package com.example.feature.chat.presentation.create_chat
 
 import androidx.compose.foundation.text.input.TextFieldState
-import com.example.core.designsystem.components.avatar.AvatarUi
 import com.example.core.presentation.util.UiText
-
-typealias ChatParticipantUi = AvatarUi
+import com.example.feature.chat.presentation.type_alias.ChatParticipantUi
 
 data class CreateChatState(
     val queryTextState: TextFieldState = TextFieldState(),
