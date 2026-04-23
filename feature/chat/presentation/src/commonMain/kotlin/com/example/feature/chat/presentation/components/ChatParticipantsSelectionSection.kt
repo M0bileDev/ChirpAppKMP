@@ -87,18 +87,48 @@ fun ChatParticipantListItem(
 
 @Preview
 @Composable
-fun PreviewChatParticipantsSelectionSection() {
+fun PreviewChatParticipantListItem() {
     ChirpTheme {
-        ChatParticipantsSelectionSection()
+        ChatParticipantListItem(
+            participantUi = ChatParticipantUi(
+                id = "0",
+                username = "Lorem ipsum",
+                initials = "LI"
+            )
+        )
     }
 }
 
 @Preview
 @Composable
-fun PreviewDarkChatParticipantsSelectionSection() {
+fun PreviewDarkChatParticipantListItem() {
     ChirpTheme(
         darkTheme = true
     ) {
-        ChatParticipantsSelectionSection()
+        ChatParticipantListItem(
+            participantUi = ChatParticipantUi(
+                id = "0",
+                username = "Lorem ipsum",
+                initials = "LI"
+            )
+        )
     }
 }
+
+//@Preview
+//@Composable
+//fun PreviewChatParticipantsSelectionSection() {
+//    ChirpTheme {
+//        ChatParticipantsSelectionSection()
+//    }
+//}
+//
+//@Preview
+//@Composable
+//fun PreviewDarkChatParticipantsSelectionSection() {
+//    ChirpTheme(
+//        darkTheme = true
+//    ) {
+//        ChatParticipantsSelectionSection()
+//    }
+//}
