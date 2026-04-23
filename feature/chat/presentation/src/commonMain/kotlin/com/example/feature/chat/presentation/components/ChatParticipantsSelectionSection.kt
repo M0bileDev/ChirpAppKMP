@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.core.designsystem.components.avatar.ChirpAvatarPhoto
+import com.example.core.designsystem.components.brand.ChirpHorizontalDivider
 import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import com.example.core.designsystem.theme.titleXSmall
@@ -51,7 +54,24 @@ fun ColumnScope.ChatParticipantsSelectionSection(
         ) {
             searchResult?.let {
                 item {
-                    // TODO: add item
+                    ChatParticipantListItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        participantUi = it
+                    )
+                }
+            }
+            item {
+                ChirpHorizontalDivider(modifier = Modifier.height(12.dp))
+            }
+            if (selectedParticipants.isNotEmpty() && searchResult == null) {
+                items(
+                    items = selectedParticipants,
+                    key = { it.id }
+                ) { participant ->
+                    ChatParticipantListItem(
+                        modifier = Modifier.fillMaxWidth(),
+                        participantUi = participant
+                    )
                 }
             }
         }
