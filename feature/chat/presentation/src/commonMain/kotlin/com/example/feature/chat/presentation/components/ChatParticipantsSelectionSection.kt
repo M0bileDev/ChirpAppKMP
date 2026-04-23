@@ -1,8 +1,11 @@
 package com.example.feature.chat.presentation.components
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -29,6 +32,18 @@ fun ColumnScope.ChatParticipantsSelectionSection(
         }
 
         else -> Modifier.weight(1f)
+    }
+
+    Box(modifier = rootHeightModifier.then(modifier)) {
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            searchResult?.let {
+                item {
+                    // TODO: add item
+                }
+            }
+        }
     }
 }
 
