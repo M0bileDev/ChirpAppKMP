@@ -1,13 +1,15 @@
+@file:OptIn(ExperimentalUuidApi::class)
+
 package com.example.feature.chat.presentation.components
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,6 +30,8 @@ import com.example.core.presentation.composableUtil.currentDeviceConfiguration
 import com.example.core.presentation.util.DeviceConfiguration
 import com.example.feature.chat.presentation.type_alias.ChatParticipantUi
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Composable
 fun ColumnScope.ChatParticipantsSelectionSection(
@@ -61,7 +65,7 @@ fun ColumnScope.ChatParticipantsSelectionSection(
                 }
             }
             item {
-                ChirpHorizontalDivider(modifier = Modifier.height(12.dp))
+                ChirpHorizontalDivider()
             }
             if (selectedParticipants.isNotEmpty() && searchResult == null) {
                 items(
@@ -111,7 +115,7 @@ fun PreviewChatParticipantListItem() {
     ChirpTheme {
         ChatParticipantListItem(
             participantUi = ChatParticipantUi(
-                id = "0",
+                id = Uuid.random().toString(),
                 username = "Lorem ipsum",
                 initials = "LI"
             )
@@ -127,7 +131,7 @@ fun PreviewDarkChatParticipantListItem() {
     ) {
         ChatParticipantListItem(
             participantUi = ChatParticipantUi(
-                id = "0",
+                id = Uuid.random().toString(),
                 username = "Lorem ipsum",
                 initials = "LI"
             )
@@ -135,20 +139,50 @@ fun PreviewDarkChatParticipantListItem() {
     }
 }
 
-//@Preview
-//@Composable
-//fun PreviewChatParticipantsSelectionSection() {
-//    ChirpTheme {
-//        ChatParticipantsSelectionSection()
-//    }
-//}
-//
-//@Preview
-//@Composable
-//fun PreviewDarkChatParticipantsSelectionSection() {
-//    ChirpTheme(
-//        darkTheme = true
-//    ) {
-//        ChatParticipantsSelectionSection()
-//    }
-//}
+@Preview
+@Composable
+fun PreviewChatParticipantsSelectionSection() {
+    ChirpTheme {
+        Column {
+            ChatParticipantsSelectionSection(
+                selectedParticipants = listOf(
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum",
+                        initials = "LI"
+                    ),
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum 2",
+                        initials = "LI2"
+                    )
+                )
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkChatParticipantsSelectionSection() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        Column {
+            ChatParticipantsSelectionSection(
+                selectedParticipants = listOf(
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum",
+                        initials = "LI"
+                    ),
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum 2",
+                        initials = "LI2"
+                    )
+                )
+            )
+        }
+    }
+}
