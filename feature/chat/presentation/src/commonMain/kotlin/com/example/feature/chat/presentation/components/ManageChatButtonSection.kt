@@ -29,18 +29,34 @@ fun ManageChatButtonSection(
 
 @Preview
 @Composable
-fun PreviewManageChatButtonRow() {
+fun PreviewManageChatButtonSection() {
     ChirpTheme {
-        ManageChatButtonSection()
+        ManageChatButtonSection(
+            modifier = Modifier.fillMaxWidth(),
+            primaryButton = {
+                ChirpButton(text = "Lorem ipsum", onClick = {})
+            },
+            secondaryButton = {
+                ChirpButton(text = "Lorem ipsum", onClick = {})
+            }
+        )
     }
 }
 
 @Preview
 @Composable
-fun PreviewDarkManageChatButtonRow() {
+fun PreviewDarkManageChatButtonSection() {
     ChirpTheme(
         darkTheme = true
     ) {
-        ManageChatButtonSection()
+        ManageChatButtonSection(
+            modifier = Modifier.fillMaxWidth(),
+            primaryButton = {
+                ChirpButton(text = "Lorem ipsum", onClick = {})
+            },
+            secondaryButton = {
+                ChirpButton(text = "Lorem ipsum", onClick = {})
+            }
+        )
     }
 }
