@@ -26,6 +26,8 @@ import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.core.designsystem.theme.extended
+import com.example.core.presentation.util.DialogSheetScopedViewModel
+import com.example.feature.chat.presentation.create_chat.CreateChatRoot
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -93,4 +95,10 @@ fun ChatListDetailAdaptiveLayout(
             }
         },
     )
+
+    DialogSheetScopedViewModel(
+        visible = sharedState.dialogState is DialogState.CreateChat
+    ) {
+        CreateChatRoot()
+    }
 }
