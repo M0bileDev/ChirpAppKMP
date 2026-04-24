@@ -27,6 +27,7 @@ import chirpappkmp.feature.chat.presentation.generated.resources.create_chat
 import com.example.core.designsystem.components.brand.ChirpHorizontalDivider
 import com.example.core.designsystem.components.buttons.ChirpButton
 import com.example.core.designsystem.components.buttons.ChirpButtonStyle
+import com.example.core.designsystem.components.dialogs.ChirpAdaptiveDialogSheetLayout
 import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.presentation.composableUtil.currentDeviceConfiguration
 import com.example.core.presentation.util.DeviceConfiguration
@@ -48,10 +49,16 @@ fun CreateChatRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    CreateChatScreen(
-        state = state,
-        onAction = viewModel::onAction
-    )
+    ChirpAdaptiveDialogSheetLayout(
+        onDismiss = {
+            viewModel.onAction(CreateChatAction.OnDismissDialog)
+        },
+    ) {
+        CreateChatScreen(
+            state = state,
+            onAction = viewModel::onAction
+        )
+    }
 }
 
 @Composable
