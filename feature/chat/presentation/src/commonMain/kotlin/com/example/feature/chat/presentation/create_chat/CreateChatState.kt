@@ -9,6 +9,7 @@ data class CreateChatState(
     val selectedChatParticipants: List<ChatParticipantUi> = emptyList(),
     val isAddingParticipant: Boolean = false,
     val isLoadingParticipant: Boolean = false,
+    val isCreatingChat: Boolean = false,
     val canAddParticipant: Boolean = false,
     val currentSearchResult: ChatParticipantUi? = null,
     val searchError: UiText? = null

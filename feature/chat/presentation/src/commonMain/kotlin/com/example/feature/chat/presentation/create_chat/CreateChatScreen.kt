@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -18,16 +19,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import chirpappkmp.feature.chat.presentation.generated.resources.Res
+import chirpappkmp.feature.chat.presentation.generated.resources.cancel
 import chirpappkmp.feature.chat.presentation.generated.resources.create_chat
 import com.example.core.designsystem.components.brand.ChirpHorizontalDivider
+import com.example.core.designsystem.components.buttons.ChirpButton
+import com.example.core.designsystem.components.buttons.ChirpButtonStyle
+import com.example.core.designsystem.components.dialogs.ChirpAdaptiveDialogSheetLayout
 import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.presentation.composableUtil.currentDeviceConfiguration
 import com.example.core.presentation.util.DeviceConfiguration
 import com.example.core.presentation.util.clearFocusOnTap
 import com.example.feature.chat.presentation.components.ChatParticipantSearchTextSection
 import com.example.feature.chat.presentation.components.ChatParticipantsSelectionSection
+import com.example.feature.chat.presentation.components.ManageChatButtonSection
 import com.example.feature.chat.presentation.components.ManageChatHeaderRow
 import com.example.feature.chat.presentation.type_alias.ChatParticipantUi
 import org.jetbrains.compose.resources.stringResource
@@ -42,10 +49,16 @@ fun CreateChatRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    CreateChatScreen(
-        state = state,
-        onAction = viewModel::onAction
-    )
+    ChirpAdaptiveDialogSheetLayout(
+        onDismiss = {
+            viewModel.onAction(CreateChatAction.OnDismissDialog)
+        },
+    ) {
+        CreateChatScreen(
+            state = state,
+            onAction = viewModel::onAction
+        )
+    }
 }
 
 @Composable
@@ -104,6 +117,29 @@ fun CreateChatScreen(
             modifier = Modifier.fillMaxWidth(),
             selectedParticipants = selectedChatParticipants,
             searchResult = currentSearchResult
+        )
+        ChirpHorizontalDivider()
+        ManageChatButtonSection(
+            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp, horizontal = 20.dp),
+            primaryButton = {
+                ChirpButton(
+                    text = stringResource(Res.string.create_chat),
+                    onClick = {
+                        onAction(CreateChatAction.OnCreateChatClick)
+                    },
+                    enabled = selectedChatParticipants.isNotEmpty(),
+                    isLoading = isCreatingChat
+                )
+            },
+            secondaryButton = {
+                ChirpButton(
+                    text = stringResource(Res.string.cancel),
+                    onClick = {
+                        onAction(CreateChatAction.OnDismissDialog)
+                    },
+                    style = ChirpButtonStyle.SECONDARY
+                )
+            }
         )
     }
 }
