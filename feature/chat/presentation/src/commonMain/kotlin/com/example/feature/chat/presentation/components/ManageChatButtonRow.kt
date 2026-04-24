@@ -6,7 +6,11 @@ import com.example.core.designsystem.theme.ChirpTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ManageChatButtonRow(modifier: Modifier = Modifier) {
+fun ManageChatButtonRow(
+    primaryButton: @Composable () -> Unit,
+    secondaryButton: @Composable () -> Unit,
+    modifier: Modifier = Modifier
+) {
 }
 
 @Preview
