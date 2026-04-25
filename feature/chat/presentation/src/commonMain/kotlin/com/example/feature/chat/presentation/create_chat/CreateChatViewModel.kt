@@ -18,6 +18,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -30,7 +31,7 @@ class CreateChatViewModel(
 ) : ViewModel() {
     private var hasLoadedInitialData = false
     private val _state = MutableStateFlow(CreateChatState())
-    private val searchFlow = snapshotFlow { state.value.queryTextState.text.toString() }
+    private val searchFlow = snapshotFlow { _state.value.queryTextState.text.toString() }
         .debounce(1.seconds)
         .onEach { query ->
             performSearch(query)
@@ -38,7 +39,7 @@ class CreateChatViewModel(
     val state = _state
         .onStart {
             if (!hasLoadedInitialData) {
-                // TODO: implement
+                searchFlow.launchIn(viewModelScope)
                 hasLoadedInitialData = true
             }
         }.stateIn(
