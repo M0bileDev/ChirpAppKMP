@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlin.time.Duration.Companion.seconds
 
 class CreateChatViewModel(
@@ -21,8 +22,20 @@ class CreateChatViewModel(
     private val searchFlow = snapshotFlow { state.value.queryTextState.text.toString() }
         .debounce(1.seconds)
         .onEach { query ->
-            searchQuery(query)
+            performSearch(query)
         }
+
+    private fun performSearch(query: String) {
+        if(query.isBlank()){
+            _state.update { it.copy(
+                currentSearchResult = null,
+                canAddParticipant = false,
+                searchError = null
+            ) }
+            return
+        }
+    }
+
     val state = _state
         .onStart {
             if (!hasLoadedInitialData) {
