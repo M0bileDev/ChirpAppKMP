@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
 class CreateChatViewModel(
@@ -25,15 +26,27 @@ class CreateChatViewModel(
             performSearch(query)
         }
 
-    private fun performSearch(query: String) {
-        if(query.isBlank()){
-            _state.update { it.copy(
-                currentSearchResult = null,
-                canAddParticipant = false,
-                searchError = null
-            ) }
-            return
+    private fun performSearch(query: String) = with(viewModelScope) {
+        if (query.isBlank()) {
+            _state.update {
+                it.copy(
+                    currentSearchResult = null,
+                    canAddParticipant = false,
+                    searchError = null
+                )
+            }
+            return@with
         }
+
+        launch {
+            _state.update {
+                it.copy(
+                    isSearching = true,
+                    canAddParticipant = false
+                )
+            }
+        }
+
     }
 
     val state = _state
