@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.MaterialTheme
@@ -46,17 +47,22 @@ import kotlin.uuid.Uuid
 @Composable
 fun CreateChatRoot(
     viewModel: CreateChatViewModel = koinViewModel(),
+    onDismiss: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     ChirpAdaptiveDialogSheetLayout(
-        onDismiss = {
-            viewModel.onAction(CreateChatAction.OnDismissDialog)
-        },
+        onDismiss = onDismiss,
     ) {
         CreateChatScreen(
             state = state,
-            onAction = viewModel::onAction
+            onAction = { action ->
+                when (action) {
+                    CreateChatAction.OnDismissDialog -> onDismiss()
+                    else -> Unit
+                }
+                viewModel.onAction(action)
+            }
         )
     }
 }
@@ -82,8 +88,9 @@ fun CreateChatScreen(
             .clearFocusOnTap()
             .fillMaxWidth()
             .wrapContentHeight()
-            .imePadding()
             .background(MaterialTheme.colorScheme.surface)
+            .imePadding()
+            .navigationBarsPadding()
     ) {
         AnimatedVisibility(
             visible = !shouldHideHeader
@@ -106,7 +113,7 @@ fun CreateChatScreen(
                 onAction(CreateChatAction.OnAddClick)
             },
             isSearchEnabled = canAddParticipant,
-            isLoading = isAddingParticipant,
+            isLoading = isSearching,
             error = searchError,
             onFocusChanged = {
                 isTextFieldFocused = it
