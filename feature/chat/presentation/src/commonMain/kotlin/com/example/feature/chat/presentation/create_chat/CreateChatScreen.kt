@@ -47,17 +47,22 @@ import kotlin.uuid.Uuid
 @Composable
 fun CreateChatRoot(
     viewModel: CreateChatViewModel = koinViewModel(),
+    onDismiss: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     ChirpAdaptiveDialogSheetLayout(
-        onDismiss = {
-            viewModel.onAction(CreateChatAction.OnDismissDialog)
-        },
+        onDismiss = onDismiss,
     ) {
         CreateChatScreen(
             state = state,
-            onAction = viewModel::onAction
+            onAction = { action ->
+                when (action) {
+                    CreateChatAction.OnDismissDialog -> onDismiss()
+                    else -> Unit
+                }
+                viewModel.onAction(action)
+            }
         )
     }
 }
