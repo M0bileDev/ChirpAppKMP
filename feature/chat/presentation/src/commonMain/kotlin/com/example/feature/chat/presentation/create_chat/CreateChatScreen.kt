@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.MaterialTheme
@@ -82,8 +83,9 @@ fun CreateChatScreen(
             .clearFocusOnTap()
             .fillMaxWidth()
             .wrapContentHeight()
-            .imePadding()
             .background(MaterialTheme.colorScheme.surface)
+            .imePadding()
+            .navigationBarsPadding()
     ) {
         AnimatedVisibility(
             visible = !shouldHideHeader
