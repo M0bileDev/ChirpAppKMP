@@ -1,16 +1,28 @@
+@file:OptIn(FlowPreview::class)
+
 package com.example.feature.chat.presentation.create_chat
 
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlin.time.Duration.Companion.seconds
 
 class CreateChatViewModel(
 ) : ViewModel() {
     private var hasLoadedInitialData = false
     private val _state = MutableStateFlow(CreateChatState())
+    private val searchFlow = snapshotFlow { state.value.queryTextState.text.toString() }
+        .debounce(1.seconds)
+        .onEach { query ->
+            searchQuery(query)
+        }
     val state = _state
         .onStart {
             if (!hasLoadedInitialData) {
