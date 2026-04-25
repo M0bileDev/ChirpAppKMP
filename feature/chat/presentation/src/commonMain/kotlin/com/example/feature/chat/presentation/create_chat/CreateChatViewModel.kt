@@ -5,6 +5,15 @@ package com.example.feature.chat.presentation.create_chat
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import chirpappkmp.feature.chat.presentation.generated.resources.Res
+import chirpappkmp.feature.chat.presentation.generated.resources.error_participant_not_found
+import com.example.core.domain.util.DataError
+import com.example.core.domain.util.onFailure
+import com.example.core.domain.util.onSuccess
+import com.example.core.presentation.ext.toUiText
+import com.example.core.presentation.util.UiText
+import com.example.feature.chat.domain.chat.ChatParticipantService
+import com.example.feature.chat.mappers.toUi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,6 +26,7 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
 class CreateChatViewModel(
+    private val chatParticipantService: ChatParticipantService
 ) : ViewModel() {
     private var hasLoadedInitialData = false
     private val _state = MutableStateFlow(CreateChatState())
@@ -25,6 +35,17 @@ class CreateChatViewModel(
         .onEach { query ->
             performSearch(query)
         }
+    val state = _state
+        .onStart {
+            if (!hasLoadedInitialData) {
+                // TODO: implement
+                hasLoadedInitialData = true
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = CreateChatState()
+        )
 
     private fun performSearch(query: String) = with(viewModelScope) {
         if (query.isBlank()) {
@@ -45,21 +66,37 @@ class CreateChatViewModel(
                     canAddParticipant = false
                 )
             }
+
+            chatParticipantService
+                .searchParticipant(query)
+                .onSuccess { participant ->
+                    _state.update {
+                        it.copy(
+                            currentSearchResult = participant.toUi(),
+                            isSearching = false,
+                            canAddParticipant = true,
+                            searchError = null
+                        )
+                    }
+                }
+                .onFailure { error ->
+                    val errorMessage = when (error) {
+                        DataError.Remote.NOT_FOUND -> UiText.Resource(Res.string.error_participant_not_found)
+                        else -> error.toUiText()
+                    }
+                    _state.update {
+                        it.copy(
+                            currentSearchResult = null,
+                            isSearching = false,
+                            canAddParticipant = false,
+                            searchError = errorMessage
+                        )
+                    }
+                }
+
         }
 
     }
-
-    val state = _state
-        .onStart {
-            if (!hasLoadedInitialData) {
-                // TODO: implement
-                hasLoadedInitialData = true
-            }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = CreateChatState()
-        )
 
     fun onAction(createChatAction: CreateChatAction) {}
 }
