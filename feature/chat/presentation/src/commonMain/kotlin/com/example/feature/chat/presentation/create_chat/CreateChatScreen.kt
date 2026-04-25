@@ -108,7 +108,7 @@ fun CreateChatScreen(
                 onAction(CreateChatAction.OnAddClick)
             },
             isSearchEnabled = canAddParticipant,
-            isLoading = isAddingParticipant,
+            isLoading = isSearching,
             error = searchError,
             onFocusChanged = {
                 isTextFieldFocused = it
