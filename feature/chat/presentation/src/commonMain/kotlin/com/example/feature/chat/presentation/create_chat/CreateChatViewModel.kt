@@ -2,6 +2,7 @@
 
 package com.example.feature.chat.presentation.create_chat
 
+import androidx.compose.foundation.text.input.clearText
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -99,5 +100,31 @@ class CreateChatViewModel(
 
     }
 
-    fun onAction(createChatAction: CreateChatAction) {}
+    fun onAction(createChatAction: CreateChatAction) {
+        when (createChatAction) {
+            CreateChatAction.OnAddClick -> addParticipant()
+            CreateChatAction.OnCreateChatClick -> TODO()
+            CreateChatAction.OnDismissDialog -> TODO()
+        }
+    }
+
+    private fun addParticipant() {
+        state.value.currentSearchResult?.let { participant ->
+            val isAlreadyPartOfChat = state.value.selectedChatParticipants.any {
+                it.id == participant.id
+            }
+
+            if (isAlreadyPartOfChat) return@let
+
+            _state.update {
+                it.copy(
+                    selectedChatParticipants = it.selectedChatParticipants + participant,
+                    canAddParticipant = false,
+                    currentSearchResult = null
+                )
+            }
+
+            state.value.queryTextState.clearText()
+        }
+    }
 }
