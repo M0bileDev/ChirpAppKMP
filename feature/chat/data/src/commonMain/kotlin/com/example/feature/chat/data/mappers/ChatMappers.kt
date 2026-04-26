@@ -9,6 +9,6 @@ fun ChatDto.toDomain() : Chat{
         id = id,
         participants = participants.map { it.toDomain() },
         lastActivityAt = Instant.parse(lastActivityAt),
-        lastMessage = lastMessage.toDomain()
+        lastMessage = lastMessage?.toDomain()
     )
 }
