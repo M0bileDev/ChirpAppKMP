@@ -102,6 +102,10 @@ fun ChatListDetailAdaptiveLayout(
         CreateChatRoot(
             onDismiss = {
                 viewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)
+            },
+            onChatCreated = {
+                viewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)
+                // TODO: navigate to created chat
             }
         )
     }
