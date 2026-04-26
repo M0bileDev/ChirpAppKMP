@@ -14,6 +14,7 @@ import com.example.core.domain.util.onSuccess
 import com.example.core.presentation.ext.toUiText
 import com.example.core.presentation.util.UiText
 import com.example.feature.chat.domain.chat.ChatParticipantService
+import com.example.feature.chat.domain.chat.ChatService
 import com.example.feature.chat.mappers.toUi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,7 +29,8 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
 class CreateChatViewModel(
-    private val chatParticipantService: ChatParticipantService
+    private val chatParticipantService: ChatParticipantService,
+    private val chatService: ChatService
 ) : ViewModel() {
     private var hasLoadedInitialData = false
     private val _state = MutableStateFlow(CreateChatState())
@@ -103,8 +105,36 @@ class CreateChatViewModel(
     fun onAction(createChatAction: CreateChatAction) {
         when (createChatAction) {
             CreateChatAction.OnAddClick -> addParticipant()
-            CreateChatAction.OnCreateChatClick -> Unit
+            CreateChatAction.OnCreateChatClick -> createChat()
             CreateChatAction.OnDismissDialog -> Unit
+        }
+    }
+
+    private fun createChat() = with(viewModelScope) {
+        val otherUserIds = state.value.selectedChatParticipants.map { it.id }
+        if (otherUserIds.isEmpty()) return@with
+
+        launch {
+            _state.update {
+                it.copy(
+                    isCreatingChat = true,
+                    canAddParticipant = false
+                )
+            }
+
+            chatService.createChat(
+                otherUserIds = otherUserIds
+            ).onSuccess { chat ->
+                // TODO: call an event
+            }.onFailure { error ->
+                _state.update {
+                    it.copy(
+                        isCreatingChat = false,
+                        createChatError = error.toUiText(),
+                        canAddParticipant = it.currentSearchResult != null && !it.isSearching,
+                    )
+                }
+            }
         }
     }
 
