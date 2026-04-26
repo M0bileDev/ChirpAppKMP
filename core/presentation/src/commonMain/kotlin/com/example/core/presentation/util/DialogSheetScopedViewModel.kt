@@ -39,6 +39,7 @@ fun DialogSheetScopedViewModel(
             }
         } else if (!visible && owner != null) {
             registry.clear(scopeId)
+            owner = null
         }
     }
 
