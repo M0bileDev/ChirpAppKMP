@@ -88,9 +88,7 @@ fun CreateChatScreen(
     val configuration = currentDeviceConfiguration()
 
     val shouldHideHeader =
-        configuration == DeviceConfiguration.MOBILE_LANDSCAPE
-                || (isKeyboardVisible && configuration != DeviceConfiguration.DESKTOP)
-                || isTextFieldFocused
+        configuration == DeviceConfiguration.MOBILE_LANDSCAPE && isKeyboardVisible && isTextFieldFocused
 
     Column(
         modifier = Modifier
@@ -136,7 +134,7 @@ fun CreateChatScreen(
         )
         ChirpHorizontalDivider()
         ManageChatButtonSection(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp, horizontal = 20.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp).padding(top = 16.dp),
             primaryButton = {
                 ChirpButton(
                     text = stringResource(Res.string.create_chat),
