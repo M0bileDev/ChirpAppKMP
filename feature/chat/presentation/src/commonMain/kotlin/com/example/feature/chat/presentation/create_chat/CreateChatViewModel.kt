@@ -110,7 +110,7 @@ class CreateChatViewModel(
         when (createChatAction) {
             CreateChatAction.OnAddClick -> addParticipant()
             CreateChatAction.OnCreateChatClick -> createChat()
-            CreateChatAction.OnDismissDialog -> Unit
+            else -> Unit
         }
     }
 
@@ -129,6 +129,9 @@ class CreateChatViewModel(
             chatService.createChat(
                 otherUserIds = otherUserIds
             ).onSuccess { chat ->
+                _state.update { it.copy(
+                    isCreatingChat = false
+                ) }
                 eventChannel.send(CreateChatEvent.OnChatCreated(chat))
             }.onFailure { error ->
                 _state.update {
