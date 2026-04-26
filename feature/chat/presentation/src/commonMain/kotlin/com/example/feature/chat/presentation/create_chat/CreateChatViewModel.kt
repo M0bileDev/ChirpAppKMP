@@ -17,12 +17,14 @@ import com.example.feature.chat.domain.chat.ChatParticipantService
 import com.example.feature.chat.domain.chat.ChatService
 import com.example.feature.chat.mappers.toUi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -33,6 +35,8 @@ class CreateChatViewModel(
     private val chatService: ChatService
 ) : ViewModel() {
     private var hasLoadedInitialData = false
+    private val eventChannel = Channel<CreateChatEvent>()
+    val events = eventChannel.receiveAsFlow()
     private val _state = MutableStateFlow(CreateChatState())
     private val searchFlow = snapshotFlow { _state.value.queryTextState.text.toString() }
         .debounce(1.seconds)
@@ -125,7 +129,7 @@ class CreateChatViewModel(
             chatService.createChat(
                 otherUserIds = otherUserIds
             ).onSuccess { chat ->
-                // TODO: call an event
+                eventChannel.send(CreateChatEvent.OnChatCreated(chat))
             }.onFailure { error ->
                 _state.update {
                     it.copy(
