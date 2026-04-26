@@ -32,7 +32,9 @@ import com.example.core.designsystem.components.dialogs.ChirpAdaptiveDialogSheet
 import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.presentation.composableUtil.currentDeviceConfiguration
 import com.example.core.presentation.util.DeviceConfiguration
+import com.example.core.presentation.util.ObserveAsEvents
 import com.example.core.presentation.util.clearFocusOnTap
+import com.example.feature.chat.domain.Chat
 import com.example.feature.chat.presentation.components.ChatParticipantSearchTextSection
 import com.example.feature.chat.presentation.components.ChatParticipantsSelectionSection
 import com.example.feature.chat.presentation.components.ManageChatButtonSection
@@ -46,10 +48,17 @@ import kotlin.uuid.Uuid
 
 @Composable
 fun CreateChatRoot(
-    viewModel: CreateChatViewModel = koinViewModel(),
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onChatCreated: (Chat) -> Unit,
+    viewModel: CreateChatViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            is CreateChatEvent.OnChatCreated -> onChatCreated(event.chat)
+        }
+    }
 
     ChirpAdaptiveDialogSheetLayout(
         onDismiss = onDismiss,
@@ -79,9 +88,7 @@ fun CreateChatScreen(
     val configuration = currentDeviceConfiguration()
 
     val shouldHideHeader =
-        configuration == DeviceConfiguration.MOBILE_LANDSCAPE
-                || (isKeyboardVisible && configuration != DeviceConfiguration.DESKTOP)
-                || isTextFieldFocused
+        configuration == DeviceConfiguration.MOBILE_LANDSCAPE && isKeyboardVisible && isTextFieldFocused
 
     Column(
         modifier = Modifier
@@ -127,7 +134,7 @@ fun CreateChatScreen(
         )
         ChirpHorizontalDivider()
         ManageChatButtonSection(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp, horizontal = 20.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp).padding(top = 16.dp),
             primaryButton = {
                 ChirpButton(
                     text = stringResource(Res.string.create_chat),
@@ -146,7 +153,8 @@ fun CreateChatScreen(
                     },
                     style = ChirpButtonStyle.SECONDARY
                 )
-            }
+            },
+            errorMessage = createChatError?.asString()
         )
     }
 }
