@@ -15,7 +15,7 @@ import com.example.core.presentation.ext.toUiText
 import com.example.core.presentation.util.UiText
 import com.example.feature.chat.domain.chat.ChatParticipantService
 import com.example.feature.chat.domain.chat.ChatService
-import com.example.feature.chat.mappers.toUi
+import com.example.feature.chat.presentation.mappers.toUi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
