@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalUuidApi::class)
+
 package com.example.feature.chat.presentation.chat_list.components
 
 import androidx.compose.foundation.background
@@ -27,8 +29,11 @@ import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import com.example.core.designsystem.theme.titleXSmall
 import com.example.feature.chat.presentation.model.ChatUi
+import com.example.feature.chat.presentation.type_alias.ChatParticipantUi
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Composable
 fun ChatListItem(
@@ -109,7 +114,25 @@ fun ChatListItem(
 @Composable
 fun PreviewChatListItem() {
     ChirpTheme {
-        ChatListItem()
+        ChatListItem(
+            chatUi = ChatUi(
+                id = Uuid.random().toString(),
+                localParticipant = ChatParticipantUi(
+                    id = Uuid.random().toString(),
+                    username = "Lorem ipsum 1",
+                    initials = "LI1"
+                ),
+                otherParticipants = listOf(
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum 1",
+                        initials = "LI1"
+                    )
+                ),
+                lastMessage = null
+            ),
+            isSelected = false,
+        )
     }
 }
 
@@ -119,6 +142,88 @@ fun PreviewDarkChatListItem() {
     ChirpTheme(
         darkTheme = true
     ) {
-        ChatListItem()
+        ChatListItem(
+            chatUi = ChatUi(
+                id = Uuid.random().toString(),
+                localParticipant = ChatParticipantUi(
+                    id = Uuid.random().toString(),
+                    username = "Lorem ipsum 1",
+                    initials = "LI1"
+                ),
+                otherParticipants = listOf(
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum 1",
+                        initials = "LI1"
+                    )
+                ),
+                lastMessage = null
+            ),
+            isSelected = false,
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewChatListItemGroup() {
+    ChirpTheme {
+        ChatListItem(
+            chatUi = ChatUi(
+                id = Uuid.random().toString(),
+                localParticipant = ChatParticipantUi(
+                    id = Uuid.random().toString(),
+                    username = "Lorem ipsum 1",
+                    initials = "LI1"
+                ),
+                otherParticipants = listOf(
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum 2",
+                        initials = "LI2"
+                    ),
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum 3",
+                        initials = "LI3"
+                    )
+                ),
+                lastMessage = null
+            ),
+            isSelected = false,
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkChatListItemGroup() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChatListItem(
+            chatUi = ChatUi(
+                id = Uuid.random().toString(),
+                localParticipant = ChatParticipantUi(
+                    id = Uuid.random().toString(),
+                    username = "Lorem ipsum 1",
+                    initials = "LI1"
+                ),
+                otherParticipants = listOf(
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum 2",
+                        initials = "LI2"
+                    ),
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum 3",
+                        initials = "LI3"
+                    )
+                ),
+                lastMessage = null
+            ),
+            isSelected = false,
+        )
     }
 }
