@@ -1,4 +1,4 @@
-package com.example.feature.chat.mappers
+package com.example.feature.chat.presentation.mappers
 
 import com.example.feature.chat.domain.ChatParticipant
 import com.example.feature.chat.presentation.type_alias.ChatParticipantUi
