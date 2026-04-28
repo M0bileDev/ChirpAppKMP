@@ -98,7 +98,14 @@ fun ChatListItem(
                     }
                 }
             }
-            // TODO: text message
+            lastMessage?.let {
+                Text(
+                    text = "$lastMessageSenderUsername: ${lastMessage.content}",
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
         Box(
             modifier = Modifier
@@ -129,7 +136,8 @@ fun PreviewChatListItem() {
                         initials = "LI1"
                     )
                 ),
-                lastMessage = null
+                lastMessage = null,
+                lastMessageSenderUsername = null
             ),
             isSelected = false,
         )
@@ -157,7 +165,8 @@ fun PreviewDarkChatListItem() {
                         initials = "LI1"
                     )
                 ),
-                lastMessage = null
+                lastMessage = null,
+                lastMessageSenderUsername = null
             ),
             isSelected = false,
         )
@@ -188,7 +197,8 @@ fun PreviewChatListItemGroup() {
                         initials = "LI3"
                     )
                 ),
-                lastMessage = null
+                lastMessage = null,
+                lastMessageSenderUsername = null
             ),
             isSelected = false,
         )
@@ -221,7 +231,8 @@ fun PreviewDarkChatListItemGroup() {
                         initials = "LI3"
                     )
                 ),
-                lastMessage = null
+                lastMessage = null,
+                lastMessageSenderUsername = null
             ),
             isSelected = false,
         )
