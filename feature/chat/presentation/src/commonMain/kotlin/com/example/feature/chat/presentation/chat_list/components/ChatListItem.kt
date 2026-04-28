@@ -28,10 +28,12 @@ import com.example.core.designsystem.components.avatar.ChirpStackedAvatars
 import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import com.example.core.designsystem.theme.titleXSmall
+import com.example.feature.chat.domain.ChatMessage
 import com.example.feature.chat.presentation.model.ChatUi
 import com.example.feature.chat.presentation.type_alias.ChatParticipantUi
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import kotlin.time.Clock
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -103,7 +105,8 @@ fun ChatListItem(
                     text = "$lastMessageSenderUsername: ${lastMessage.content}",
                     style = MaterialTheme.typography.bodySmall,
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.extended.textSecondary
                 )
             }
         }
@@ -235,6 +238,140 @@ fun PreviewDarkChatListItemGroup() {
                 lastMessageSenderUsername = null
             ),
             isSelected = false,
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewChatListItemGroupLastMessage() {
+    ChirpTheme {
+        ChatListItem(
+            chatUi = ChatUi(
+                id = Uuid.random().toString(),
+                localParticipant = ChatParticipantUi(
+                    id = Uuid.random().toString(),
+                    username = "Lorem ipsum 1",
+                    initials = "LI1"
+                ),
+                otherParticipants = listOf(
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum 2",
+                        initials = "LI2"
+                    ),
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum 3",
+                        initials = "LI3"
+                    )
+                ),
+                lastMessage = ChatMessage(
+                    id = Uuid.random().toString(),
+                    chatId = Uuid.random().toString(),
+                    content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                    createdAt = Clock.System.now(),
+                    senderId = Uuid.random().toString()
+                ),
+                lastMessageSenderUsername = "Lorem ipsum"
+            ),
+            isSelected = false,
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkChatListItemGroupLastMessage() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChatListItem(
+            chatUi = ChatUi(
+                id = Uuid.random().toString(),
+                localParticipant = ChatParticipantUi(
+                    id = Uuid.random().toString(),
+                    username = "Lorem ipsum 1",
+                    initials = "LI1"
+                ),
+                otherParticipants = listOf(
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum 2",
+                        initials = "LI2"
+                    ),
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum 3",
+                        initials = "LI3"
+                    )
+                ),
+                lastMessage = ChatMessage(
+                    id = Uuid.random().toString(),
+                    chatId = Uuid.random().toString(),
+                    content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                    createdAt = Clock.System.now(),
+                    senderId = Uuid.random().toString()
+                ),
+                lastMessageSenderUsername = "Lorem ipsum"
+            ),
+            isSelected = false,
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewChatListItemSelected() {
+    ChirpTheme {
+        ChatListItem(
+            chatUi = ChatUi(
+                id = Uuid.random().toString(),
+                localParticipant = ChatParticipantUi(
+                    id = Uuid.random().toString(),
+                    username = "Lorem ipsum 1",
+                    initials = "LI1"
+                ),
+                otherParticipants = listOf(
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum 1",
+                        initials = "LI1"
+                    )
+                ),
+                lastMessage = null,
+                lastMessageSenderUsername = null
+            ),
+            isSelected = true,
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkChatListItemSelected() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChatListItem(
+            chatUi = ChatUi(
+                id = Uuid.random().toString(),
+                localParticipant = ChatParticipantUi(
+                    id = Uuid.random().toString(),
+                    username = "Lorem ipsum 1",
+                    initials = "LI1"
+                ),
+                otherParticipants = listOf(
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum 1",
+                        initials = "LI1"
+                    )
+                ),
+                lastMessage = null,
+                lastMessageSenderUsername = null
+            ),
+            isSelected = true,
         )
     }
 }
