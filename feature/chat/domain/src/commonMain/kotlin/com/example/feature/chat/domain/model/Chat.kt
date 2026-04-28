@@ -1,4 +1,4 @@
-package com.example.feature.chat.domain
+package com.example.feature.chat.domain.model
 
 import kotlin.time.Instant
 

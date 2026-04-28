@@ -1,7 +1,7 @@
 package com.example.feature.chat.data.mappers
 
 import com.example.feature.chat.data.dto.ChatDto
-import com.example.feature.chat.domain.Chat
+import com.example.feature.chat.domain.model.Chat
 import kotlin.time.Instant
 
 fun ChatDto.toDomain() : Chat{

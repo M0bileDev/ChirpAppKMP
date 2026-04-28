@@ -1,6 +1,6 @@
 package com.example.feature.chat.presentation.mappers
 
-import com.example.feature.chat.domain.Chat
+import com.example.feature.chat.domain.model.Chat
 import com.example.feature.chat.presentation.model.ChatUi
 
 fun Chat.toUi(localParticipantId: String): ChatUi {
