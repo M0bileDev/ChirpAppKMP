@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import chirpappkmp.feature.chat.presentation.generated.resources.Res
 import chirpappkmp.feature.chat.presentation.generated.resources.group_chat
+import chirpappkmp.feature.chat.presentation.generated.resources.you
 import com.example.core.designsystem.components.avatar.ChirpStackedAvatars
 import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
@@ -50,8 +51,9 @@ fun ChatListItem(
     val isGroupChat = otherParticipants.size > 1
     val chatName = if (isGroupChat) stringResource(Res.string.group_chat)
     else otherParticipants.first().username
+    val you = stringResource(Res.string.you)
     val formattedUsernames = remember(otherParticipants) {
-        otherParticipants.joinToString { it.username }
+        "$you, " + otherParticipants.joinToString { it.username }
     }
 
     Row(
