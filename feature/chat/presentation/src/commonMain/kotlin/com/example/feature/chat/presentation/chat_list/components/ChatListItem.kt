@@ -20,7 +20,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import chirpappkmp.feature.chat.presentation.generated.resources.Res
 import chirpappkmp.feature.chat.presentation.generated.resources.group_chat
@@ -54,6 +58,17 @@ fun ChatListItem(
     val you = stringResource(Res.string.you)
     val formattedUsernames = remember(otherParticipants) {
         "$you, " + otherParticipants.joinToString { it.username }
+    }
+    val previewMessage = buildAnnotatedString {
+        withStyle(
+            style = SpanStyle(
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.extended.textSecondary
+            )
+        ){
+            append("$lastMessageSenderUsername: ")
+        }
+        append(lastMessage?.content)
     }
 
     Row(
@@ -104,7 +119,7 @@ fun ChatListItem(
             }
             lastMessage?.let {
                 Text(
-                    text = "$lastMessageSenderUsername: ${lastMessage.content}",
+                    text = previewMessage,
                     style = MaterialTheme.typography.bodySmall,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
