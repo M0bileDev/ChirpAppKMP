@@ -9,6 +9,9 @@ fun Chat.toUi(localParticipantId: String): ChatUi {
         id = id,
         localParticipant = local.first().toUi(),
         otherParticipants = other.map { it.toUi() },
-        lastMessage = lastMessage
+        lastMessage = lastMessage,
+        lastMessageSenderUsername = participants
+            .find { lastMessage?.senderId == it.userId }
+            ?.username
     )
 }

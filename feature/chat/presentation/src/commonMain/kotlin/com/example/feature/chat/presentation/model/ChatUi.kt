@@ -7,5 +7,6 @@ data class ChatUi(
     val id: String,
     val localParticipant: ChatParticipantUi,
     val otherParticipants: List<ChatParticipantUi>,
-    val lastMessage: ChatMessage?
+    val lastMessage: ChatMessage?,
+    val lastMessageSenderUsername: String?
 )
