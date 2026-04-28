@@ -2,7 +2,7 @@ package com.example.feature.chat.domain.chat
 
 import com.example.core.domain.util.DataError
 import com.example.core.domain.util.Result
-import com.example.feature.chat.domain.Chat
+import com.example.feature.chat.domain.model.Chat
 
 interface ChatService {
     suspend fun createChat(

@@ -33,7 +33,7 @@ import com.example.core.designsystem.components.avatar.ChirpStackedAvatars
 import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import com.example.core.designsystem.theme.titleXSmall
-import com.example.feature.chat.domain.ChatMessage
+import com.example.feature.chat.domain.model.ChatMessage
 import com.example.feature.chat.presentation.model.ChatUi
 import com.example.feature.chat.presentation.type_alias.ChatParticipantUi
 import org.jetbrains.compose.resources.stringResource

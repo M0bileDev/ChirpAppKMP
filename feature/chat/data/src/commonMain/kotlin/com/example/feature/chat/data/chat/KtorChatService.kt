@@ -7,7 +7,7 @@ import com.example.core.domain.util.map
 import com.example.feature.chat.data.dto.ChatDto
 import com.example.feature.chat.data.dto.CreateChatRequest
 import com.example.feature.chat.data.mappers.toDomain
-import com.example.feature.chat.domain.Chat
+import com.example.feature.chat.domain.model.Chat
 import com.example.feature.chat.domain.chat.ChatService
 import io.ktor.client.HttpClient
 

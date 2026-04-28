@@ -1,6 +1,6 @@
 package com.example.feature.chat.presentation.model
 
-import com.example.feature.chat.domain.ChatMessage
+import com.example.feature.chat.domain.model.ChatMessage
 import com.example.feature.chat.presentation.type_alias.ChatParticipantUi
 
 data class ChatUi(

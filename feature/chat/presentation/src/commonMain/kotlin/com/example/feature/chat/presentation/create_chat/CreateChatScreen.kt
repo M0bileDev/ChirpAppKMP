@@ -34,7 +34,7 @@ import com.example.core.presentation.composableUtil.currentDeviceConfiguration
 import com.example.core.presentation.util.DeviceConfiguration
 import com.example.core.presentation.util.ObserveAsEvents
 import com.example.core.presentation.util.clearFocusOnTap
-import com.example.feature.chat.domain.Chat
+import com.example.feature.chat.domain.model.Chat
 import com.example.feature.chat.presentation.components.ChatParticipantSearchTextSection
 import com.example.feature.chat.presentation.components.ChatParticipantsSelectionSection
 import com.example.feature.chat.presentation.components.ManageChatButtonSection

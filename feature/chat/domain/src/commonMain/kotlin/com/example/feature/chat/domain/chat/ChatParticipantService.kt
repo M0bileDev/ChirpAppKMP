@@ -2,7 +2,7 @@ package com.example.feature.chat.domain.chat
 
 import com.example.core.domain.util.DataError
 import com.example.core.domain.util.Result
-import com.example.feature.chat.domain.ChatParticipant
+import com.example.feature.chat.domain.model.ChatParticipant
 
 interface ChatParticipantService {
 
