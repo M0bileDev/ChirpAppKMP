@@ -41,3 +41,7 @@ kotlin {
     }
 
 }
+// make generated resources public that will be available in different modules
+compose.resources {
+    publicResClass = true
+}
