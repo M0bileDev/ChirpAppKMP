@@ -1,5 +1,6 @@
 package com.example.feature.chat.presentation.components
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.feature.chat.domain.model.ChatParticipant
@@ -13,5 +14,9 @@ fun ProfileAvatarSection(
     onProfileSettingsClick: () -> Unit,
     onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier
-) {
+) = with(localParticipant) {
+    Box(
+        modifier = modifier
+    ) {}
+
 }
