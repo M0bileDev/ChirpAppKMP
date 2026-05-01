@@ -36,7 +36,7 @@ import chirpappkmp.core.designsystem.generated.resources.Res as DesignSystemRes
 
 @Composable
 fun ProfileAvatarSection(
-    localParticipant: ChatParticipantUi,
+    localParticipant: ChatParticipantUi?,
     isMenuOpen: Boolean,
     onClick: () -> Unit,
     onDismissMenu: () -> Unit,
@@ -47,11 +47,13 @@ fun ProfileAvatarSection(
     Box(
         modifier = modifier
     ) {
-        ChirpAvatarPhoto(
-            displayText = initials,
-            imageUrl = imageUrl,
-            onClick = onClick
-        )
+        this@with?.let {
+            ChirpAvatarPhoto(
+                displayText = initials,
+                imageUrl = imageUrl,
+                onClick = onClick
+            )
+        }
         //use above component as anchor
         DropdownMenu(
             expanded = isMenuOpen,
