@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
@@ -16,9 +17,11 @@ import chirpappkmp.feature.chat.presentation.generated.resources.Res
 import chirpappkmp.feature.chat.presentation.generated.resources.empty_chat
 import chirpappkmp.feature.chat.presentation.generated.resources.no_messages
 import chirpappkmp.feature.chat.presentation.generated.resources.no_messages_subtitle
+import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun EmptyChatSection(
@@ -44,6 +47,28 @@ fun EmptyChatSection(
             text = stringResource(Res.string.no_messages_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.extended.textSecondary
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
+@Composable
+fun PreviewEmptyChatSection() {
+    ChirpTheme {
+        EmptyChatSection(
+            modifier = Modifier.fillMaxSize()
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF000000)
+@Composable
+fun PreviewDarkEmptyChatSection() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        EmptyChatSection(
+            modifier = Modifier.fillMaxSize()
         )
     }
 }
