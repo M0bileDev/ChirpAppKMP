@@ -1,5 +1,7 @@
 package com.example.feature.chat.presentation.chat_list
 
+import com.example.feature.chat.presentation.model.ChatUi
+
 sealed interface ChatListAction {
     data object OnUserAvatarClick : ChatListAction
     data object OnDismissUserMenu : ChatListAction
@@ -8,5 +10,5 @@ sealed interface ChatListAction {
     data object OnConfirmLogout : ChatListAction
     data object OnDismissLogoutDialog : ChatListAction
     data object OnCreateChatClick : ChatListAction
-    data class OnChatClick(val chatId: String) : ChatListAction
+    data class OnChatClick(val chat: ChatUi) : ChatListAction
 }
