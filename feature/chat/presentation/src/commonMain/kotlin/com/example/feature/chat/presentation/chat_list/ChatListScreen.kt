@@ -2,12 +2,16 @@
 
 package com.example.feature.chat.presentation.chat_list
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CircularProgressIndicator
@@ -18,14 +22,17 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import chirpappkmp.feature.chat.presentation.generated.resources.Res
 import chirpappkmp.feature.chat.presentation.generated.resources.create_chat
+import com.example.core.designsystem.components.brand.ChirpHorizontalDivider
 import com.example.core.designsystem.components.buttons.ChirpFloatingActionButton
 import com.example.core.designsystem.theme.extended
 import com.example.feature.chat.presentation.chat_list.components.ChatListHeader
+import com.example.feature.chat.presentation.chat_list.components.ChatListItem
 import com.example.feature.chat.presentation.chat_list.components.EmptyChatSection
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -72,7 +79,9 @@ fun ChatListScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ChatListHeader(
                 localParticipant = localParticipant,
@@ -106,6 +115,30 @@ fun ChatListScreen(
                                 horizontal = 8.dp
                             )
                     )
+                }
+
+                else -> {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    ) {
+                        items(
+                            items = chats,
+                            key = { it.id }
+                        ) { chatUi ->
+                            ChatListItem(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        onAction(ChatListAction.OnChatClick(chat = chatUi))
+                                    },
+                                chatUi = chatUi,
+                                isSelected = chatUi.id == selectedChatId
+                            )
+                            ChirpHorizontalDivider()
+                        }
+                    }
                 }
             }
         }
