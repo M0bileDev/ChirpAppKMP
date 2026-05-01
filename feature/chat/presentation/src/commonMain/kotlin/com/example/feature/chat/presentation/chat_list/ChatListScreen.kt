@@ -2,8 +2,10 @@
 
 package com.example.feature.chat.presentation.chat_list
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -20,6 +22,7 @@ import chirpappkmp.feature.chat.presentation.generated.resources.Res
 import chirpappkmp.feature.chat.presentation.generated.resources.create_chat
 import com.example.core.designsystem.components.buttons.ChirpFloatingActionButton
 import com.example.core.designsystem.theme.extended
+import com.example.feature.chat.presentation.chat_list.components.ChatListHeader
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.uuid.ExperimentalUuidApi
@@ -61,7 +64,28 @@ fun ChatListScreen(
                 }
             )
         },
-    ) {
-
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            ChatListHeader(
+                localParticipant = localParticipant,
+                isUserMenuOpen = isUserManuOpen,
+                onUserAvatarClick = {
+                    onAction(ChatListAction.OnUserAvatarClick)
+                },
+                onDismissMenu = {
+                    onAction(ChatListAction.OnDismissUserMenu)
+                },
+                onProfileSettingsClick = {
+                    onAction(ChatListAction.OnProfileSettingsClick)
+                },
+                onLogoutClick = {
+                    onAction(ChatListAction.OnLogoutClick)
+                },
+            )
+        }
     }
 }
