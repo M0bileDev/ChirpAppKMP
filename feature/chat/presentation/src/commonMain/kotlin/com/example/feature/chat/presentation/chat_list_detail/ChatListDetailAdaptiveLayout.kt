@@ -34,6 +34,7 @@ import chirpappkmp.feature.chat.presentation.generated.resources.create_chat
 import com.example.core.designsystem.components.buttons.ChirpFloatingActionButton
 import com.example.core.designsystem.theme.extended
 import com.example.core.presentation.util.DialogSheetScopedViewModel
+import com.example.feature.chat.presentation.chat_list.ChatListRoot
 import com.example.feature.chat.presentation.create_chat.CreateChatRoot
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -64,49 +65,14 @@ fun ChatListDetailAdaptiveLayout(
         directive = paneScaffoldDirective,
         value = scaffoldNavigator.scaffoldValue,
         listPane = {
-            //For test purpose
             AnimatedPane {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    floatingActionButton = {
-                        ChirpFloatingActionButton(
-                            onClick = {
-                                viewModel.onAction(ChatListDetailAction.OnCreateChatClick)
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = stringResource(Res.string.create_chat)
-                            )
-                        }
-                    }
-                ) { innerPadding ->
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = innerPadding
-                    ) {
-                        items(100) { chatIndex ->
-                            Text(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        viewModel.onAction(
-                                            ChatListDetailAction.OnChatClick(
-                                                chatIndex.toString()
-                                            )
-                                        )
-                                        scope.launch {
-                                            scaffoldNavigator.navigateTo(
-                                                ListDetailPaneScaffoldRole.Detail
-                                            )
-                                        }
-                                    }
-                                    .padding(16.dp),
-                                text = "Chat $chatIndex"
-                            )
-                        }
-                    }
-                }
+                ChatListRoot(
+                    onChatClick = TODO(),
+                    onLogout = TODO(),
+                    onCreateChatClick = TODO(),
+                    onProfileSettingsClick = TODO(),
+                    viewModel = TODO()
+                )
             }
         },
         detailPane = {
