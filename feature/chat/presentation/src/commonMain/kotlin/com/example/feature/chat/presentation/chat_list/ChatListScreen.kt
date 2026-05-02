@@ -39,12 +39,17 @@ import com.example.core.designsystem.theme.extended
 import com.example.feature.chat.presentation.chat_list.components.ChatListHeader
 import com.example.feature.chat.presentation.chat_list.components.ChatListItem
 import com.example.feature.chat.presentation.chat_list.components.EmptyChatSection
+import com.example.feature.chat.presentation.model.ChatUi
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
 fun ChatListRoot(
+    onChatClick: (ChatUi) -> Unit,
+    onLogout: () -> Unit,
+    onCreateChatClick: () -> Unit,
+    onProfileSettingsClick: () -> Unit,
     viewModel: ChatListViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -53,7 +58,16 @@ fun ChatListRoot(
     ChatListScreen(
         state = state,
         snackbarHostState = snackbarHostState,
-        onAction = viewModel::onAction
+        onAction = { action ->
+            when (action) {
+                is ChatListAction.OnChatClick -> onChatClick(action.chat)
+                ChatListAction.OnConfirmLogout -> onLogout()
+                ChatListAction.OnCreateChatClick -> onCreateChatClick()
+                ChatListAction.OnProfileSettingsClick -> onProfileSettingsClick()
+                else -> Unit
+            }
+            viewModel.onAction(action)
+        }
     )
 }
 
