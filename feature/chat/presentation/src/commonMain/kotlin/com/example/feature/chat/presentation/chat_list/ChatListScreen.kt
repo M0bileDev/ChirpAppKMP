@@ -27,9 +27,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import chirpappkmp.feature.chat.presentation.generated.resources.Res
+import chirpappkmp.feature.chat.presentation.generated.resources.cancel
 import chirpappkmp.feature.chat.presentation.generated.resources.create_chat
+import chirpappkmp.feature.chat.presentation.generated.resources.logout
+import chirpappkmp.feature.chat.presentation.generated.resources.logout_dialog_description
+import chirpappkmp.feature.chat.presentation.generated.resources.logout_dialog_title
 import com.example.core.designsystem.components.brand.ChirpHorizontalDivider
 import com.example.core.designsystem.components.buttons.ChirpFloatingActionButton
+import com.example.core.designsystem.components.dialogs.DestructiveConfirmationDialog
 import com.example.core.designsystem.theme.extended
 import com.example.feature.chat.presentation.chat_list.components.ChatListHeader
 import com.example.feature.chat.presentation.chat_list.components.ChatListItem
@@ -142,5 +147,22 @@ fun ChatListScreen(
                 }
             }
         }
+    }
+    if (showLogoutConfirmation) {
+        DestructiveConfirmationDialog(
+            title = stringResource(Res.string.logout_dialog_title),
+            description = stringResource(Res.string.logout_dialog_description),
+            confirmationButtonText = stringResource(Res.string.logout),
+            cancelButtonText = stringResource(Res.string.cancel),
+            onDismiss = {
+                onAction(ChatListAction.OnDismissLogoutDialog)
+            },
+            onCancelClick = {
+                onAction(ChatListAction.OnDismissLogoutDialog)
+            },
+            onConfirmClick = {
+                onAction(ChatListAction.OnConfirmLogout)
+            }
+        )
     }
 }
