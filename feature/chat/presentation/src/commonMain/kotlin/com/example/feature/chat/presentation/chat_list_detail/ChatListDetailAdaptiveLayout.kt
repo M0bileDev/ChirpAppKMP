@@ -65,7 +65,9 @@ fun ChatListDetailAdaptiveLayout(
                     onCreateChatClick = {
                         viewModel.onAction(ChatListDetailAction.OnCreateChatClick)
                     },
-                    onProfileSettingsClick = {},
+                    onProfileSettingsClick = {
+                        viewModel.onAction(ChatListDetailAction.OnProfileSettingsClick)
+                    },
                 )
             }
         },
