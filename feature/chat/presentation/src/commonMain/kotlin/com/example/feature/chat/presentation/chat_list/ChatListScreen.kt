@@ -33,12 +33,14 @@ import chirpappkmp.feature.chat.presentation.generated.resources.logout_dialog_t
 import com.example.core.designsystem.components.brand.ChirpHorizontalDivider
 import com.example.core.designsystem.components.buttons.ChirpFloatingActionButton
 import com.example.core.designsystem.components.dialogs.DestructiveConfirmationDialog
+import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import com.example.feature.chat.presentation.chat_list.components.ChatListHeader
 import com.example.feature.chat.presentation.chat_list.components.ChatListItem
 import com.example.feature.chat.presentation.chat_list.components.EmptyChatSection
 import com.example.feature.chat.presentation.model.ChatUi
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -172,6 +174,30 @@ fun ChatListScreen(
             onConfirmClick = {
                 onAction(ChatListAction.OnConfirmLogout)
             }
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewChatListScreen() {
+    ChirpTheme {
+        ChatListScreen(
+            state = ChatListState(),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkChatListScreen() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChatListScreen(
+            state = ChatListState(),
+            onAction = {}
         )
     }
 }
