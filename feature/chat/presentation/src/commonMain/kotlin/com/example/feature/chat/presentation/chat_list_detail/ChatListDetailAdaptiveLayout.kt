@@ -29,6 +29,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ChatListDetailAdaptiveLayout(
+    onLogout: () -> Unit,
     viewModel: ChatListDetailViewModel = koinViewModel<ChatListDetailViewModel>()
 ) {
     val sharedState by viewModel.state.collectAsStateWithLifecycle()
@@ -60,7 +61,7 @@ fun ChatListDetailAdaptiveLayout(
                             scaffoldNavigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
                         }
                     },
-                    onLogout = { },
+                    onLogout = onLogout,
                     onCreateChatClick = {},
                     onProfileSettingsClick = {},
                 )
