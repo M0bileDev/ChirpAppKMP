@@ -62,7 +62,9 @@ fun ChatListDetailAdaptiveLayout(
                         }
                     },
                     onLogout = onLogout,
-                    onCreateChatClick = {},
+                    onCreateChatClick = {
+                        viewModel.onAction(ChatListDetailAction.OnCreateChatClick)
+                    },
                     onProfileSettingsClick = {},
                 )
             }
