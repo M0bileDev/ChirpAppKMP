@@ -19,6 +19,8 @@ import chirpappkmp.feature.chat.presentation.generated.resources.no_messages
 import chirpappkmp.feature.chat.presentation.generated.resources.no_messages_subtitle
 import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
+import com.example.core.presentation.composableUtil.currentDeviceConfiguration
+import com.example.core.presentation.util.DeviceConfiguration
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -27,13 +29,20 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun EmptyChatSection(
     modifier: Modifier = Modifier
 ) {
+    val configuration = currentDeviceConfiguration()
+    val size = if (configuration == DeviceConfiguration.MOBILE_LANDSCAPE) {
+        125.dp
+    } else {
+        200.dp
+    }
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            modifier = Modifier.size(200.dp),
+            modifier = Modifier.size(size),
             painter = painterResource(Res.drawable.empty_chat),
             contentDescription = stringResource(Res.string.no_messages),
         )

@@ -18,44 +18,60 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import chirpappkmp.feature.chat.presentation.generated.resources.Res
+import chirpappkmp.feature.chat.presentation.generated.resources.cancel
 import chirpappkmp.feature.chat.presentation.generated.resources.create_chat
+import chirpappkmp.feature.chat.presentation.generated.resources.logout
+import chirpappkmp.feature.chat.presentation.generated.resources.logout_dialog_description
+import chirpappkmp.feature.chat.presentation.generated.resources.logout_dialog_title
 import com.example.core.designsystem.components.brand.ChirpHorizontalDivider
 import com.example.core.designsystem.components.buttons.ChirpFloatingActionButton
+import com.example.core.designsystem.components.dialogs.DestructiveConfirmationDialog
+import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import com.example.feature.chat.presentation.chat_list.components.ChatListHeader
 import com.example.feature.chat.presentation.chat_list.components.ChatListItem
 import com.example.feature.chat.presentation.chat_list.components.EmptyChatSection
+import com.example.feature.chat.presentation.model.ChatUi
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
 fun ChatListRoot(
+    onChatClick: (ChatUi) -> Unit,
+    onLogout: () -> Unit,
+    onCreateChatClick: () -> Unit,
+    onProfileSettingsClick: () -> Unit,
     viewModel: ChatListViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val snackbarHostState = remember { SnackbarHostState() }
 
     ChatListScreen(
         state = state,
-        snackbarHostState = snackbarHostState,
-        onAction = viewModel::onAction
+        onAction = { action ->
+            when (action) {
+                is ChatListAction.OnChatClick -> onChatClick(action.chat)
+                ChatListAction.OnConfirmLogout -> onLogout()
+                ChatListAction.OnCreateChatClick -> onCreateChatClick()
+                ChatListAction.OnProfileSettingsClick -> onProfileSettingsClick()
+                else -> Unit
+            }
+            viewModel.onAction(action)
+        }
     )
 }
 
 @Composable
 fun ChatListScreen(
     state: ChatListState,
-    snackbarHostState: SnackbarHostState,
     onAction: (ChatListAction) -> Unit
 ) = with(state) {
     Scaffold(
@@ -142,5 +158,46 @@ fun ChatListScreen(
                 }
             }
         }
+    }
+    if (showLogoutConfirmation) {
+        DestructiveConfirmationDialog(
+            title = stringResource(Res.string.logout_dialog_title),
+            description = stringResource(Res.string.logout_dialog_description),
+            confirmationButtonText = stringResource(Res.string.logout),
+            cancelButtonText = stringResource(Res.string.cancel),
+            onDismiss = {
+                onAction(ChatListAction.OnDismissLogoutDialog)
+            },
+            onCancelClick = {
+                onAction(ChatListAction.OnDismissLogoutDialog)
+            },
+            onConfirmClick = {
+                onAction(ChatListAction.OnConfirmLogout)
+            }
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewChatListScreen() {
+    ChirpTheme {
+        ChatListScreen(
+            state = ChatListState(),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkChatListScreen() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChatListScreen(
+            state = ChatListState(),
+            onAction = {}
+        )
     }
 }

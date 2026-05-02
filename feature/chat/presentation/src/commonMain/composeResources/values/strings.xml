@@ -11,4 +11,6 @@
     <string name="logout">Logout</string>
     <string name="no_messages">No messages</string>
     <string name="no_messages_subtitle">Create new chat to start messaging</string>
+    <string name="logout_dialog_title">Do you want to log out?</string>
+    <string name="logout_dialog_description">You will have to log in again to use the app.</string>
 </resources>
