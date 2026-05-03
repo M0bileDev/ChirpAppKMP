@@ -33,26 +33,3 @@ fun MessageListItemUi(
         }
     }
 }
-
-@Composable
-fun DateSeparatorItem(
-    date: String,
-    modifier: Modifier = Modifier
-) {
-}
-
-@Composable
-fun LocalUserMessageItem(
-    messageUi: MessageUi.LocalUserMessage,
-    isMenuOpen: Boolean,
-    modifier: Modifier = Modifier
-) {
-}
-
-@Composable
-fun OtherUserMessageItem(
-    messageUi: MessageUi.OtherUserMessage,
-    modifier: Modifier = Modifier
-) {
-
-}
