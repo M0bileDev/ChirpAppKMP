@@ -19,4 +19,9 @@ sealed interface MessageUi {
         val formattedSendAt: UiText,
         val sender: ChatParticipantUi
     ) : MessageUi
+
+    data class DateSeparator(
+        val id: String,
+        val date: UiText
+    ) : MessageUi
 }
