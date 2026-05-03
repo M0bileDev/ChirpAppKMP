@@ -20,7 +20,11 @@ fun MessageListItemUi(
                 date = messageUi.date.asString(),
             )
 
-            is MessageUi.OtherUserMessage -> TODO()
+            is MessageUi.OtherUserMessage -> OtherUserMessageItem(
+                modifier = Modifier.fillMaxWidth(),
+                messageUi = messageUi
+            )
+
             is MessageUi.LocalUserMessage -> LocalUserMessageItem(
                 messageUi = messageUi,
                 isMenuOpen = false,
@@ -43,4 +47,12 @@ fun LocalUserMessageItem(
     isMenuOpen: Boolean,
     modifier: Modifier = Modifier
 ) {
+}
+
+@Composable
+fun OtherUserMessageItem(
+    messageUi: MessageUi.OtherUserMessage,
+    modifier: Modifier = Modifier
+) {
+
 }
