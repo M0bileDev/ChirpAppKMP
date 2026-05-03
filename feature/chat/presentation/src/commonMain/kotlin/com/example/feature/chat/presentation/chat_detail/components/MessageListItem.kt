@@ -21,7 +21,11 @@ fun MessageListItemUi(
             )
 
             is MessageUi.OtherUserMessage -> TODO()
-            is MessageUi.LocalUserMessage -> TODO()
+            is MessageUi.LocalUserMessage -> LocalUserMessageItem(
+                messageUi = messageUi,
+                isMenuOpen = false,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }
@@ -29,6 +33,14 @@ fun MessageListItemUi(
 @Composable
 fun DateSeparatorItem(
     date: String,
+    modifier: Modifier = Modifier
+) {
+}
+
+@Composable
+fun LocalUserMessageItem(
+    messageUi: MessageUi.LocalUserMessage,
+    isMenuOpen: Boolean,
     modifier: Modifier = Modifier
 ) {
 }
