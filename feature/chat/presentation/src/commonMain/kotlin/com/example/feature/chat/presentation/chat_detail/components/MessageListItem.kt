@@ -27,7 +27,10 @@ fun MessageListItemUi(
 
             is MessageUi.LocalUserMessage -> LocalUserMessageItem(
                 messageUi = messageUi,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                onMessageLongClick = {
+                    // TODO: add implemention
+                }
             )
         }
     }
