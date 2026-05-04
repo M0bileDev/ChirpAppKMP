@@ -7,7 +7,6 @@ import com.example.feature.chat.presentation.model.MessageUi
 @Composable
 fun LocalUserMessageItem(
     messageUi: MessageUi.LocalUserMessage,
-    isMenuOpen: Boolean,
     modifier: Modifier = Modifier
 ) {
 }
