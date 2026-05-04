@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalUuidApi::class)
+
 package com.example.feature.chat.presentation.chat_detail.components
 
 import androidx.compose.foundation.layout.Arrangement
@@ -10,7 +12,13 @@ import androidx.compose.ui.unit.dp
 import com.example.core.designsystem.components.avatar.ChirpAvatarPhoto
 import com.example.core.designsystem.components.chat.ChirpChatBubble
 import com.example.core.designsystem.components.chat.TrianglePosition
+import com.example.core.designsystem.theme.ChirpTheme
+import com.example.core.presentation.util.UiText
 import com.example.feature.chat.presentation.model.MessageUi
+import com.example.feature.chat.presentation.type_alias.ChatParticipantUi
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Composable
 fun OtherUserMessageItem(
@@ -31,6 +39,46 @@ fun OtherUserMessageItem(
             sender = sender.username,
             formattedDateTime = formattedSendAt.asString(),
             trianglePosition = TrianglePosition.LEFT
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewOtherUserMessageItem() {
+    ChirpTheme {
+        OtherUserMessageItem(
+            messageUi = MessageUi.OtherUserMessage(
+                id = Uuid.random().toString(),
+                content = "Lorem ipsum",
+                formattedSendAt = UiText.DynamicString("01/01/1900 00:00"),
+                sender = ChatParticipantUi(
+                    id = Uuid.random().toString(),
+                    username = "Lorem ipsum 1",
+                    initials = "LI1"
+                )
+            )
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkOtherUserMessageItem() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        OtherUserMessageItem(
+            messageUi = MessageUi.OtherUserMessage(
+                id = Uuid.random().toString(),
+                content = "Lorem ipsum",
+                formattedSendAt = UiText.DynamicString("01/01/1900 00:00"),
+                sender = ChatParticipantUi(
+                    id = Uuid.random().toString(),
+                    username = "Lorem ipsum 1",
+                    initials = "LI1"
+                )
+            )
         )
     }
 }
