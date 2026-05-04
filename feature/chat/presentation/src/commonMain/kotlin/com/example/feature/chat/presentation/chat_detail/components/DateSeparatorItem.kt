@@ -10,7 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun DateSeparatorItem(
@@ -29,5 +31,27 @@ fun DateSeparatorItem(
             color = MaterialTheme.colorScheme.extended.textPlaceholder
         )
         HorizontalDivider(modifier = Modifier.weight(1f))
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDateSeparatorItem() {
+    ChirpTheme {
+        DateSeparatorItem(
+            date = "Lorem ipsum"
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkDateSeparatorItem() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        DateSeparatorItem(
+            date = "Lorem ipsum"
+        )
     }
 }
