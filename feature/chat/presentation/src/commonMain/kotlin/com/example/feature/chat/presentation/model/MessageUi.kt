@@ -10,7 +10,8 @@ sealed interface MessageUi {
         val content: String,
         val deliveryStatus: ChatMessageDeliveryStatus,
         val canRetry: Boolean,
-        val formattedSentAt: UiText
+        val formattedSentAt: UiText,
+        val isMenuOpen: Boolean
     ) : MessageUi
 
     data class OtherUserMessage(
