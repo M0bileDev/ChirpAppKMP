@@ -19,11 +19,13 @@ import chirpappkmp.feature.chat.presentation.generated.resources.failed
 import chirpappkmp.feature.chat.presentation.generated.resources.loading_icon
 import chirpappkmp.feature.chat.presentation.generated.resources.sending
 import chirpappkmp.feature.chat.presentation.generated.resources.sent
+import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import com.example.core.designsystem.theme.labelXSmall
 import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MessageStatus(
@@ -64,6 +66,72 @@ fun MessageStatus(
             text = text,
             color = color,
             style = MaterialTheme.typography.labelXSmall
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewMessageStatusSending() {
+    ChirpTheme {
+        MessageStatus(
+            status = ChatMessageDeliveryStatus.SENDING
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkMessageStatusSending() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        MessageStatus(
+            status = ChatMessageDeliveryStatus.SENDING
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewMessageStatusSent() {
+    ChirpTheme {
+        MessageStatus(
+            status = ChatMessageDeliveryStatus.SENT
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkMessageStatusSent() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        MessageStatus(
+            status = ChatMessageDeliveryStatus.SENT
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewMessageStatusFailed() {
+    ChirpTheme {
+        MessageStatus(
+            status = ChatMessageDeliveryStatus.FAILED
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkMessageStatusFailed() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        MessageStatus(
+            status = ChatMessageDeliveryStatus.FAILED
         )
     }
 }
