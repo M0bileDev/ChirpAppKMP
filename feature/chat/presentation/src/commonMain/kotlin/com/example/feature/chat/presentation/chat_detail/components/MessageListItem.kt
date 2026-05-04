@@ -27,7 +27,6 @@ fun MessageListItemUi(
 
             is MessageUi.LocalUserMessage -> LocalUserMessageItem(
                 messageUi = messageUi,
-                isMenuOpen = false,
                 modifier = Modifier.fillMaxWidth()
             )
         }
