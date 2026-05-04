@@ -1,9 +1,11 @@
 package com.example.feature.chat.presentation.chat_detail.components
 
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import chirpappkmp.feature.chat.presentation.generated.resources.Res
 import chirpappkmp.feature.chat.presentation.generated.resources.check_icon
@@ -39,5 +41,11 @@ fun MessageStatus(
             Icons.Default.Close,
             MaterialTheme.colorScheme.error
         )
+    }
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
     }
 }
