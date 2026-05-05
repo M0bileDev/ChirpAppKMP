@@ -29,7 +29,13 @@ fun MessageListItemUi(
                 messageUi = messageUi,
                 modifier = Modifier.fillMaxWidth(),
                 onMessageLongClick = {
-                    // TODO: add implemention
+                    // TODO: add implementation
+                },
+                onDismissMessageMenu = {
+                    // TODO: add implementation
+                },
+                onDeleteClick = {
+                    // TODO: add implementation
                 }
             )
         }
