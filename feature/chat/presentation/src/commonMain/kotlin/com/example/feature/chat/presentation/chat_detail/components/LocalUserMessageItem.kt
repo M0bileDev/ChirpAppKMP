@@ -1,9 +1,13 @@
 package com.example.feature.chat.presentation.chat_detail.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,6 +16,7 @@ import chirpappkmp.feature.chat.presentation.generated.resources.Res
 import chirpappkmp.feature.chat.presentation.generated.resources.you
 import com.example.core.designsystem.components.chat.ChirpChatBubble
 import com.example.core.designsystem.components.chat.TrianglePosition
+import com.example.core.designsystem.theme.extended
 import com.example.feature.chat.presentation.model.MessageUi
 import org.jetbrains.compose.resources.stringResource
 
@@ -19,6 +24,7 @@ import org.jetbrains.compose.resources.stringResource
 fun LocalUserMessageItem(
     messageUi: MessageUi.LocalUserMessage,
     onMessageLongClick: (MessageUi.LocalUserMessage) -> Unit,
+    onDismissMessageMenu: () -> Unit,
     modifier: Modifier = Modifier
 ) = with(messageUi) {
     Row(
@@ -41,6 +47,18 @@ fun LocalUserMessageItem(
                     onMessageLongClick(this@with)
                 }
             )
+            DropdownMenu(
+                expanded = isMenuOpen,
+                onDismissRequest = onDismissMessageMenu,
+                containerColor = MaterialTheme.colorScheme.surface,
+                shape = RoundedCornerShape(8.dp),
+                border = BorderStroke(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.extended.surfaceOutline
+                )
+            ){
+                // TODO: content
+            }
         }
     }
 }
