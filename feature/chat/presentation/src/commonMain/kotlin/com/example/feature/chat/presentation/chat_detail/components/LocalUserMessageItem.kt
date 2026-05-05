@@ -1,24 +1,50 @@
+@file:OptIn(ExperimentalUuidApi::class)
+
 package com.example.feature.chat.presentation.chat_detail.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import chirpappkmp.feature.chat.presentation.generated.resources.Res
+import chirpappkmp.feature.chat.presentation.generated.resources.delete_for_everyone
+import chirpappkmp.feature.chat.presentation.generated.resources.reload_icon
+import chirpappkmp.feature.chat.presentation.generated.resources.retry
 import chirpappkmp.feature.chat.presentation.generated.resources.you
 import com.example.core.designsystem.components.chat.ChirpChatBubble
 import com.example.core.designsystem.components.chat.TrianglePosition
+import com.example.core.designsystem.theme.ChirpTheme
+import com.example.core.designsystem.theme.extended
+import com.example.core.presentation.util.UiText
+import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
 import com.example.feature.chat.presentation.model.MessageUi
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Composable
 fun LocalUserMessageItem(
     messageUi: MessageUi.LocalUserMessage,
-    onMessageLongClick: (MessageUi.LocalUserMessage) -> Unit,
+    onMessageLongClick: () -> Unit,
+    onDismissMessageMenu: () -> Unit,
+    onDeleteClick: () -> Unit,
+    onRetryClick: () -> Unit,
     modifier: Modifier = Modifier
 ) = with(messageUi) {
     Row(
@@ -26,7 +52,7 @@ fun LocalUserMessageItem(
         verticalAlignment = Alignment.Bottom,
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
     ) {
-        Box {
+        Box(modifier = Modifier.weight(1f)) {
             ChirpChatBubble(
                 messageContent = content,
                 sender = stringResource(Res.string.you),
@@ -37,10 +63,94 @@ fun LocalUserMessageItem(
                         status = deliveryStatus
                     )
                 },
-                onLongClick = {
-                    onMessageLongClick(this@with)
-                }
+                onLongClick = onMessageLongClick
+            )
+            DropdownMenu(
+                expanded = isMenuOpen,
+                onDismissRequest = onDismissMessageMenu,
+                containerColor = MaterialTheme.colorScheme.surface,
+                shape = RoundedCornerShape(8.dp),
+                border = BorderStroke(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.extended.surfaceOutline
+                )
+            ) {
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = stringResource(Res.string.delete_for_everyone),
+                            color = MaterialTheme.colorScheme.extended.destructiveHover,
+                            fontWeight = FontWeight.Medium
+                        )
+                    },
+                    onClick = {
+                        onDismissMessageMenu()
+                        onDeleteClick()
+                    }
+                )
+            }
+        }
+
+        if (deliveryStatus == ChatMessageDeliveryStatus.FAILED) {
+            IconButton(
+                onClick = onRetryClick
+            ) {
+                Icon(
+                    imageVector = vectorResource(Res.drawable.reload_icon),
+                    contentDescription = stringResource(Res.string.retry),
+                    tint = MaterialTheme.colorScheme.error
+                )
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewLocalUserMessageItem() {
+    ChirpTheme {
+        Box(modifier = Modifier.fillMaxSize()) {
+            LocalUserMessageItem(
+                messageUi = MessageUi.LocalUserMessage(
+                    id = Uuid.random().toString(),
+                    content = "Lorem ipsum",
+                    deliveryStatus = ChatMessageDeliveryStatus.FAILED,
+                    canRetry = true,
+                    formattedSentAt = UiText.DynamicString("01/01/1900 00:00"),
+                    isMenuOpen = true
+                ),
+                onMessageLongClick = {},
+                onDismissMessageMenu = {},
+                onDeleteClick = {},
+                onRetryClick = {},
             )
         }
+
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkLocalUserMessageItem() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            LocalUserMessageItem(
+                messageUi = MessageUi.LocalUserMessage(
+                    id = Uuid.random().toString(),
+                    content = "Lorem ipsum",
+                    deliveryStatus = ChatMessageDeliveryStatus.FAILED,
+                    canRetry = true,
+                    formattedSentAt = UiText.DynamicString("01/01/1900 00:00"),
+                    isMenuOpen = true
+                ),
+                onMessageLongClick = {},
+                onDismissMessageMenu = {},
+                onDeleteClick = {},
+                onRetryClick = {},
+            )
+        }
+
     }
 }

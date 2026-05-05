@@ -9,6 +9,10 @@ import com.example.feature.chat.presentation.model.MessageUi
 @Composable
 fun MessageListItemUi(
     messageUi: MessageUi,
+    onMessageLongClick: () -> Unit,
+    onDismissMessageMenu: () -> Unit,
+    onDeleteClick: () -> Unit,
+    onRetryClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -28,9 +32,10 @@ fun MessageListItemUi(
             is MessageUi.LocalUserMessage -> LocalUserMessageItem(
                 messageUi = messageUi,
                 modifier = Modifier.fillMaxWidth(),
-                onMessageLongClick = {
-                    // TODO: add implemention
-                }
+                onMessageLongClick = onMessageLongClick,
+                onDismissMessageMenu = onDismissMessageMenu,
+                onDeleteClick = onDeleteClick,
+                onRetryClick = onRetryClick
             )
         }
     }
