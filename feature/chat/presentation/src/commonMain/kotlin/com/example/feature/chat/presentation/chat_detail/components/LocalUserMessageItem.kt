@@ -1,9 +1,12 @@
+@file:OptIn(ExperimentalUuidApi::class)
+
 package com.example.feature.chat.presentation.chat_detail.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
@@ -24,11 +27,16 @@ import chirpappkmp.feature.chat.presentation.generated.resources.retry
 import chirpappkmp.feature.chat.presentation.generated.resources.you
 import com.example.core.designsystem.components.chat.ChirpChatBubble
 import com.example.core.designsystem.components.chat.TrianglePosition
+import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
+import com.example.core.presentation.util.UiText
 import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
 import com.example.feature.chat.presentation.model.MessageUi
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Composable
 fun LocalUserMessageItem(
@@ -94,5 +102,55 @@ fun LocalUserMessageItem(
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewLocalUserMessageItem() {
+    ChirpTheme {
+        Box(modifier = Modifier.fillMaxSize()) {
+            LocalUserMessageItem(
+                messageUi = MessageUi.LocalUserMessage(
+                    id = Uuid.random().toString(),
+                    content = "Lorem ipsum",
+                    deliveryStatus = ChatMessageDeliveryStatus.FAILED,
+                    canRetry = true,
+                    formattedSentAt = UiText.DynamicString("01/01/1900 00:00"),
+                    isMenuOpen = true
+                ),
+                onMessageLongClick = {},
+                onDismissMessageMenu = {},
+                onDeleteClick = {},
+                onRetryClick = {},
+            )
+        }
+
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkLocalUserMessageItem() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            LocalUserMessageItem(
+                messageUi = MessageUi.LocalUserMessage(
+                    id = Uuid.random().toString(),
+                    content = "Lorem ipsum",
+                    deliveryStatus = ChatMessageDeliveryStatus.FAILED,
+                    canRetry = true,
+                    formattedSentAt = UiText.DynamicString("01/01/1900 00:00"),
+                    isMenuOpen = true
+                ),
+                onMessageLongClick = {},
+                onDismissMessageMenu = {},
+                onDeleteClick = {},
+                onRetryClick = {},
+            )
+        }
+
     }
 }
