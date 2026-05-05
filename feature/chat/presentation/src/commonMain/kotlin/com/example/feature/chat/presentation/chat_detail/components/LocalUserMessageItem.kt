@@ -52,7 +52,7 @@ fun LocalUserMessageItem(
         verticalAlignment = Alignment.Bottom,
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
     ) {
-        Box {
+        Box(modifier = Modifier.weight(1f)) {
             ChirpChatBubble(
                 messageContent = content,
                 sender = stringResource(Res.string.you),
