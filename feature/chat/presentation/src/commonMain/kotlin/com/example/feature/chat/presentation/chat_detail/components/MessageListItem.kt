@@ -36,6 +36,9 @@ fun MessageListItemUi(
                 },
                 onDeleteClick = {
                     // TODO: add implementation
+                },
+                onRetryClick = {
+                    // TODO: add implementation
                 }
             )
         }
