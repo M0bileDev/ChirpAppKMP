@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,12 +19,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import chirpappkmp.feature.chat.presentation.generated.resources.Res
 import chirpappkmp.feature.chat.presentation.generated.resources.delete_for_everyone
+import chirpappkmp.feature.chat.presentation.generated.resources.reload_icon
+import chirpappkmp.feature.chat.presentation.generated.resources.retry
 import chirpappkmp.feature.chat.presentation.generated.resources.you
 import com.example.core.designsystem.components.chat.ChirpChatBubble
 import com.example.core.designsystem.components.chat.TrianglePosition
 import com.example.core.designsystem.theme.extended
+import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
 import com.example.feature.chat.presentation.model.MessageUi
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun LocalUserMessageItem(
@@ -30,6 +36,7 @@ fun LocalUserMessageItem(
     onMessageLongClick: (MessageUi.LocalUserMessage) -> Unit,
     onDismissMessageMenu: () -> Unit,
     onDeleteClick: () -> Unit,
+    onRetryClick: () -> Unit,
     modifier: Modifier = Modifier
 ) = with(messageUi) {
     Row(
@@ -74,6 +81,18 @@ fun LocalUserMessageItem(
                         onDismissMessageMenu()
                         onDeleteClick()
                     }
+                )
+            }
+        }
+
+        if (deliveryStatus == ChatMessageDeliveryStatus.FAILED) {
+            IconButton(
+                onClick = onRetryClick
+            ) {
+                Icon(
+                    imageVector = vectorResource(Res.drawable.reload_icon),
+                    contentDescription = stringResource(Res.string.retry),
+                    tint = MaterialTheme.colorScheme.error
                 )
             }
         }
