@@ -17,4 +17,5 @@
     <string name="sent">Sent</string>
     <string name="failed">Failed</string>
     <string name="delete_for_everyone">Delete for everyone</string>
+    <string name="retry">Retry</string>
 </resources>
