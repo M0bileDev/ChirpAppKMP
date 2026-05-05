@@ -33,7 +33,7 @@ import org.jetbrains.compose.resources.vectorResource
 @Composable
 fun LocalUserMessageItem(
     messageUi: MessageUi.LocalUserMessage,
-    onMessageLongClick: (MessageUi.LocalUserMessage) -> Unit,
+    onMessageLongClick: () -> Unit,
     onDismissMessageMenu: () -> Unit,
     onDeleteClick: () -> Unit,
     onRetryClick: () -> Unit,
@@ -55,9 +55,7 @@ fun LocalUserMessageItem(
                         status = deliveryStatus
                     )
                 },
-                onLongClick = {
-                    onMessageLongClick(this@with)
-                }
+                onLongClick = onMessageLongClick
             )
             DropdownMenu(
                 expanded = isMenuOpen,
