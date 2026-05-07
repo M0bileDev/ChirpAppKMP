@@ -4,6 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun DateChip(modifier: Modifier = Modifier) {
+fun DateChip(
+    date: String,
+    modifier: Modifier = Modifier
+) {
 
 }
