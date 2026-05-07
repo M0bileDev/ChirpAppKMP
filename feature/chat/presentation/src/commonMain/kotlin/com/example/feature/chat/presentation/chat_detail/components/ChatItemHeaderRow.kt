@@ -36,8 +36,7 @@ fun ChatItemHeaderRow(
     }
 
     Row(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
