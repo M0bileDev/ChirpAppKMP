@@ -1,6 +1,7 @@
 package com.example.feature.chat.presentation.chat_detail.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +26,7 @@ import chirpappkmp.core.designsystem.generated.resources.Res as DesignSystemRes
 fun ChatDetailHeader(
     chatUi: ChatUi,
     isDetailPresent: Boolean,
+    isGroupChat: Boolean,
     isChatOptionsDropDownOpen: Boolean,
     onChatOptionsClick: () -> Unit,
     onDismissChatOptions: () -> Unit,
@@ -52,5 +54,14 @@ fun ChatDetailHeader(
                 )
             }
         }
+        ChatItemHeaderRow(
+            modifier = Modifier
+                .weight(1f)
+                .clickable {
+                    onManageChatClick()
+                },
+            chatUi = chatUi,
+            isGroupChat = isGroupChat,
+        )
     }
 }
