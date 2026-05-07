@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -25,10 +26,15 @@ import chirpappkmp.feature.chat.presentation.generated.resources.open_chat_optio
 import com.example.core.designsystem.components.buttons.ChirpIconButton
 import com.example.core.designsystem.components.dropdown.ChirpDropDownMenu
 import com.example.core.designsystem.components.dropdown.DropDownItem
+import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import com.example.feature.chat.presentation.model.ChatUi
+import com.example.feature.chat.presentation.type_alias.ChatParticipantUi
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import chirpappkmp.core.designsystem.generated.resources.Res as DesignSystemRes
 
 @Composable
@@ -105,5 +111,152 @@ fun ChatDetailHeader(
                 },
             )
         }
+    }
+}
+
+
+@OptIn(ExperimentalUuidApi::class)
+@Preview
+@Composable
+fun PreviewChatDetailHeader() {
+    ChirpTheme {
+        Box(modifier = Modifier.height(300.dp).fillMaxWidth()) {
+            ChatDetailHeader(
+                chatUi = ChatUi(
+                    id = Uuid.random().toString(),
+                    localParticipant = ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum",
+                        initials = "LI"
+                    ),
+                    otherParticipants = listOf(
+                        ChatParticipantUi(
+                            id = Uuid.random().toString(),
+                            username = "Lorem ipsum1",
+                            initials = "LI1"
+                        )
+                    ),
+                    lastMessage = null,
+                    lastMessageSenderUsername = null
+                ),
+                isDetailPresent = true,
+                isGroupChat = false,
+                isChatOptionsDropDownOpen = true,
+                onChatOptionsClick = {},
+                onDismissChatOptions = {},
+                onManageChatClick = {},
+                onLeaveChatClick = {},
+                onBackClick = {},
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalUuidApi::class)
+@Preview
+@Composable
+fun PreviewDarkChatDetailHeader() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChatDetailHeader(
+            chatUi = ChatUi(
+                id = Uuid.random().toString(),
+                localParticipant = ChatParticipantUi(
+                    id = Uuid.random().toString(),
+                    username = "Lorem ipsum",
+                    initials = "LI"
+                ),
+                otherParticipants = listOf(
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum1",
+                        initials = "LI1"
+                    )
+                ),
+                lastMessage = null,
+                lastMessageSenderUsername = null
+            ),
+            isDetailPresent = true,
+            isGroupChat = false,
+            isChatOptionsDropDownOpen = true,
+            onChatOptionsClick = {},
+            onDismissChatOptions = {},
+            onManageChatClick = {},
+            onLeaveChatClick = {},
+            onBackClick = {},
+        )
+    }
+}
+
+@OptIn(ExperimentalUuidApi::class)
+@Preview
+@Composable
+fun PreviewChatDetailHeaderDetailNotPresent() {
+    ChirpTheme {
+        ChatDetailHeader(
+            chatUi = ChatUi(
+                id = Uuid.random().toString(),
+                localParticipant = ChatParticipantUi(
+                    id = Uuid.random().toString(),
+                    username = "Lorem ipsum",
+                    initials = "LI"
+                ),
+                otherParticipants = listOf(
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum1",
+                        initials = "LI1"
+                    )
+                ),
+                lastMessage = null,
+                lastMessageSenderUsername = null
+            ),
+            isDetailPresent = false,
+            isGroupChat = false,
+            isChatOptionsDropDownOpen = false,
+            onChatOptionsClick = {},
+            onDismissChatOptions = {},
+            onManageChatClick = {},
+            onLeaveChatClick = {},
+            onBackClick = {},
+        )
+    }
+}
+
+@OptIn(ExperimentalUuidApi::class)
+@Preview
+@Composable
+fun PreviewDarkChatDetailHeaderDetailNotPresent() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChatDetailHeader(
+            chatUi = ChatUi(
+                id = Uuid.random().toString(),
+                localParticipant = ChatParticipantUi(
+                    id = Uuid.random().toString(),
+                    username = "Lorem ipsum",
+                    initials = "LI"
+                ),
+                otherParticipants = listOf(
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum1",
+                        initials = "LI1"
+                    )
+                ),
+                lastMessage = null,
+                lastMessageSenderUsername = null
+            ),
+            isDetailPresent = false,
+            isGroupChat = false,
+            isChatOptionsDropDownOpen = false,
+            onChatOptionsClick = {},
+            onDismissChatOptions = {},
+            onManageChatClick = {},
+            onLeaveChatClick = {},
+            onBackClick = {},
+        )
     }
 }
