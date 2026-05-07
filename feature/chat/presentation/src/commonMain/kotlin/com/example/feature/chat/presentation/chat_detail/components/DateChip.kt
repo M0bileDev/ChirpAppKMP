@@ -11,7 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun DateChip(
@@ -37,6 +39,28 @@ fun DateChip(
             text = date,
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.extended.textPlaceholder
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDateChip() {
+    ChirpTheme {
+        DateChip(
+            date = "Today"
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkDateChip() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        DateChip(
+            date = "Today"
         )
     }
 }
