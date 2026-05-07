@@ -7,6 +7,7 @@ import com.example.feature.chat.presentation.model.ChatUi
 @Composable
 fun ChatDetailHeader(
     chatUi: ChatUi,
+    isDetailPresent: Boolean,
     isChatOptionsDropDownOpen: Boolean,
     onChatOptionsClick: () -> Unit,
     onDismissChatOptions: () -> Unit,
@@ -14,4 +15,5 @@ fun ChatDetailHeader(
     onLeaveChatClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+
 }
