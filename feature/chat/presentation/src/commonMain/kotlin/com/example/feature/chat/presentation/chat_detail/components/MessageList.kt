@@ -2,6 +2,7 @@ package com.example.feature.chat.presentation.chat_detail.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -47,6 +48,7 @@ fun MessageList(
                 key = { it.id }
             ) { message ->
                 MessageListItem(
+                    modifier = Modifier.fillMaxWidth().animateItem(),
                     messageUi = message,
                     onMessageLongClick = onMessageLongClick,
                     onDismissMessageMenu = onDismissMessageMenu,
