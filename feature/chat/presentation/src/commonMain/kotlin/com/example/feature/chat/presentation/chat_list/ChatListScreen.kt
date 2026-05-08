@@ -30,6 +30,8 @@ import chirpappkmp.feature.chat.presentation.generated.resources.create_chat
 import chirpappkmp.feature.chat.presentation.generated.resources.logout
 import chirpappkmp.feature.chat.presentation.generated.resources.logout_dialog_description
 import chirpappkmp.feature.chat.presentation.generated.resources.logout_dialog_title
+import chirpappkmp.feature.chat.presentation.generated.resources.no_chats
+import chirpappkmp.feature.chat.presentation.generated.resources.no_chats_subtitle
 import com.example.core.designsystem.components.brand.ChirpHorizontalDivider
 import com.example.core.designsystem.components.buttons.ChirpFloatingActionButton
 import com.example.core.designsystem.components.dialogs.DestructiveConfirmationDialog
@@ -37,7 +39,7 @@ import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import com.example.feature.chat.presentation.chat_list.components.ChatListHeader
 import com.example.feature.chat.presentation.chat_list.components.ChatListItem
-import com.example.feature.chat.presentation.chat_list.components.EmptyChatSection
+import com.example.feature.chat.presentation.components.EmptyListSection
 import com.example.feature.chat.presentation.model.ChatUi
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -123,13 +125,15 @@ fun ChatListScreen(
                 }
 
                 chats.isEmpty() && !isLoading -> {
-                    EmptyChatSection(
+                    EmptyListSection(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxWidth()
                             .padding(
                                 horizontal = 8.dp
-                            )
+                            ),
+                        title = stringResource(Res.string.no_chats),
+                        description = stringResource(Res.string.no_chats_subtitle)
                     )
                 }
 

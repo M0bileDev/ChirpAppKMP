@@ -10,7 +10,7 @@
     <string name="profile_settings">Profile settings</string>
     <string name="logout">Logout</string>
     <string name="no_messages">No messages</string>
-    <string name="no_messages_subtitle">Create new chat to start messaging</string>
+    <string name="no_messages_subtitle">Be the first one to send a message</string>
     <string name="logout_dialog_title">Do you want to log out?</string>
     <string name="logout_dialog_description">You will have to log in again to use the app.</string>
     <string name="sending">Sending...</string>
@@ -29,4 +29,6 @@
     <string name="network_error">Network error</string>
     <string name="unknown_error">Unknown error</string>
     <string name="send">Send</string>
+    <string name="no_chats">No chats</string>
+    <string name="no_chats_subtitle">Create new chat to start messaging</string>
 </resources>

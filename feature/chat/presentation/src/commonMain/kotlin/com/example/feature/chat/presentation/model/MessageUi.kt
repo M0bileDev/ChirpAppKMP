@@ -4,25 +4,25 @@ import com.example.core.presentation.util.UiText
 import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
 import com.example.feature.chat.presentation.type_alias.ChatParticipantUi
 
-sealed interface MessageUi {
+sealed class MessageUi(open val id: String) {
     data class LocalUserMessage(
-        val id: String,
+        override val id: String,
         val content: String,
         val deliveryStatus: ChatMessageDeliveryStatus,
         val canRetry: Boolean,
         val formattedSentAt: UiText,
         val isMenuOpen: Boolean
-    ) : MessageUi
+    ) : MessageUi(id)
 
     data class OtherUserMessage(
-        val id: String,
+        override val id: String,
         val content: String,
-        val formattedSendAt: UiText,
+        val formattedSentAt: UiText,
         val sender: ChatParticipantUi
-    ) : MessageUi
+    ) : MessageUi(id)
 
     data class DateSeparator(
-        val id: String,
+        override val id: String,
         val date: UiText
-    ) : MessageUi
+    ) : MessageUi(id)
 }
