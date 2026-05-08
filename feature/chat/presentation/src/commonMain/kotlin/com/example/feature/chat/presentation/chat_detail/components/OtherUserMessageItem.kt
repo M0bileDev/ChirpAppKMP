@@ -37,7 +37,7 @@ fun OtherUserMessageItem(
         ChirpChatBubble(
             messageContent = content,
             sender = sender.username,
-            formattedDateTime = formattedSendAt.asString(),
+            formattedDateTime = formattedSentAt.asString(),
             trianglePosition = TrianglePosition.LEFT
         )
     }
@@ -51,7 +51,7 @@ fun PreviewOtherUserMessageItem() {
             messageUi = MessageUi.OtherUserMessage(
                 id = Uuid.random().toString(),
                 content = "Lorem ipsum",
-                formattedSendAt = UiText.DynamicString("01/01/1900 00:00"),
+                formattedSentAt = UiText.DynamicString("01/01/1900 00:00"),
                 sender = ChatParticipantUi(
                     id = Uuid.random().toString(),
                     username = "Lorem ipsum 1",
@@ -72,7 +72,7 @@ fun PreviewDarkOtherUserMessageItem() {
             messageUi = MessageUi.OtherUserMessage(
                 id = Uuid.random().toString(),
                 content = "Lorem ipsum",
-                formattedSendAt = UiText.DynamicString("01/01/1900 00:00"),
+                formattedSentAt = UiText.DynamicString("01/01/1900 00:00"),
                 sender = ChatParticipantUi(
                     id = Uuid.random().toString(),
                     username = "Lorem ipsum 1",
