@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +22,8 @@ fun MessageList(
     listState: LazyListState,
     onMessageLongClick: (MessageUi.LocalUserMessage) -> Unit,
     onMessageRetryClick: (MessageUi.LocalUserMessage) -> Unit,
+    onDismissMessageMenu: () -> Unit,
+    onDeleteMessageClick: (MessageUi.LocalUserMessage) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (messages.isEmpty()) {
@@ -32,14 +35,25 @@ fun MessageList(
                 description = stringResource(Res.string.no_messages_subtitle)
             )
         }
-    }else{
+    } else {
         LazyColumn(
             modifier = modifier,
             state = listState,
             contentPadding = PaddingValues(16.dp),
             reverseLayout = true
         ) {
-
+            items(
+                items = messages,
+                key = { it.id }
+            ) { message ->
+                MessageListItem(
+                    messageUi = message,
+                    onMessageLongClick = onMessageLongClick,
+                    onDismissMessageMenu = onDismissMessageMenu,
+                    onDeleteClick = onDeleteMessageClick,
+                    onRetryClick = onMessageRetryClick
+                )
+            }
         }
     }
 }
