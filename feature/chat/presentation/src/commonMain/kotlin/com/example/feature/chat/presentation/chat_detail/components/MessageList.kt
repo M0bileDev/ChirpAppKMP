@@ -1,5 +1,6 @@
 package com.example.feature.chat.presentation.chat_detail.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,7 +42,8 @@ fun MessageList(
             modifier = modifier,
             state = listState,
             contentPadding = PaddingValues(16.dp),
-            reverseLayout = true
+            reverseLayout = true,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(
                 items = messages,
