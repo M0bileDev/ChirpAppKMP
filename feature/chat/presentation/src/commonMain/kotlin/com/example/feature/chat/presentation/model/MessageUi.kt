@@ -17,7 +17,7 @@ sealed class MessageUi(open val id: String) {
     data class OtherUserMessage(
         override val id: String,
         val content: String,
-        val formattedSendAt: UiText,
+        val formattedSentAt: UiText,
         val sender: ChatParticipantUi
     ) : MessageUi(id)
 
