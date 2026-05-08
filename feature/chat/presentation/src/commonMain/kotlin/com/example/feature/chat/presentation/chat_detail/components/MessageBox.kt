@@ -21,11 +21,13 @@ import chirpappkmp.feature.chat.presentation.generated.resources.send
 import chirpappkmp.feature.chat.presentation.generated.resources.send_a_message
 import com.example.core.designsystem.components.buttons.ChirpButton
 import com.example.core.designsystem.components.textfields.ChirpMultiLineTextField
+import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import com.example.feature.chat.domain.model.ConnectionState
 import com.example.feature.chat.presentation.util.toUiText
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MessageBox(
@@ -74,4 +76,88 @@ fun MessageBox(
             )
         }
     )
+}
+
+@Preview
+@Composable
+fun PreviewMessageBox() {
+    ChirpTheme {
+        MessageBox(
+            messageTextFieldState = TextFieldState(),
+            isTextInputEnabled = true,
+            connectionState = ConnectionState.CONNECTED,
+            onSendClick = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkMessageBox() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        MessageBox(
+            messageTextFieldState = TextFieldState(),
+            isTextInputEnabled = true,
+            connectionState = ConnectionState.CONNECTED,
+            onSendClick = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewMessageBoxDisconnected() {
+    ChirpTheme {
+        MessageBox(
+            messageTextFieldState = TextFieldState(),
+            isTextInputEnabled = true,
+            connectionState = ConnectionState.DISCONNECTED,
+            onSendClick = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkMessageBoxDisconnected() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        MessageBox(
+            messageTextFieldState = TextFieldState(),
+            isTextInputEnabled = true,
+            connectionState = ConnectionState.DISCONNECTED,
+            onSendClick = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewMessageBoxInputDisabled() {
+    ChirpTheme {
+        MessageBox(
+            messageTextFieldState = TextFieldState(),
+            isTextInputEnabled = false,
+            connectionState = ConnectionState.CONNECTING,
+            onSendClick = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkMessageBoxInputDisabled() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        MessageBox(
+            messageTextFieldState = TextFieldState(),
+            isTextInputEnabled = false,
+            connectionState = ConnectionState.CONNECTING,
+            onSendClick = {},
+        )
+    }
 }
