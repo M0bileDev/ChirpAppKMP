@@ -7,12 +7,12 @@ import androidx.compose.ui.Modifier
 import com.example.feature.chat.presentation.model.MessageUi
 
 @Composable
-fun MessageListItemUi(
+fun MessageListItem(
     messageUi: MessageUi,
-    onMessageLongClick: () -> Unit,
+    onMessageLongClick: (MessageUi.LocalUserMessage) -> Unit,
     onDismissMessageMenu: () -> Unit,
-    onDeleteClick: () -> Unit,
-    onRetryClick: () -> Unit,
+    onDeleteClick: (MessageUi.LocalUserMessage) -> Unit,
+    onRetryClick: (MessageUi.LocalUserMessage) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -32,10 +32,10 @@ fun MessageListItemUi(
             is MessageUi.LocalUserMessage -> LocalUserMessageItem(
                 messageUi = messageUi,
                 modifier = Modifier.fillMaxWidth(),
-                onMessageLongClick = onMessageLongClick,
+                onMessageLongClick = { onMessageLongClick(messageUi) },
                 onDismissMessageMenu = onDismissMessageMenu,
-                onDeleteClick = onDeleteClick,
-                onRetryClick = onRetryClick
+                onDeleteClick = { onDeleteClick(messageUi) },
+                onRetryClick = { onRetryClick(messageUi) }
             )
         }
     }
