@@ -1,10 +1,13 @@
 package com.example.feature.chat.presentation.chat_detail.components
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import chirpappkmp.feature.chat.presentation.generated.resources.Res
 import chirpappkmp.feature.chat.presentation.generated.resources.no_messages
 import chirpappkmp.feature.chat.presentation.generated.resources.no_messages_subtitle
@@ -28,6 +31,15 @@ fun MessageList(
                 title = stringResource(Res.string.no_messages),
                 description = stringResource(Res.string.no_messages_subtitle)
             )
+        }
+    }else{
+        LazyColumn(
+            modifier = modifier,
+            state = listState,
+            contentPadding = PaddingValues(16.dp),
+            reverseLayout = true
+        ) {
+
         }
     }
 }
