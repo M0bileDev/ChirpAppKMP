@@ -24,17 +24,21 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.core.designsystem.theme.extended
 import com.example.core.presentation.composableUtil.currentDeviceConfiguration
 import com.example.core.presentation.util.clearFocusOnTap
+import com.example.feature.chat.presentation.chat_detail.components.ChatDetailHeader
+import com.example.feature.chat.presentation.components.ChatHeader
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
 fun ChatDetailRoot(
+    isDetailPresent: Boolean,
     viewModel: ChatDetailViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     ChatDetailScreen(
         state = state,
+        isDetailPresent = isDetailPresent,
         onAction = viewModel::onAction
     )
 }
@@ -42,6 +46,7 @@ fun ChatDetailRoot(
 @Composable
 fun ChatDetailScreen(
     state: ChatDetailState,
+    isDetailPresent: Boolean,
     onAction: (ChatDetailAction) -> Unit
 ) = with(state) {
     val configuration = currentDeviceConfiguration()
@@ -74,8 +79,30 @@ fun ChatDetailScreen(
                         .weight(1f)
                         .fillMaxWidth(),
                     isCornersRounded = configuration.isWideScreen
-                ){
-
+                ) {
+                    ChatHeader {
+                        ChatDetailHeader(
+                            modifier = Modifier.fillMaxWidth(),
+                            chatUi = chatUi,
+                            isDetailPresent = isDetailPresent,
+                            isChatOptionsDropDownOpen = isChatOptionsOpen,
+                            onChatOptionsClick = {
+                                onAction(ChatDetailAction.OnChatOptionsCLick)
+                            },
+                            onDismissChatOptions = {
+                                onAction(ChatDetailAction.OnDismissChatOptions)
+                            },
+                            onManageChatClick = {
+                                onAction(ChatDetailAction.OnChatMembersClick)
+                            },
+                            onLeaveChatClick = {
+                                onAction(ChatDetailAction.OnLeaveChatClick)
+                            },
+                            onBackClick = {
+                                onAction(ChatDetailAction.OnBackClick)
+                            }
+                        )
+                    }
                 }
             }
         }
