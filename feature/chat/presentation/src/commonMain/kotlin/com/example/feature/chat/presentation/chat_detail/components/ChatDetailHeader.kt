@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -39,9 +40,8 @@ import chirpappkmp.core.designsystem.generated.resources.Res as DesignSystemRes
 
 @Composable
 fun ChatDetailHeader(
-    chatUi: ChatUi,
+    chatUi: ChatUi?,
     isDetailPresent: Boolean,
-    isGroupChat: Boolean,
     isChatOptionsDropDownOpen: Boolean,
     onChatOptionsClick: () -> Unit,
     onDismissChatOptions: () -> Unit,
@@ -50,6 +50,7 @@ fun ChatDetailHeader(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -69,15 +70,21 @@ fun ChatDetailHeader(
                 )
             }
         }
-        ChatItemHeaderRow(
-            modifier = Modifier
-                .weight(1f)
-                .clickable {
-                    onManageChatClick()
-                },
-            chatUi = chatUi,
-            isGroupChat = isGroupChat,
-        )
+        if (chatUi != null) {
+            val isGroupChat = chatUi.otherParticipants.size > 1
+
+            ChatItemHeaderRow(
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable {
+                        onManageChatClick()
+                    },
+                chatUi = chatUi,
+                isGroupChat = isGroupChat,
+            )
+        } else {
+            Spacer(modifier = Modifier.weight(1f))
+        }
 
         Box {
             ChirpIconButton(
@@ -140,7 +147,6 @@ fun PreviewChatDetailHeader() {
                     lastMessageSenderUsername = null
                 ),
                 isDetailPresent = true,
-                isGroupChat = false,
                 isChatOptionsDropDownOpen = true,
                 onChatOptionsClick = {},
                 onDismissChatOptions = {},
@@ -178,7 +184,6 @@ fun PreviewDarkChatDetailHeader() {
                 lastMessageSenderUsername = null
             ),
             isDetailPresent = true,
-            isGroupChat = false,
             isChatOptionsDropDownOpen = true,
             onChatOptionsClick = {},
             onDismissChatOptions = {},
@@ -213,7 +218,6 @@ fun PreviewChatDetailHeaderDetailNotPresent() {
                 lastMessageSenderUsername = null
             ),
             isDetailPresent = false,
-            isGroupChat = false,
             isChatOptionsDropDownOpen = false,
             onChatOptionsClick = {},
             onDismissChatOptions = {},
@@ -250,7 +254,6 @@ fun PreviewDarkChatDetailHeaderDetailNotPresent() {
                 lastMessageSenderUsername = null
             ),
             isDetailPresent = false,
-            isGroupChat = false,
             isChatOptionsDropDownOpen = false,
             onChatOptionsClick = {},
             onDismissChatOptions = {},
