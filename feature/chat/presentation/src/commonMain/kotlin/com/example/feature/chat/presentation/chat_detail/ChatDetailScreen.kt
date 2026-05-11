@@ -5,6 +5,7 @@ package com.example.feature.chat.presentation.chat_detail
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -74,7 +75,7 @@ fun ChatDetailScreen(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                DynamicRoundedCornerBox(
+                DynamicRoundedCornerColumn(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth(),
@@ -110,14 +111,14 @@ fun ChatDetailScreen(
 }
 
 @Composable
-private fun DynamicRoundedCornerBox(
+private fun DynamicRoundedCornerColumn(
     isCornersRounded: Boolean,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    content: @Composable ColumnScope.() -> Unit
 ) {
     val shape = if (isCornersRounded) RoundedCornerShape(16.dp) else RectangleShape
 
-    Box(
+    Column(
         modifier = modifier
             .shadow(
                 elevation = if (isCornersRounded) 4.dp else 0.dp,
