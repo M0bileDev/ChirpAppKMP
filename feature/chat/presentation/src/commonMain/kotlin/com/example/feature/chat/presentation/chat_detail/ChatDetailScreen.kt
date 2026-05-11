@@ -2,6 +2,7 @@
 
 package com.example.feature.chat.presentation.chat_detail
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,7 @@ import com.example.core.designsystem.theme.extended
 import com.example.core.presentation.composableUtil.currentDeviceConfiguration
 import com.example.core.presentation.util.clearFocusOnTap
 import com.example.feature.chat.presentation.chat_detail.components.ChatDetailHeader
+import com.example.feature.chat.presentation.chat_detail.components.MessageBox
 import com.example.feature.chat.presentation.chat_detail.components.MessageList
 import com.example.feature.chat.presentation.components.ChatHeader
 import org.koin.compose.viewmodel.koinViewModel
@@ -125,6 +127,20 @@ fun ChatDetailScreen(
                             onAction(ChatDetailAction.OnDeleteMessageClick(message))
                         }
                     )
+
+                    AnimatedVisibility(
+                        visible = !configuration.isWideScreen && chatUi != null
+                    ) {
+                        MessageBox(
+                            modifier = Modifier.fillMaxWidth(),
+                            messageTextFieldState = messageTextFieldState,
+                            isTextInputEnabled = canSendMessage,
+                            connectionState = connectionState,
+                            onSendClick = {
+                                onAction(ChatDetailAction.OnSendMessageClick)
+                            }
+                        )
+                    }
                 }
             }
         }
