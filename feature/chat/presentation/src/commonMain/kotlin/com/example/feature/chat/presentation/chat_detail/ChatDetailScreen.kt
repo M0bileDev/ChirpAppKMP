@@ -269,3 +269,77 @@ fun PreviewChatDetailScreenMessages() {
         )
     }
 }
+
+@Preview
+@Composable
+fun PreviewDarkChatDetailScreen() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChatDetailScreen(
+            state = ChatDetailState(),
+            isDetailPresent = false,
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkChatDetailScreenMessages() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ChatDetailScreen(
+            state = ChatDetailState(
+                messageTextFieldState = TextFieldState(
+                    initialText = "New message"
+                ),
+                canSendMessage = true,
+                chatUi = ChatUi(
+                    id = Uuid.random().toString(),
+                    localParticipant = ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum",
+                        initials = "LI"
+                    ),
+                    otherParticipants = listOf(
+                        ChatParticipantUi(
+                            id = Uuid.random().toString(),
+                            username = "Lorem ipsum1",
+                            initials = "LI1"
+                        )
+                    ),
+                    lastMessage = null,
+                    lastMessageSenderUsername = null
+                ),
+                messages = (1..20).map {
+                    val showLocalMessage = Random.nextBoolean()
+                    if (showLocalMessage) {
+                        MessageUi.LocalUserMessage(
+                            id = Uuid.random().toString(),
+                            content = "Lorem ipsum",
+                            deliveryStatus = ChatMessageDeliveryStatus.SENT,
+                            isMenuOpen = false,
+                            formattedSentAt = UiText.DynamicString("01/01/1900 00:00"),
+                            canRetry = true
+                        )
+                    } else {
+                        MessageUi.OtherUserMessage(
+                            id = Uuid.random().toString(),
+                            content = "Lorem ipsum",
+                            formattedSentAt = UiText.DynamicString("01/01/1900 00:00"),
+                            sender = ChatParticipantUi(
+                                id = Uuid.random().toString(),
+                                username = "Lorem ipsum 1",
+                                initials = "LI1"
+                            )
+                        )
+                    }
+                }
+            ),
+            isDetailPresent = true,
+            onAction = {}
+        )
+    }
+}
