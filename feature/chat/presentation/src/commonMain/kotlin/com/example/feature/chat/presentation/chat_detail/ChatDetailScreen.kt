@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalUuidApi::class)
+@file:OptIn(ExperimentalUuidApi::class, ExperimentalComposeUiApi::class)
 
 package com.example.feature.chat.presentation.chat_detail
 
@@ -23,7 +23,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
@@ -51,12 +53,20 @@ import kotlin.uuid.Uuid
 fun ChatDetailRoot(
     chatId: String?,
     isDetailPresent: Boolean,
+    onBack: () -> Unit,
     viewModel: ChatDetailViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(chatId) {
         viewModel.onAction(ChatDetailAction.OnSelectChat(chatId))
+    }
+
+    BackHandler(
+        enabled = !isDetailPresent
+    ) {
+        viewModel.onAction(ChatDetailAction.OnSelectChat(null))
+        onBack()
     }
 
     ChatDetailScreen(
