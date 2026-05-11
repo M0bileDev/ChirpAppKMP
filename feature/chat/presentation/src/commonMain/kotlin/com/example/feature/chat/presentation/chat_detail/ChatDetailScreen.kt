@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -26,15 +27,24 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import com.example.core.presentation.composableUtil.currentDeviceConfiguration
+import com.example.core.presentation.util.UiText
 import com.example.core.presentation.util.clearFocusOnTap
+import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
 import com.example.feature.chat.presentation.chat_detail.components.ChatDetailHeader
 import com.example.feature.chat.presentation.chat_detail.components.MessageBox
 import com.example.feature.chat.presentation.chat_detail.components.MessageList
 import com.example.feature.chat.presentation.components.ChatHeader
+import com.example.feature.chat.presentation.model.ChatUi
+import com.example.feature.chat.presentation.model.MessageUi
+import com.example.feature.chat.presentation.type_alias.ChatParticipantUi
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Composable
 fun ChatDetailRoot(
@@ -145,13 +155,13 @@ fun ChatDetailScreen(
                     }
                 }
 
-                if(configuration.isWideScreen){
+                if (configuration.isWideScreen) {
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
                 AnimatedVisibility(
                     visible = configuration.isWideScreen && chatUi != null
-                ){
+                ) {
                     MessageBox(
                         modifier = Modifier.fillMaxWidth(),
                         messageTextFieldState = messageTextFieldState,
@@ -187,5 +197,75 @@ private fun DynamicRoundedCornerColumn(
             )
     ) {
         content()
+    }
+}
+
+@Preview
+@Composable
+fun PreviewChatDetailScreen() {
+    ChirpTheme {
+        ChatDetailScreen(
+            state = ChatDetailState(),
+            isDetailPresent = false,
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewChatDetailScreenMessages() {
+    ChirpTheme {
+        ChatDetailScreen(
+            state = ChatDetailState(
+                messageTextFieldState = TextFieldState(
+                    initialText = "New message"
+                ),
+                canSendMessage = true,
+                chatUi = ChatUi(
+                    id = Uuid.random().toString(),
+                    localParticipant = ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum",
+                        initials = "LI"
+                    ),
+                    otherParticipants = listOf(
+                        ChatParticipantUi(
+                            id = Uuid.random().toString(),
+                            username = "Lorem ipsum1",
+                            initials = "LI1"
+                        )
+                    ),
+                    lastMessage = null,
+                    lastMessageSenderUsername = null
+                ),
+                messages = (1..20).map {
+                    val showLocalMessage = Random.nextBoolean()
+                    if (showLocalMessage) {
+                        MessageUi.LocalUserMessage(
+                            id = Uuid.random().toString(),
+                            content = "Lorem ipsum",
+                            deliveryStatus = ChatMessageDeliveryStatus.SENT,
+                            isMenuOpen = false,
+                            formattedSentAt = UiText.DynamicString("01/01/1900 00:00"),
+                            canRetry = true
+                        )
+                    } else {
+                        MessageUi.OtherUserMessage(
+                            id = Uuid.random().toString(),
+                            content = "Lorem ipsum",
+                            formattedSentAt = UiText.DynamicString("01/01/1900 00:00"),
+                            sender = ChatParticipantUi(
+                                id = Uuid.random().toString(),
+                                username = "Lorem ipsum 1",
+                                initials = "LI1"
+                            )
+                        )
+                    }
+                }
+            ),
+            isDetailPresent = true,
+            onAction = {}
+        )
     }
 }
