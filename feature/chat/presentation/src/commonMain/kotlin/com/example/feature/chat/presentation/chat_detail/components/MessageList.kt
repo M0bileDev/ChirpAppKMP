@@ -40,6 +40,7 @@ fun MessageList(
 ) {
     if (messages.isEmpty()) {
         Box(
+            modifier = modifier,
             contentAlignment = Alignment.Center
         ) {
             EmptyListSection(

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.feature.chat.presentation.model.MessageUi
+import com.example.feature.chat.presentation.util.getChatBubbleColorForUser
 
 @Composable
 fun MessageListItem(
@@ -26,7 +27,8 @@ fun MessageListItem(
 
             is MessageUi.OtherUserMessage -> OtherUserMessageItem(
                 modifier = Modifier.fillMaxWidth(),
-                messageUi = messageUi
+                messageUi = messageUi,
+                color = getChatBubbleColorForUser(messageUi.id)
             )
 
             is MessageUi.LocalUserMessage -> LocalUserMessageItem(

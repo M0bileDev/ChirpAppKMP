@@ -5,14 +5,17 @@ package com.example.feature.chat.presentation.chat_detail.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.core.designsystem.components.avatar.ChirpAvatarPhoto
 import com.example.core.designsystem.components.chat.ChirpChatBubble
 import com.example.core.designsystem.components.chat.TrianglePosition
 import com.example.core.designsystem.theme.ChirpTheme
+import com.example.core.designsystem.theme.extended
 import com.example.core.presentation.util.UiText
 import com.example.feature.chat.presentation.model.MessageUi
 import com.example.feature.chat.presentation.type_alias.ChatParticipantUi
@@ -23,7 +26,8 @@ import kotlin.uuid.Uuid
 @Composable
 fun OtherUserMessageItem(
     messageUi: MessageUi.OtherUserMessage,
-    modifier: Modifier = Modifier
+    color: Color = MaterialTheme.colorScheme.extended.surfaceHigher,
+    modifier: Modifier = Modifier,
 ) = with(messageUi) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -38,7 +42,8 @@ fun OtherUserMessageItem(
             messageContent = content,
             sender = sender.username,
             formattedDateTime = formattedSentAt.asString(),
-            trianglePosition = TrianglePosition.LEFT
+            trianglePosition = TrianglePosition.LEFT,
+            color = color
         )
     }
 }
