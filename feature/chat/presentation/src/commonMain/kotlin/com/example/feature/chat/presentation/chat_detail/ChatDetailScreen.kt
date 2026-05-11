@@ -20,6 +20,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,10 +49,15 @@ import kotlin.uuid.Uuid
 
 @Composable
 fun ChatDetailRoot(
+    chatId: String?,
     isDetailPresent: Boolean,
     viewModel: ChatDetailViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(chatId) {
+        viewModel.onAction(ChatDetailAction.OnSelectChat(chatId))
+    }
 
     ChatDetailScreen(
         state = state,
