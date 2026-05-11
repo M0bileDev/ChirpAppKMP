@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -26,6 +27,7 @@ import com.example.core.designsystem.theme.extended
 import com.example.core.presentation.composableUtil.currentDeviceConfiguration
 import com.example.core.presentation.util.clearFocusOnTap
 import com.example.feature.chat.presentation.chat_detail.components.ChatDetailHeader
+import com.example.feature.chat.presentation.chat_detail.components.MessageList
 import com.example.feature.chat.presentation.components.ChatHeader
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.uuid.ExperimentalUuidApi
@@ -56,6 +58,7 @@ fun ChatDetailScreen(
     } else {
         MaterialTheme.colorScheme.extended.surfaceLower
     }
+    val messageLazyListState = rememberLazyListState()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -104,6 +107,24 @@ fun ChatDetailScreen(
                             }
                         )
                     }
+
+                    MessageList(
+                        modifier = Modifier.fillMaxWidth().weight(1f),
+                        messages = messages,
+                        listState = messageLazyListState,
+                        onMessageLongClick = { message ->
+                            onAction(ChatDetailAction.OnMessageLongClick(message))
+                        },
+                        onMessageRetryClick = { message ->
+                            onAction(ChatDetailAction.OnRetryClick(message))
+                        },
+                        onDismissMessageMenu = {
+                            onAction(ChatDetailAction.OnDismissMessageMenu)
+                        },
+                        onDeleteMessageClick = { message ->
+                            onAction(ChatDetailAction.OnDeleteMessageClick(message))
+                        }
+                    )
                 }
             }
         }
