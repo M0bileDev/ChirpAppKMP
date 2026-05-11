@@ -7,9 +7,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -141,6 +143,24 @@ fun ChatDetailScreen(
                             }
                         )
                     }
+                }
+
+                if(configuration.isWideScreen){
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
+                AnimatedVisibility(
+                    visible = configuration.isWideScreen && chatUi != null
+                ){
+                    MessageBox(
+                        modifier = Modifier.fillMaxWidth(),
+                        messageTextFieldState = messageTextFieldState,
+                        isTextInputEnabled = canSendMessage,
+                        connectionState = connectionState,
+                        onSendClick = {
+                            onAction(ChatDetailAction.OnSendMessageClick)
+                        }
+                    )
                 }
             }
         }
