@@ -14,3 +14,20 @@ data class ChatWithParticipants(
     )
     val participants: List<ChatParticipantEntity>
 )
+
+data class ChatInfoEntity(
+    @Embedded
+    val chat: ChatEntity,
+    @Relation(
+        parentColumn = "chatId",
+        entityColumn = "userId",
+        associateBy = Junction(ChatParticipantCrossRef::class)
+    )
+    val participants: List<ChatParticipantEntity>,
+    @Relation(
+        parentColumn = "chatId",
+        entityColumn = "chatId",
+        entity = ChatMessageEntity::class
+    )
+    val messagesWithSenders: List<MessageWithSender>
+)
