@@ -9,4 +9,7 @@ interface ChatDao {
 
     @Upsert
     suspend fun upsertChat(chat: ChatEntity)
+
+    @Upsert
+    suspend fun upsertChats(chats: List<ChatEntity>)
 }
