@@ -21,4 +21,7 @@ interface ChatDao {
 
     @Query("SELECT * FROM chatentity ORDER BY lastActivityAt DESC")
     fun getChatsWithParticipants(): Flow<List<ChatWithParticipants>>
+
+    @Query("SELECT * FROM chatentity WHERE chatId = :chatId")
+    fun getChatById(chatId: String): ChatWithParticipants?
 }
