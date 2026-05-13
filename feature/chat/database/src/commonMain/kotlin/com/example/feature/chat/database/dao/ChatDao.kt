@@ -5,6 +5,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
 import com.example.feature.chat.database.entities.ChatEntity
+import com.example.feature.chat.database.entities.ChatInfoEntity
 import com.example.feature.chat.database.entities.ChatParticipantEntity
 import com.example.feature.chat.database.entities.ChatWithParticipants
 import kotlinx.coroutines.flow.Flow
@@ -52,4 +53,7 @@ interface ChatDao {
         ORDER BY p.userName
     """)
     fun getActiveParticipantsByChatId(chatId: String): Flow<List<ChatParticipantEntity>>
+
+    @Query("SELECT * FROM chatentity WHERE chatId = :chatId")
+    fun getChatInfoById(chatId: String): Flow<ChatInfoEntity?>
 }
