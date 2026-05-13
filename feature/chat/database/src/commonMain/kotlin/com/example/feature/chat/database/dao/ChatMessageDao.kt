@@ -8,6 +8,9 @@ import com.example.feature.chat.database.entities.ChatMessageEntity
 interface ChatMessageDao {
 
     @Upsert
-    suspend fun upsertMessage(chatMessageEntity: ChatMessageEntity)
+    suspend fun upsertMessage(message: ChatMessageEntity)
+
+    @Upsert
+    suspend fun upsertMessages(messages: List<ChatMessageEntity>)
 
 }
