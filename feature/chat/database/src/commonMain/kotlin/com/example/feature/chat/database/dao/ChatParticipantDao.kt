@@ -1,6 +1,7 @@
 package com.example.feature.chat.database.dao
 
 import androidx.room.Dao
+import androidx.room.Query
 import androidx.room.Upsert
 import com.example.feature.chat.database.entities.ChatParticipantEntity
 
@@ -12,4 +13,7 @@ interface ChatParticipantDao {
 
     @Upsert
     suspend fun upsertParticipants(participants: List<ChatParticipantEntity>)
+
+    @Query("SELECT * FROM chatparticipantentity")
+    suspend fun getAllParticipants(): List<ChatParticipantEntity>
 }
