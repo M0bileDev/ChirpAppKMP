@@ -2,6 +2,7 @@ package com.example.feature.chat.database.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
 import com.example.feature.chat.database.entities.ChatEntity
 import com.example.feature.chat.database.entities.ChatWithParticipants
@@ -30,4 +31,11 @@ interface ChatDao {
 
     @Query("SELECT chatId FROM chatentity")
     suspend fun getAllChatIds(): List<String>
+
+    @Transaction
+    suspend fun deleteChatsByIds(chatIds: List<String>) {
+        chatIds.forEach { chatId ->
+            deleteChatById(chatId)
+        }
+    }
 }
