@@ -9,4 +9,7 @@ interface ChatParticipantDao {
 
     @Upsert
     suspend fun upsertParticipant(participant: ChatParticipantEntity)
+
+    @Upsert
+    suspend fun upsertParticipants(participants: List<ChatParticipantEntity>)
 }
