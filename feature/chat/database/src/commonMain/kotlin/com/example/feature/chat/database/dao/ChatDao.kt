@@ -38,4 +38,7 @@ interface ChatDao {
             deleteChatById(chatId)
         }
     }
+
+    @Query("SELECT COUNT(*) FROM chatentity")
+    fun getChatCount(): Flow<Int>
 }
