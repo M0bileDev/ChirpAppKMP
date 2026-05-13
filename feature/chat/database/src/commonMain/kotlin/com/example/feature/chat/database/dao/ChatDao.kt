@@ -27,4 +27,7 @@ interface ChatDao {
 
     @Query("DELETE FROM chatentity")
     suspend fun deleteAllChats()
+
+    @Query("SELECT chatId FROM chatentity")
+    suspend fun getAllChatIds(): List<String>
 }
