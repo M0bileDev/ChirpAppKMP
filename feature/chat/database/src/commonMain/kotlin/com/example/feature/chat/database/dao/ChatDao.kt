@@ -64,12 +64,19 @@ interface ChatDao {
     suspend fun upsertChatWithParticipantsAndCrossRefs(
         chat: ChatEntity,
         participants: List<ChatParticipantEntity>,
-        crossRefs: List<ChatParticipantCrossRef>,
         participantDao: ChatParticipantDao,
         crossRefDao: ChatParticipantsCrossRefDao
     ) {
         upsertChat(chat)
         participantDao.upsertParticipants(participants)
+
+        val crossRefs = participants.map {
+            ChatParticipantCrossRef(
+                chatId = chat.chatId,
+                userId = it.userId,
+                isActive = true
+            )
+        }
         with(crossRefDao) {
             upsertCrossRefs(crossRefs)
             syncChatParticipants(chat.chatId, participants)
