@@ -6,6 +6,7 @@ import androidx.room.Transaction
 import androidx.room.Upsert
 import com.example.feature.chat.database.entities.ChatEntity
 import com.example.feature.chat.database.entities.ChatInfoEntity
+import com.example.feature.chat.database.entities.ChatParticipantCrossRef
 import com.example.feature.chat.database.entities.ChatParticipantEntity
 import com.example.feature.chat.database.entities.ChatWithParticipants
 import kotlinx.coroutines.flow.Flow
@@ -44,16 +45,73 @@ interface ChatDao {
     @Query("SELECT COUNT(*) FROM chatentity")
     fun getChatCount(): Flow<Int>
 
-    @Query("""
+    @Query(
+        """
         SELECT p.*
         FROM chatparticipantentity p
         JOIN chatparticipantcrossref c
         ON p.userId == c.userId
         WHERE c.chatId = :chatId AND c.isActive
         ORDER BY p.userName
-    """)
+    """
+    )
     fun getActiveParticipantsByChatId(chatId: String): Flow<List<ChatParticipantEntity>>
 
     @Query("SELECT * FROM chatentity WHERE chatId = :chatId")
     fun getChatInfoById(chatId: String): Flow<ChatInfoEntity?>
+
+    @Transaction
+    suspend fun upsertChatWithParticipantsAndCrossRefs(
+        chat: ChatEntity,
+        participants: List<ChatParticipantEntity>,
+        participantDao: ChatParticipantDao,
+        crossRefDao: ChatParticipantsCrossRefDao
+    ) {
+        upsertChat(chat)
+        participantDao.upsertParticipants(participants)
+
+        val crossRefs = participants.map {
+            ChatParticipantCrossRef(
+                chatId = chat.chatId,
+                userId = it.userId,
+                isActive = true
+            )
+        }
+        with(crossRefDao) {
+            upsertCrossRefs(crossRefs)
+            syncChatParticipants(chat.chatId, participants)
+        }
+
+    }
+
+    @Transaction
+    suspend fun upsertChatsWithParticipantsAndCrossRefs(
+        chatsWithParticipants: List<ChatWithParticipants>,
+        participantDao: ChatParticipantDao,
+        crossRefDao: ChatParticipantsCrossRefDao
+    ) {
+        upsertChats(chatsWithParticipants.map { it.chat })
+
+        // this probably needs to be converted to a set (eliminating duplicates)
+        val participants = chatsWithParticipants.flatMap { it.participants }
+        participantDao.upsertParticipants(participants)
+
+        val crossRefs = chatsWithParticipants.flatMap { chatWithParticipants ->
+            chatWithParticipants.participants.map { participant ->
+                ChatParticipantCrossRef(
+                    chatId = chatWithParticipants.chat.chatId,
+                    userId = participant.userId,
+                    isActive = true
+                )
+            }
+        }
+        crossRefDao.upsertCrossRefs(crossRefs)
+
+        chatsWithParticipants.forEach { chatWithParticipants ->
+            crossRefDao.syncChatParticipants(
+                chatId = chatWithParticipants.chat.chatId,
+                participants = participants
+            )
+        }
+    }
 }
