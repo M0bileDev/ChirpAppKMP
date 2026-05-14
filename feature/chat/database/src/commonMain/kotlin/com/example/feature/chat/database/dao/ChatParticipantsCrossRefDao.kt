@@ -20,4 +20,11 @@ interface ChatParticipantsCrossRefDao {
         WHERE chatId = :chatId AND userId IN (:userIds)
     """)
     suspend fun markParticipantsAsInactive(chatId: String, userIds: List<String>)
+
+    @Query("""
+        UPDATE chatparticipantcrossref
+        SET isActive = 1
+        WHERE chatId = :chatId AND userId IN (:userIds)
+    """)
+    suspend fun markParticipantsAsActive(chatId: String, userIds: List<String>)
 }
