@@ -76,4 +76,35 @@ interface ChatDao {
         }
 
     }
+
+    @Transaction
+    suspend fun upsertChatsWithParticipantsAndCrossRefs(
+        chatsWithParticipants: List<ChatWithParticipants>,
+        participantDao: ChatParticipantDao,
+        crossRefDao: ChatParticipantsCrossRefDao
+    ) {
+        upsertChats(chatsWithParticipants.map { it.chat })
+
+        // this probably needs to be converted to a set (eliminating duplicates)
+        val participants = chatsWithParticipants.flatMap { it.participants }
+        participantDao.upsertParticipants(participants)
+
+        val crossRefs = chatsWithParticipants.flatMap { chatWithParticipants ->
+            chatWithParticipants.participants.map { participant ->
+                ChatParticipantCrossRef(
+                    chatId = chatWithParticipants.chat.chatId,
+                    userId = participant.userId,
+                    isActive = true
+                )
+            }
+        }
+        crossRefDao.upsertCrossRefs(crossRefs)
+
+        chatsWithParticipants.forEach { chatWithParticipants ->
+            crossRefDao.syncChatParticipants(
+                chatId = chatWithParticipants.chat.chatId,
+                participants = participants
+            )
+        }
+    }
 }
