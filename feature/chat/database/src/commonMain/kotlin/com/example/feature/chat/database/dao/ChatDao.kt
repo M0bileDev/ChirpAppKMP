@@ -6,6 +6,7 @@ import androidx.room.Transaction
 import androidx.room.Upsert
 import com.example.feature.chat.database.entities.ChatEntity
 import com.example.feature.chat.database.entities.ChatInfoEntity
+import com.example.feature.chat.database.entities.ChatParticipantCrossRef
 import com.example.feature.chat.database.entities.ChatParticipantEntity
 import com.example.feature.chat.database.entities.ChatWithParticipants
 import kotlinx.coroutines.flow.Flow
@@ -44,16 +45,35 @@ interface ChatDao {
     @Query("SELECT COUNT(*) FROM chatentity")
     fun getChatCount(): Flow<Int>
 
-    @Query("""
+    @Query(
+        """
         SELECT p.*
         FROM chatparticipantentity p
         JOIN chatparticipantcrossref c
         ON p.userId == c.userId
         WHERE c.chatId = :chatId AND c.isActive
         ORDER BY p.userName
-    """)
+    """
+    )
     fun getActiveParticipantsByChatId(chatId: String): Flow<List<ChatParticipantEntity>>
 
     @Query("SELECT * FROM chatentity WHERE chatId = :chatId")
     fun getChatInfoById(chatId: String): Flow<ChatInfoEntity?>
+
+    @Transaction
+    suspend fun upsertChatWithParticipantsAndCrossRefs(
+        chat: ChatEntity,
+        participants: List<ChatParticipantEntity>,
+        crossRefs: List<ChatParticipantCrossRef>,
+        participantDao: ChatParticipantDao,
+        crossRefDao: ChatParticipantsCrossRefDao
+    ) {
+        upsertChat(chat)
+        participantDao.upsertParticipants(participants)
+        with(crossRefDao) {
+            upsertCrossRefs(crossRefs)
+            syncChatParticipants(chat.chatId, participants)
+        }
+
+    }
 }
