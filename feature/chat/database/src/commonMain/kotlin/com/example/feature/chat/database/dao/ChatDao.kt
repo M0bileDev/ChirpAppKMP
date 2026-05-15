@@ -23,9 +23,11 @@ interface ChatDao {
     @Query("DELETE FROM chatentity WHERE chatId = :chatId")
     suspend fun deleteChatById(chatId: String)
 
+    @Transaction
     @Query("SELECT * FROM chatentity ORDER BY lastActivityAt DESC")
     fun getChatsWithParticipants(): Flow<List<ChatWithParticipants>>
 
+    @Transaction
     @Query("SELECT * FROM chatentity WHERE chatId = :chatId")
     fun getChatById(chatId: String): ChatWithParticipants?
 
@@ -57,6 +59,7 @@ interface ChatDao {
     )
     fun getActiveParticipantsByChatId(chatId: String): Flow<List<ChatParticipantEntity>>
 
+    @Transaction
     @Query("SELECT * FROM chatentity WHERE chatId = :chatId")
     fun getChatInfoById(chatId: String): Flow<ChatInfoEntity?>
 
