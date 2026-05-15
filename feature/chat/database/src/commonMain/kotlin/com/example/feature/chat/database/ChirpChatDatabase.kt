@@ -6,6 +6,7 @@ import com.example.feature.chat.database.entities.ChatEntity
 import com.example.feature.chat.database.entities.ChatMessageEntity
 import com.example.feature.chat.database.entities.ChatParticipantCrossRef
 import com.example.feature.chat.database.entities.ChatParticipantEntity
+import com.example.feature.chat.database.view.LastMessageView
 
 @Database(
     entities = [
@@ -13,6 +14,9 @@ import com.example.feature.chat.database.entities.ChatParticipantEntity
         ChatParticipantEntity::class,
         ChatMessageEntity::class,
         ChatParticipantCrossRef::class
+    ],
+    views = [
+        LastMessageView::class
     ],
     version = 1
 )
