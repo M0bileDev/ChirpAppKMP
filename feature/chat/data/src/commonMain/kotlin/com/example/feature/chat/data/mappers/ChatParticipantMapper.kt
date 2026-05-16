@@ -1,6 +1,7 @@
 package com.example.feature.chat.data.mappers
 
 import com.example.feature.chat.data.dto.ChatParticipantDto
+import com.example.feature.chat.database.entities.ChatParticipantEntity
 import com.example.feature.chat.domain.model.ChatParticipant
 
 fun ChatParticipantDto.toDomain(): ChatParticipant {
@@ -8,5 +9,13 @@ fun ChatParticipantDto.toDomain(): ChatParticipant {
         userId = userId,
         username = username,
         profilePictureUrl = profilePictureUrl
+    )
+}
+
+fun ChatParticipantEntity.toDomain(): ChatParticipant{
+    return ChatParticipant(
+        userId = userId,
+        username = username,
+        profilePictureUrl =  profilePictureUrl
     )
 }
