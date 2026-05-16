@@ -64,7 +64,7 @@ interface ChatDao {
         JOIN chatparticipantcrossref c
         ON p.userId == c.userId
         WHERE c.chatId = :chatId AND c.isActive
-        ORDER BY p.userName
+        ORDER BY p.username
     """
     )
     fun getActiveParticipantsByChatId(chatId: String): Flow<List<ChatParticipantEntity>>
