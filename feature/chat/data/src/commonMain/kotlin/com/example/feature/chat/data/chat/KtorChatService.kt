@@ -1,5 +1,6 @@
 package com.example.feature.chat.data.chat
 
+import com.example.core.data.network.get
 import com.example.core.data.network.post
 import com.example.core.domain.util.DataError
 import com.example.core.domain.util.Result
@@ -7,8 +8,8 @@ import com.example.core.domain.util.map
 import com.example.feature.chat.data.dto.ChatDto
 import com.example.feature.chat.data.dto.CreateChatRequest
 import com.example.feature.chat.data.mappers.toDomain
-import com.example.feature.chat.domain.model.Chat
 import com.example.feature.chat.domain.chat.ChatService
+import com.example.feature.chat.domain.model.Chat
 import io.ktor.client.HttpClient
 
 class KtorChatService(
@@ -22,6 +23,14 @@ class KtorChatService(
             )
         ).map {
             it.toDomain()
+        }
+    }
+
+    override suspend fun getChats(): Result<List<Chat>, DataError.Remote> {
+        return httpClient.get<List<ChatDto>>(
+            route = "/chat"
+        ).map { chatDto ->
+            chatDto.map { it.toDomain() }
         }
     }
 }
