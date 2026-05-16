@@ -7,6 +7,6 @@ import androidx.room.PrimaryKey
 data class ChatParticipantEntity(
     @PrimaryKey
     val userId: String,
-    val userName: String,
+    val username: String,
     val profilePictureUrl: String?
 )
