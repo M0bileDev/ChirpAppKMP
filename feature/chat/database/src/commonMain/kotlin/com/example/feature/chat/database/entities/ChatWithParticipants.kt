@@ -19,7 +19,7 @@ data class ChatWithParticipants(
         entityColumn = "chatId",
         entity = LastMessageView::class
     )
-    val lastMessage: LastMessageView
+    val lastMessage: LastMessageView?
 )
 
 data class ChatInfoEntity(

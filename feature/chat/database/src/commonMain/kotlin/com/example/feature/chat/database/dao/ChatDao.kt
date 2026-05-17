@@ -6,6 +6,7 @@ import androidx.room.Transaction
 import androidx.room.Upsert
 import com.example.feature.chat.database.entities.ChatEntity
 import com.example.feature.chat.database.entities.ChatInfoEntity
+import com.example.feature.chat.database.entities.ChatMessageEntity
 import com.example.feature.chat.database.entities.ChatParticipantCrossRef
 import com.example.feature.chat.database.entities.ChatParticipantEntity
 import com.example.feature.chat.database.entities.ChatWithParticipants
@@ -28,13 +29,15 @@ interface ChatDao {
     fun getChatsWithParticipants(): Flow<List<ChatWithParticipants>>
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         SELECT DISTINCT c.*
         FROM chatentity AS c
         JOIN chatparticipantcrossref AS p ON c.chatId = p.chatId
         WHERE p.isActive = 1
         ORDER BY lastActivityAt DESC
-    """)
+    """
+    )
     fun getChatsWithActiveParticipants(): Flow<List<ChatWithParticipants>>
 
     @Transaction
@@ -101,9 +104,25 @@ interface ChatDao {
     suspend fun upsertChatsWithParticipantsAndCrossRefs(
         chatsWithParticipants: List<ChatWithParticipants>,
         participantDao: ChatParticipantDao,
-        crossRefDao: ChatParticipantsCrossRefDao
+        crossRefDao: ChatParticipantsCrossRefDao,
+        messageDao: ChatMessageDao
     ) {
         upsertChats(chatsWithParticipants.map { it.chat })
+
+        chatsWithParticipants.forEach { chatWithParticipants ->
+            chatWithParticipants.lastMessage?.run {
+                messageDao.upsertMessage(
+                    ChatMessageEntity(
+                        messageId = messageId,
+                        chatId = chatId,
+                        senderId = senderId,
+                        content = content,
+                        timestamp = timestamp,
+                        deliveryStatus = deliveryStatus
+                    )
+                )
+            }
+        }
 
         // this probably needs to be converted to a set (eliminating duplicates)
         val participants = chatsWithParticipants.flatMap { it.participants }

@@ -1,6 +1,7 @@
 package com.example.feature.chat.data.mappers
 
 import com.example.feature.chat.data.dto.ChatDto
+import com.example.feature.chat.database.entities.ChatEntity
 import com.example.feature.chat.database.entities.ChatWithParticipants
 import com.example.feature.chat.domain.model.Chat
 import kotlin.time.Instant
@@ -19,6 +20,13 @@ fun ChatWithParticipants.toDomain(): Chat {
         id = chat.chatId,
         participants = participants.map { it.toDomain() },
         lastActivityAt = Instant.fromEpochMilliseconds(chat.lastActivityAt),
-        lastMessage = lastMessage.toDomain()
+        lastMessage = lastMessage?.toDomain()
+    )
+}
+
+fun Chat.toEntity(): ChatEntity {
+    return ChatEntity(
+        chatId = id,
+        lastActivityAt = lastActivityAt.toEpochMilliseconds()
     )
 }
