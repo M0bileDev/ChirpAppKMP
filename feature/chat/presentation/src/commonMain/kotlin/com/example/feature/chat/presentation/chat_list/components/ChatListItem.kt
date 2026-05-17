@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import com.example.feature.chat.domain.model.ChatMessage
+import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
 import com.example.feature.chat.presentation.chat_detail.components.ChatItemHeaderRow
 import com.example.feature.chat.presentation.model.ChatUi
 import com.example.feature.chat.presentation.type_alias.ChatParticipantUi
@@ -247,7 +248,8 @@ fun PreviewChatListItemGroupLastMessage() {
                     chatId = Uuid.random().toString(),
                     content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
                     createdAt = Clock.System.now(),
-                    senderId = Uuid.random().toString()
+                    senderId = Uuid.random().toString(),
+                    deliveryStatus = ChatMessageDeliveryStatus.SENT
                 ),
                 lastMessageSenderUsername = "Lorem ipsum"
             ),
@@ -287,7 +289,8 @@ fun PreviewDarkChatListItemGroupLastMessage() {
                     chatId = Uuid.random().toString(),
                     content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
                     createdAt = Clock.System.now(),
-                    senderId = Uuid.random().toString()
+                    senderId = Uuid.random().toString(),
+                    deliveryStatus = ChatMessageDeliveryStatus.SENT
                 ),
                 lastMessageSenderUsername = "Lorem ipsum"
             ),
