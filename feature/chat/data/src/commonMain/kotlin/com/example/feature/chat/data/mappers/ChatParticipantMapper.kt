@@ -19,3 +19,11 @@ fun ChatParticipantEntity.toDomain(): ChatParticipant{
         profilePictureUrl =  profilePictureUrl
     )
 }
+
+fun ChatParticipant.toEntity(): ChatParticipantEntity{
+    return ChatParticipantEntity(
+        userId = userId,
+        username = username,
+        profilePictureUrl = profilePictureUrl
+    )
+}
