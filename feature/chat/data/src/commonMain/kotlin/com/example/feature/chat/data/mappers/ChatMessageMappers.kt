@@ -39,3 +39,14 @@ fun ChatMessage.toEntity(): ChatMessageEntity {
         deliveryStatus = deliveryStatus.name
     )
 }
+
+fun ChatMessage.toLastMessageView(): LastMessageView {
+    return LastMessageView(
+        messageId = id,
+        chatId = chatId,
+        senderId = senderId,
+        content = content,
+        timestamp = createdAt.toEpochMilliseconds(),
+        deliveryStatus = deliveryStatus.name
+    )
+}
