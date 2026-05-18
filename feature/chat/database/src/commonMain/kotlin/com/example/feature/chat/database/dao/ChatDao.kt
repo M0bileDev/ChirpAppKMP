@@ -109,6 +109,10 @@ interface ChatDao {
     ) {
         upsertChats(chatsWithParticipants.map { it.chat })
 
+        val localChatIds = getAllChatIds()
+        val serverChatIds = chatsWithParticipants.map { it.chat.chatId }
+        val staleChatIds = localChatIds - serverChatIds.toSet()
+
         chatsWithParticipants.forEach { chatWithParticipants ->
             chatWithParticipants.lastMessage?.run {
                 messageDao.upsertMessage(
@@ -145,5 +149,8 @@ interface ChatDao {
                 participants = participants
             )
         }
+
+        //Delete chats that differ from client side db
+        deleteChatsByIds(staleChatIds)
     }
 }
