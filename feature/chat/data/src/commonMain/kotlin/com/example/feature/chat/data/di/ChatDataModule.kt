@@ -3,8 +3,10 @@ package com.example.feature.chat.data.di
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.example.feature.chat.data.chat.KtorChatParticipantService
 import com.example.feature.chat.data.chat.KtorChatService
+import com.example.feature.chat.data.chat.OfflineFirstChatRepository
 import com.example.feature.chat.database.ChirpDatabaseFactory
 import com.example.feature.chat.domain.chat.ChatParticipantService
+import com.example.feature.chat.domain.chat.ChatRepository
 import com.example.feature.chat.domain.chat.ChatService
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -24,4 +26,5 @@ val chatDataModule = module {
             .setDriver(BundledSQLiteDriver())
             .build()
     }
+    singleOf(::OfflineFirstChatRepository) bind ChatRepository::class
 }
