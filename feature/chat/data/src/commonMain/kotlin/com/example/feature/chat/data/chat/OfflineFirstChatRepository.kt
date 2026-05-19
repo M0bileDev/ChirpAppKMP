@@ -41,7 +41,7 @@ class OfflineFirstChatRepository(
             }
     }
 
-    private suspend fun saveChats(chats: List<Chat>) {
+    private suspend fun saveChats(chats: List<Chat>) = with(chirpChatDatabase) {
         val chatsWithParticipants = chats.map { chat ->
             ChatWithParticipants(
                 chat = chat.toEntity(),
@@ -49,32 +49,28 @@ class OfflineFirstChatRepository(
                 lastMessage = chat.lastMessage?.toLastMessageView()
             )
         }
-
-        with(chirpChatDatabase) {
-            chatDao
-                .upsertChatsWithParticipantsAndCrossRefs(
-                    chatsWithParticipants = chatsWithParticipants,
-                    participantDao = chatParticipantDao,
-                    crossRefDao = chatParticipantsCrossRefDao,
-                    messageDao = chatMessageDao
-                )
-        }
+        chatDao
+            .upsertChatsWithParticipantsAndCrossRefs(
+                chatsWithParticipants = chatsWithParticipants,
+                participantDao = chatParticipantDao,
+                crossRefDao = chatParticipantsCrossRefDao,
+                messageDao = chatMessageDao
+            )
     }
 
-    override suspend fun fetchChatById(chatId: String): EmptyResult<DataError.Remote> {
-        return chatService
-            .getChatById(chatId)
-            .onSuccess { chat ->
-                with(chirpChatDatabase) {
+    override suspend fun fetchChatById(chatId: String): EmptyResult<DataError.Remote> =
+        with(chirpChatDatabase) {
+            return@with chatService
+                .getChatById(chatId)
+                .onSuccess { chat ->
                     chatDao.upsertChatWithParticipantsAndCrossRefs(
                         chat = chat.toEntity(),
                         participants = chat.participants.map { it.toEntity() },
                         participantDao = chatParticipantDao,
                         crossRefDao = chatParticipantsCrossRefDao
                     )
-                }
-            }.asEmptyResult()
-    }
+                }.asEmptyResult()
+        }
 
     override fun getChatInfoById(chatId: String): Flow<ChatInfo> = with(chirpChatDatabase) {
         return@with chatDao
