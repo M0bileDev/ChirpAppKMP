@@ -5,10 +5,12 @@ import com.example.core.domain.util.DataError
 import com.example.core.domain.util.EmptyResult
 import com.example.core.domain.util.Result
 import com.example.feature.chat.domain.model.Chat
+import com.example.feature.chat.domain.model.ChatInfo
 import kotlinx.coroutines.flow.Flow
 
 interface ChatRepository {
     fun getChats(): Flow<List<Chat>>
     suspend fun fetchChats(): Result<List<Chat>, DataError.Remote>
-    suspend fun fetchChatById(chatId:String): EmptyResult<DataError.Remote>
+    suspend fun fetchChatById(chatId: String): EmptyResult<DataError.Remote>
+    fun getChatInfoById(chatId: String): Flow<ChatInfo>
 }
