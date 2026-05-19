@@ -1,7 +1,9 @@
 package com.example.feature.chat.data.chat
 
 import com.example.core.domain.util.DataError
+import com.example.core.domain.util.EmptyResult
 import com.example.core.domain.util.Result
+import com.example.core.domain.util.asEmptyResult
 import com.example.core.domain.util.onSuccess
 import com.example.feature.chat.data.mappers.toDomain
 import com.example.feature.chat.data.mappers.toEntity
@@ -11,7 +13,9 @@ import com.example.feature.chat.database.entities.ChatWithParticipants
 import com.example.feature.chat.domain.chat.ChatRepository
 import com.example.feature.chat.domain.chat.ChatService
 import com.example.feature.chat.domain.model.Chat
+import com.example.feature.chat.domain.model.ChatInfo
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 
 class OfflineFirstChatRepository(
@@ -37,7 +41,7 @@ class OfflineFirstChatRepository(
             }
     }
 
-    private suspend fun saveChats(chats: List<Chat>) {
+    private suspend fun saveChats(chats: List<Chat>) = with(chirpChatDatabase) {
         val chatsWithParticipants = chats.map { chat ->
             ChatWithParticipants(
                 chat = chat.toEntity(),
@@ -45,15 +49,33 @@ class OfflineFirstChatRepository(
                 lastMessage = chat.lastMessage?.toLastMessageView()
             )
         }
+        chatDao
+            .upsertChatsWithParticipantsAndCrossRefs(
+                chatsWithParticipants = chatsWithParticipants,
+                participantDao = chatParticipantDao,
+                crossRefDao = chatParticipantsCrossRefDao,
+                messageDao = chatMessageDao
+            )
+    }
 
+    override suspend fun fetchChatById(chatId: String): EmptyResult<DataError.Remote> =
         with(chirpChatDatabase) {
-            chatDao
-                .upsertChatsWithParticipantsAndCrossRefs(
-                    chatsWithParticipants = chatsWithParticipants,
-                    participantDao = chatParticipantDao,
-                    crossRefDao = chatParticipantsCrossRefDao,
-                    messageDao = chatMessageDao
-                )
+            return@with chatService
+                .getChatById(chatId)
+                .onSuccess { chat ->
+                    chatDao.upsertChatWithParticipantsAndCrossRefs(
+                        chat = chat.toEntity(),
+                        participants = chat.participants.map { it.toEntity() },
+                        participantDao = chatParticipantDao,
+                        crossRefDao = chatParticipantsCrossRefDao
+                    )
+                }.asEmptyResult()
         }
+
+    override fun getChatInfoById(chatId: String): Flow<ChatInfo> = with(chirpChatDatabase) {
+        return@with chatDao
+            .getActiveChatInfoById(chatId)
+            .filterNotNull()
+            .map { it.toDomain() }
     }
 }
