@@ -1,7 +1,9 @@
 package com.example.feature.chat.data.chat
 
 import com.example.core.domain.util.DataError
+import com.example.core.domain.util.EmptyResult
 import com.example.core.domain.util.Result
+import com.example.core.domain.util.asEmptyResult
 import com.example.core.domain.util.onSuccess
 import com.example.feature.chat.data.mappers.toDomain
 import com.example.feature.chat.data.mappers.toEntity
@@ -35,6 +37,21 @@ class OfflineFirstChatRepository(
             .onSuccess { chats ->
                 saveChats(chats)
             }
+    }
+
+    override suspend fun fetchChatById(chatId: String): EmptyResult<DataError.Remote> {
+        return chatService
+            .getChatById(chatId)
+            .onSuccess { chat ->
+                with(chirpChatDatabase) {
+                    chatDao.upsertChatWithParticipantsAndCrossRefs(
+                        chat = chat.toEntity(),
+                        participants = chat.participants.map { it.toEntity() },
+                        participantDao = chatParticipantDao,
+                        crossRefDao = chatParticipantsCrossRefDao
+                    )
+                }
+            }.asEmptyResult()
     }
 
     private suspend fun saveChats(chats: List<Chat>) {
