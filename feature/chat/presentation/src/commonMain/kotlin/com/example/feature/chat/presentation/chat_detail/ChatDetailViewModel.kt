@@ -2,12 +2,17 @@ package com.example.feature.chat.presentation.chat_detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.core.domain.auth.SessionStorage
+import com.example.feature.chat.domain.chat.ChatRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 
-class ChatDetailViewModel : ViewModel() {
+class ChatDetailViewModel(
+    private val chatRepository: ChatRepository,
+    private val sessionStorage: SessionStorage
+) : ViewModel() {
     private var hasLoadedInitialData = false
     private val _state = MutableStateFlow(ChatDetailState())
     val state = _state
