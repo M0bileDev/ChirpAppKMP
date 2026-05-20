@@ -1,11 +1,16 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.example.feature.chat.presentation.chat_detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.domain.auth.SessionStorage
 import com.example.feature.chat.domain.chat.ChatRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -18,6 +23,12 @@ class ChatDetailViewModel(
 
     private val _chatId = MutableStateFlow<String?>(null)
     private var hasLoadedInitialData = false
+    private val chatInfoFlow = _chatId
+        .flatMapLatest { chatId ->
+            if (chatId != null) {
+                chatRepository.getChatInfoById(chatId)
+            } else emptyFlow()
+        }
     private val _state = MutableStateFlow(ChatDetailState())
     val state = _state
         .onStart {
