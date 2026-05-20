@@ -45,7 +45,14 @@ class ChatDetailViewModel(
             chatUi = chatInfo.chat.toUi(localParticipantId = authInfo.user.id)
         )
     }
-    val state = _state
+    val state = _chatId
+        .flatMapLatest { chatId ->
+            if (chatId != null) {
+                stateWithMessages
+            } else {
+                _state
+            }
+        }
         .onStart {
             if (!hasLoadedInitialData) {
                 // TODO: init data logic
