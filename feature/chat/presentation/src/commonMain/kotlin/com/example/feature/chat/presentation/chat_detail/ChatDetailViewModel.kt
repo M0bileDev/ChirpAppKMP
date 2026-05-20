@@ -13,6 +13,8 @@ class ChatDetailViewModel(
     private val chatRepository: ChatRepository,
     private val sessionStorage: SessionStorage
 ) : ViewModel() {
+
+    private val _chatId = MutableStateFlow<String?>(null)
     private var hasLoadedInitialData = false
     private val _state = MutableStateFlow(ChatDetailState())
     val state = _state
@@ -27,5 +29,10 @@ class ChatDetailViewModel(
             initialValue = ChatDetailState()
         )
 
-    fun onAction(chatDetailAction: ChatDetailAction) {}
+    fun onAction(action: ChatDetailAction) {
+        when (action) {
+            is ChatDetailAction.OnSelectChat -> switchChat(action.chatId)
+            else -> Unit
+        }
+    }
 }
