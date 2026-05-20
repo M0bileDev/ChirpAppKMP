@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class ChatDetailViewModel(
     private val chatRepository: ChatRepository,
@@ -33,6 +35,15 @@ class ChatDetailViewModel(
         when (action) {
             is ChatDetailAction.OnSelectChat -> switchChat(action.chatId)
             else -> Unit
+        }
+    }
+
+    private fun switchChat(chatId: String?) = with(viewModelScope) {
+        _chatId.update { chatId }
+        launch {
+            chatId?.let { id ->
+                chatRepository.fetchChatById(id)
+            }
         }
     }
 }
