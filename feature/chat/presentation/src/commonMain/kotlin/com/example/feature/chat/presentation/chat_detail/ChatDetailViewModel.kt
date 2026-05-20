@@ -6,9 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.domain.auth.SessionStorage
 import com.example.feature.chat.domain.chat.ChatRepository
+import com.example.feature.chat.presentation.mappers.toUi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onStart
@@ -23,13 +25,26 @@ class ChatDetailViewModel(
 
     private val _chatId = MutableStateFlow<String?>(null)
     private var hasLoadedInitialData = false
+    private val _state = MutableStateFlow(ChatDetailState())
+
     private val chatInfoFlow = _chatId
         .flatMapLatest { chatId ->
             if (chatId != null) {
                 chatRepository.getChatInfoById(chatId)
             } else emptyFlow()
         }
-    private val _state = MutableStateFlow(ChatDetailState())
+
+    private val stateWithMessages = combine(
+        _state,
+        chatInfoFlow,
+        sessionStorage.observeAuthInfo()
+    ) { currentState, chatInfo, authInfo ->
+        if (authInfo == null) return@combine ChatDetailState()
+
+        currentState.copy(
+            chatUi = chatInfo.chat.toUi(localParticipantId = authInfo.user.id)
+        )
+    }
     val state = _state
         .onStart {
             if (!hasLoadedInitialData) {
