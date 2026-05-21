@@ -11,7 +11,7 @@ sealed interface ChatDetailAction {
     data object OnDismissMessageMenu : ChatDetailAction
     data class OnRetryClick(val message: MessageUi.LocalUserMessage) : ChatDetailAction
     data object OnBackClick : ChatDetailAction
-    data object OnChatOptionsCLick : ChatDetailAction
+    data object OnChatOptionsClick : ChatDetailAction
     data object OnChatMembersClick : ChatDetailAction
     data object OnLeaveChatClick : ChatDetailAction
     data object OnDismissChatOptions : ChatDetailAction
