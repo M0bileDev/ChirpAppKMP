@@ -92,4 +92,12 @@ class OfflineFirstChatRepository(
                     )
                 }
         }
+
+    override suspend fun leaveChat(chatId: String): EmptyResult<DataError.Remote> {
+        return chatService
+            .leaveChat(chatId)
+            .onSuccess {
+                chirpChatDatabase.chatDao.deleteChatById(chatId)
+            }
+    }
 }
