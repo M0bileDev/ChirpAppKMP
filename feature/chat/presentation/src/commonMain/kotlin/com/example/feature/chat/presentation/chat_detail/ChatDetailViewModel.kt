@@ -68,6 +68,7 @@ class ChatDetailViewModel(
         when (action) {
             is ChatDetailAction.OnSelectChat -> switchChat(action.chatId)
             ChatDetailAction.OnChatOptionsClick -> chatOptionsClick()
+            ChatDetailAction.OnDismissChatOptions -> dismissChatOptions()
             else -> Unit
         }
     }
@@ -88,4 +89,13 @@ class ChatDetailViewModel(
             )
         }
     }
+
+    private fun dismissChatOptions() {
+        _state.update {
+            it.copy(
+                isChatOptionsOpen = false
+            )
+        }
+    }
+
 }
