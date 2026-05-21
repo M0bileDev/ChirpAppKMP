@@ -2,18 +2,24 @@
 
 package com.example.feature.chat.presentation.chat_detail
 
+import androidx.compose.foundation.text.input.clearText
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.domain.auth.SessionStorage
+import com.example.core.domain.util.onFailure
+import com.example.core.domain.util.onSuccess
+import com.example.core.presentation.ext.toUiText
 import com.example.feature.chat.domain.chat.ChatRepository
 import com.example.feature.chat.presentation.mappers.toUi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -22,6 +28,9 @@ class ChatDetailViewModel(
     private val chatRepository: ChatRepository,
     private val sessionStorage: SessionStorage
 ) : ViewModel() {
+
+    private val eventChannel = Channel<ChatDetailEvent>()
+    val events = eventChannel.receiveAsFlow()
 
     private val _chatId = MutableStateFlow<String?>(null)
     private var hasLoadedInitialData = false
@@ -67,6 +76,9 @@ class ChatDetailViewModel(
     fun onAction(action: ChatDetailAction) {
         when (action) {
             is ChatDetailAction.OnSelectChat -> switchChat(action.chatId)
+            ChatDetailAction.OnChatOptionsClick -> chatOptionsClick()
+            ChatDetailAction.OnDismissChatOptions -> dismissChatOptions()
+            ChatDetailAction.OnLeaveChatClick -> onLeaveChatClick()
             else -> Unit
         }
     }
@@ -79,4 +91,54 @@ class ChatDetailViewModel(
             }
         }
     }
+
+    private fun chatOptionsClick() {
+        _state.update {
+            it.copy(
+                isChatOptionsOpen = true
+            )
+        }
+    }
+
+    private fun dismissChatOptions() {
+        _state.update {
+            it.copy(
+                isChatOptionsOpen = false
+            )
+        }
+    }
+
+    private fun onLeaveChatClick() = with(viewModelScope) {
+        val chatId = _chatId.value ?: return@with
+
+        _state.update {
+            it.copy(
+                isChatOptionsOpen = false
+            )
+        }
+
+        launch {
+            chatRepository
+                .leaveChat(chatId)
+                .onSuccess {
+                    _state.value.messageTextFieldState.clearText()
+                    _chatId.update { null }
+                    _state.update {
+                        it.copy(
+                            chatUi = null,
+                            messages = emptyList(),
+                            bannerState = BannerState()
+                        )
+                    }
+                }
+                .onFailure { error ->
+                    eventChannel.send(
+                        ChatDetailEvent.OnError(
+                            error.toUiText()
+                        )
+                    )
+                }
+        }
+    }
+
 }
