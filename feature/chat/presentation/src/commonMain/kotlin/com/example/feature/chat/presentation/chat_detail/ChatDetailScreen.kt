@@ -206,7 +206,7 @@ private fun DynamicRoundedCornerColumn(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    val shape = if (isCornersRounded) RoundedCornerShape(16.dp) else RectangleShape
+    val shape = if (isCornersRounded) RoundedCornerShape(24.dp) else RectangleShape
 
     Column(
         modifier = modifier
