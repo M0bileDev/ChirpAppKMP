@@ -2,6 +2,7 @@
 
 package com.example.feature.chat.presentation.chat_detail
 
+import androidx.compose.foundation.text.input.clearText
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.domain.auth.SessionStorage
@@ -119,7 +120,17 @@ class ChatDetailViewModel(
         launch {
             chatRepository
                 .leaveChat(chatId)
-                .onSuccess { }
+                .onSuccess {
+                    _state.value.messageTextFieldState.clearText()
+                    _chatId.update { null }
+                    _state.update {
+                        it.copy(
+                            chatUi = null,
+                            messages = emptyList(),
+                            bannerState = BannerState()
+                        )
+                    }
+                }
                 .onFailure { error ->
                     eventChannel.send(
                         ChatDetailEvent.OnError(
