@@ -179,15 +179,19 @@ fun ChatDetailScreen(
                 AnimatedVisibility(
                     visible = configuration.isWideScreen && chatUi != null
                 ) {
-                    MessageBox(
-                        modifier = Modifier.fillMaxWidth(),
-                        messageTextFieldState = messageTextFieldState,
-                        isTextInputEnabled = canSendMessage,
-                        connectionState = connectionState,
-                        onSendClick = {
-                            onAction(ChatDetailAction.OnSendMessageClick)
-                        }
-                    )
+                    DynamicRoundedCornerColumn(
+                        isCornersRounded = configuration.isWideScreen
+                    ) {
+                        MessageBox(
+                            modifier = Modifier.fillMaxWidth(),
+                            messageTextFieldState = messageTextFieldState,
+                            isTextInputEnabled = canSendMessage,
+                            connectionState = connectionState,
+                            onSendClick = {
+                                onAction(ChatDetailAction.OnSendMessageClick)
+                            }
+                        )
+                    }
                 }
             }
         }
