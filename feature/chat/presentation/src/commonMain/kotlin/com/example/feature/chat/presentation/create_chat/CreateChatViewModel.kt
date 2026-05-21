@@ -14,7 +14,7 @@ import com.example.core.domain.util.onSuccess
 import com.example.core.presentation.ext.toUiText
 import com.example.core.presentation.util.UiText
 import com.example.feature.chat.domain.chat.ChatParticipantService
-import com.example.feature.chat.domain.chat.ChatService
+import com.example.feature.chat.domain.chat.ChatRepository
 import com.example.feature.chat.presentation.mappers.toUi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
@@ -32,7 +32,7 @@ import kotlin.time.Duration.Companion.seconds
 
 class CreateChatViewModel(
     private val chatParticipantService: ChatParticipantService,
-    private val chatService: ChatService
+    private val chatRepository: ChatRepository
 ) : ViewModel() {
     private var hasLoadedInitialData = false
     private val eventChannel = Channel<CreateChatEvent>()
@@ -126,12 +126,14 @@ class CreateChatViewModel(
                 )
             }
 
-            chatService.createChat(
+            chatRepository.createChat(
                 otherUserIds = otherUserIds
             ).onSuccess { chat ->
-                _state.update { it.copy(
-                    isCreatingChat = false
-                ) }
+                _state.update {
+                    it.copy(
+                        isCreatingChat = false
+                    )
+                }
                 eventChannel.send(CreateChatEvent.OnChatCreated(chat))
             }.onFailure { error ->
                 _state.update {
