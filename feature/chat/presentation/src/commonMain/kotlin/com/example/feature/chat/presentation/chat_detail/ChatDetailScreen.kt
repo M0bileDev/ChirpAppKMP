@@ -183,7 +183,9 @@ fun ChatDetailScreen(
                         isCornersRounded = configuration.isWideScreen
                     ) {
                         MessageBox(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
                             messageTextFieldState = messageTextFieldState,
                             isTextInputEnabled = canSendMessage,
                             connectionState = connectionState,
