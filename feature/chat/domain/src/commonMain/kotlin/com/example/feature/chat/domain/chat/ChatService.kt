@@ -1,6 +1,7 @@
 package com.example.feature.chat.domain.chat
 
 import com.example.core.domain.util.DataError
+import com.example.core.domain.util.EmptyResult
 import com.example.core.domain.util.Result
 import com.example.feature.chat.domain.model.Chat
 
@@ -11,5 +12,7 @@ interface ChatService {
 
     suspend fun getChats(): Result<List<Chat>, DataError.Remote>
 
-    suspend fun getChatById(chatId:String): Result<Chat, DataError.Remote>
+    suspend fun getChatById(chatId: String): Result<Chat, DataError.Remote>
+
+    suspend fun leaveChat(chatId: String): EmptyResult<DataError.Remote>
 }
