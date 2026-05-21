@@ -122,7 +122,7 @@ fun ChatDetailScreen(
                             isDetailPresent = isDetailPresent,
                             isChatOptionsDropDownOpen = isChatOptionsOpen,
                             onChatOptionsClick = {
-                                onAction(ChatDetailAction.OnChatOptionsCLick)
+                                onAction(ChatDetailAction.OnChatOptionsClick)
                             },
                             onDismissChatOptions = {
                                 onAction(ChatDetailAction.OnDismissChatOptions)
