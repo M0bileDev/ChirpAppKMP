@@ -7,15 +7,18 @@ import androidx.lifecycle.viewModelScope
 import com.example.core.domain.auth.SessionStorage
 import com.example.core.domain.util.onFailure
 import com.example.core.domain.util.onSuccess
+import com.example.core.presentation.ext.toUiText
 import com.example.feature.chat.domain.chat.ChatRepository
 import com.example.feature.chat.presentation.mappers.toUi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -24,6 +27,9 @@ class ChatDetailViewModel(
     private val chatRepository: ChatRepository,
     private val sessionStorage: SessionStorage
 ) : ViewModel() {
+
+    private val eventChannel = Channel<ChatDetailEvent>()
+    val events = eventChannel.receiveAsFlow()
 
     private val _chatId = MutableStateFlow<String?>(null)
     private var hasLoadedInitialData = false
@@ -115,7 +121,11 @@ class ChatDetailViewModel(
                 .leaveChat(chatId)
                 .onSuccess { }
                 .onFailure { error ->
-
+                    eventChannel.send(
+                        ChatDetailEvent.OnError(
+                            error.toUiText()
+                        )
+                    )
                 }
         }
     }
