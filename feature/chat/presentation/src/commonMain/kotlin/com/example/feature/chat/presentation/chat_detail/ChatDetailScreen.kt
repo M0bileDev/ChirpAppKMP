@@ -27,6 +27,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -160,7 +161,12 @@ fun ChatDetailScreen(
                         visible = !configuration.isWideScreen && chatUi != null
                     ) {
                         MessageBox(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    vertical = 8.dp,
+                                    horizontal = 16.dp
+                                ),
                             messageTextFieldState = messageTextFieldState,
                             isTextInputEnabled = canSendMessage,
                             connectionState = connectionState,
@@ -178,15 +184,21 @@ fun ChatDetailScreen(
                 AnimatedVisibility(
                     visible = configuration.isWideScreen && chatUi != null
                 ) {
-                    MessageBox(
-                        modifier = Modifier.fillMaxWidth(),
-                        messageTextFieldState = messageTextFieldState,
-                        isTextInputEnabled = canSendMessage,
-                        connectionState = connectionState,
-                        onSendClick = {
-                            onAction(ChatDetailAction.OnSendMessageClick)
-                        }
-                    )
+                    DynamicRoundedCornerColumn(
+                        isCornersRounded = configuration.isWideScreen
+                    ) {
+                        MessageBox(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            messageTextFieldState = messageTextFieldState,
+                            isTextInputEnabled = canSendMessage,
+                            connectionState = connectionState,
+                            onSendClick = {
+                                onAction(ChatDetailAction.OnSendMessageClick)
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -199,13 +211,14 @@ private fun DynamicRoundedCornerColumn(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    val shape = if (isCornersRounded) RoundedCornerShape(16.dp) else RectangleShape
+    val shape = if (isCornersRounded) RoundedCornerShape(24.dp) else RectangleShape
 
     Column(
         modifier = modifier
             .shadow(
-                elevation = if (isCornersRounded) 4.dp else 0.dp,
-                shape = shape
+                elevation = if (isCornersRounded) 8.dp else 0.dp,
+                shape = shape,
+                spotColor = Color.Black.copy(alpha = 0.2f)
             )
             .background(
                 color = MaterialTheme.colorScheme.surface,

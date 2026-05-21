@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ChatListViewModel(
@@ -41,7 +42,19 @@ class ChatListViewModel(
             initialValue = ChatListState()
         )
 
-    fun onAction(chatListAction: ChatListAction) {}
+    fun onAction(chatListAction: ChatListAction) {
+        when (chatListAction) {
+            is ChatListAction.OnChatClick -> {
+                _state.update {
+                    it.copy(
+                        selectedChatId = chatListAction.chat.id
+                    )
+                }
+            }
+
+            else -> Unit
+        }
+    }
 
     private fun loadChats() = with(viewModelScope) {
         launch {

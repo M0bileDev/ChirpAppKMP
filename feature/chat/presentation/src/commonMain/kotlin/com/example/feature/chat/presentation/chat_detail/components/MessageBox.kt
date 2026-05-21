@@ -41,7 +41,7 @@ fun MessageBox(
     val connectionStateText = connectionState.toUiText().asString()
 
     ChirpMultiLineTextField(
-        modifier = modifier.padding(4.dp),
+        modifier = modifier,
         state = messageTextFieldState,
         placeholder = stringResource(Res.string.send_a_message),
         enabled = isTextInputEnabled,
