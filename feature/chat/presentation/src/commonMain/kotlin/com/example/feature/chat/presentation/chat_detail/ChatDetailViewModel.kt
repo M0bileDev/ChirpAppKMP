@@ -72,16 +72,20 @@ class ChatDetailViewModel(
         }
     }
 
-    private fun chatOptionsClick() {
-
-    }
-
     private fun switchChat(chatId: String?) = with(viewModelScope) {
         _chatId.update { chatId }
         launch {
             chatId?.let { id ->
                 chatRepository.fetchChatById(id)
             }
+        }
+    }
+
+    private fun chatOptionsClick() {
+        _state.update {
+            it.copy(
+                isChatOptionsOpen = true
+            )
         }
     }
 }
