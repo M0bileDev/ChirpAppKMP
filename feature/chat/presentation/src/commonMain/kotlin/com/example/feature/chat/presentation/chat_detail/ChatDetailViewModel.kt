@@ -67,8 +67,13 @@ class ChatDetailViewModel(
     fun onAction(action: ChatDetailAction) {
         when (action) {
             is ChatDetailAction.OnSelectChat -> switchChat(action.chatId)
+            ChatDetailAction.OnChatOptionsClick -> chatOptionsClick()
             else -> Unit
         }
+    }
+
+    private fun chatOptionsClick() {
+
     }
 
     private fun switchChat(chatId: String?) = with(viewModelScope) {
