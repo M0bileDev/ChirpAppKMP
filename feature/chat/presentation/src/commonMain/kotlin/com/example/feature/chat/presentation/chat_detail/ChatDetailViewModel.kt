@@ -5,6 +5,8 @@ package com.example.feature.chat.presentation.chat_detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.domain.auth.SessionStorage
+import com.example.core.domain.util.onFailure
+import com.example.core.domain.util.onSuccess
 import com.example.feature.chat.domain.chat.ChatRepository
 import com.example.feature.chat.presentation.mappers.toUi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -69,6 +71,7 @@ class ChatDetailViewModel(
             is ChatDetailAction.OnSelectChat -> switchChat(action.chatId)
             ChatDetailAction.OnChatOptionsClick -> chatOptionsClick()
             ChatDetailAction.OnDismissChatOptions -> dismissChatOptions()
+            ChatDetailAction.OnLeaveChatClick -> onLeaveChatClick()
             else -> Unit
         }
     }
@@ -95,6 +98,25 @@ class ChatDetailViewModel(
             it.copy(
                 isChatOptionsOpen = false
             )
+        }
+    }
+
+    private fun onLeaveChatClick() = with(viewModelScope) {
+        val chatId = _chatId.value ?: return@with
+
+        _state.update {
+            it.copy(
+                isChatOptionsOpen = false
+            )
+        }
+
+        launch {
+            chatRepository
+                .leaveChat(chatId)
+                .onSuccess { }
+                .onFailure { error ->
+
+                }
         }
     }
 
