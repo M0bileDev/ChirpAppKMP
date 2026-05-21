@@ -161,7 +161,12 @@ fun ChatDetailScreen(
                         visible = !configuration.isWideScreen && chatUi != null
                     ) {
                         MessageBox(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    vertical = 8.dp,
+                                    horizontal = 16.dp
+                                ),
                             messageTextFieldState = messageTextFieldState,
                             isTextInputEnabled = canSendMessage,
                             connectionState = connectionState,
