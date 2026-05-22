@@ -9,6 +9,7 @@ import com.example.feature.chat.data.mappers.toDomain
 import com.example.feature.chat.data.mappers.toEntity
 import com.example.feature.chat.data.mappers.toLastMessageView
 import com.example.feature.chat.database.ChirpChatDatabase
+import com.example.feature.chat.database.entities.ChatInfoEntity
 import com.example.feature.chat.database.entities.ChatParticipantEntity
 import com.example.feature.chat.database.entities.ChatWithParticipants
 import com.example.feature.chat.domain.chat.ChatRepository
@@ -95,6 +96,13 @@ class OfflineFirstChatRepository(
         return@with chatDao
             .getChatInfoById(chatId)
             .filterNotNull()
+            .map { chatInfoEntity ->
+                ChatInfoEntity(
+                    chat = chatInfoEntity.chat,
+                    participants = chatInfoEntity.participants.onlyActive(chatInfoEntity.chat.chatId),
+                    messagesWithSenders = chatInfoEntity.messagesWithSenders
+                )
+            }
             .map { it.toDomain() }
     }
 
