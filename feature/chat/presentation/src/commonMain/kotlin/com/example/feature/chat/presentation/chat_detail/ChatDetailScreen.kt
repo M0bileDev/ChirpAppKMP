@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -85,6 +86,7 @@ fun ChatDetailRoot(
 
     ChatDetailScreen(
         state = state,
+        snackbarState = snackbarState,
         isDetailPresent = isDetailPresent,
         onAction = viewModel::onAction
     )
@@ -93,6 +95,7 @@ fun ChatDetailRoot(
 @Composable
 fun ChatDetailScreen(
     state: ChatDetailState,
+    snackbarState: SnackbarHostState,
     isDetailPresent: Boolean,
     onAction: (ChatDetailAction) -> Unit
 ) = with(state) {
@@ -107,7 +110,10 @@ fun ChatDetailScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets.safeDrawing,
-        containerColor = containerColor
+        containerColor = containerColor,
+        snackbarHost = {
+            SnackbarHost(snackbarState)
+        }
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -248,6 +254,7 @@ fun PreviewChatDetailScreen() {
     ChirpTheme {
         ChatDetailScreen(
             state = ChatDetailState(),
+            snackbarState = SnackbarHostState(),
             isDetailPresent = false,
             onAction = {}
         )
@@ -306,6 +313,7 @@ fun PreviewChatDetailScreenMessages() {
                     }
                 }
             ),
+            snackbarState = SnackbarHostState(),
             isDetailPresent = true,
             onAction = {}
         )
@@ -320,6 +328,7 @@ fun PreviewDarkChatDetailScreen() {
     ) {
         ChatDetailScreen(
             state = ChatDetailState(),
+            snackbarState = SnackbarHostState(),
             isDetailPresent = false,
             onAction = {}
         )
@@ -380,6 +389,7 @@ fun PreviewDarkChatDetailScreenMessages() {
                     }
                 }
             ),
+            snackbarState = SnackbarHostState(),
             isDetailPresent = true,
             onAction = {}
         )
