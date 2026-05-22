@@ -9,6 +9,7 @@ import com.example.feature.chat.data.mappers.toDomain
 import com.example.feature.chat.data.mappers.toEntity
 import com.example.feature.chat.data.mappers.toLastMessageView
 import com.example.feature.chat.database.ChirpChatDatabase
+import com.example.feature.chat.database.entities.ChatParticipantEntity
 import com.example.feature.chat.database.entities.ChatWithParticipants
 import com.example.feature.chat.domain.chat.ChatRepository
 import com.example.feature.chat.domain.chat.ChatService
@@ -16,6 +17,7 @@ import com.example.feature.chat.domain.model.Chat
 import com.example.feature.chat.domain.model.ChatInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 class OfflineFirstChatRepository(
@@ -99,5 +101,15 @@ class OfflineFirstChatRepository(
             .onSuccess {
                 chirpChatDatabase.chatDao.deleteChatById(chatId)
             }
+    }
+
+    private suspend fun List<ChatParticipantEntity>.onlyActive(chatId: String): List<ChatParticipantEntity> {
+        val activeParticipantIds = chirpChatDatabase
+            .chatDao
+            .getActiveParticipantsByChatId(chatId)
+            .first()
+            .map { it.userId }
+
+        return this.filter { it.userId in activeParticipantIds }
     }
 }
