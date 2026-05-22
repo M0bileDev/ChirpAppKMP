@@ -47,7 +47,7 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @Composable
-fun CreateChatRoot(
+fun ManageChatRoot(
     onDismiss: () -> Unit,
     onChatCreated: (Chat) -> Unit,
     viewModel: CreateChatViewModel = koinViewModel()
@@ -63,11 +63,11 @@ fun CreateChatRoot(
     ChirpAdaptiveDialogSheetLayout(
         onDismiss = onDismiss,
     ) {
-        CreateChatScreen(
+        ManageChatScreen(
             state = state,
             onAction = { action ->
                 when (action) {
-                    CreateChatAction.OnDismissDialog -> onDismiss()
+                    ManageChatAction.OnDismissDialog -> onDismiss()
                     else -> Unit
                 }
                 viewModel.onAction(action)
@@ -77,9 +77,9 @@ fun CreateChatRoot(
 }
 
 @Composable
-fun CreateChatScreen(
-    state: CreateChatState,
-    onAction: (CreateChatAction) -> Unit
+fun ManageChatScreen(
+    state: ManageChatState,
+    onAction: (ManageChatAction) -> Unit
 ) = with(state) {
 
     var isTextFieldFocused by remember { mutableStateOf(false) }
@@ -107,7 +107,7 @@ fun CreateChatScreen(
                     modifier = Modifier.fillMaxWidth(),
                     title = stringResource(Res.string.create_chat),
                     onCloseClick = {
-                        onAction(CreateChatAction.OnDismissDialog)
+                        onAction(ManageChatAction.OnDismissDialog)
                     }
                 )
                 ChirpHorizontalDivider()
@@ -117,7 +117,7 @@ fun CreateChatScreen(
             modifier = Modifier.fillMaxWidth(),
             queryState = queryTextState,
             onAddClick = {
-                onAction(CreateChatAction.OnAddClick)
+                onAction(ManageChatAction.OnAddClick)
             },
             isSearchEnabled = canAddParticipant,
             isLoading = isSearching,
@@ -139,7 +139,7 @@ fun CreateChatScreen(
                 ChirpButton(
                     text = stringResource(Res.string.create_chat),
                     onClick = {
-                        onAction(CreateChatAction.OnCreateChatClick)
+                        onAction(ManageChatAction.OnCreateChatClick)
                     },
                     enabled = selectedChatParticipants.isNotEmpty(),
                     isLoading = isCreatingChat
@@ -149,7 +149,7 @@ fun CreateChatScreen(
                 ChirpButton(
                     text = stringResource(Res.string.cancel),
                     onClick = {
-                        onAction(CreateChatAction.OnDismissDialog)
+                        onAction(ManageChatAction.OnDismissDialog)
                     },
                     style = ChirpButtonStyle.SECONDARY
                 )
@@ -161,10 +161,10 @@ fun CreateChatScreen(
 
 @Preview
 @Composable
-fun PreviewCreateChatScreen() {
+fun PreviewManageChatScreen() {
     ChirpTheme {
-        CreateChatScreen(
-            CreateChatState(
+        ManageChatScreen(
+            ManageChatState(
                 selectedChatParticipants = listOf(
                     ChatParticipantUi(
                         id = Uuid.random().toString(),
@@ -185,10 +185,10 @@ fun PreviewCreateChatScreen() {
 
 @Preview
 @Composable
-fun PreviewDarkCreateChatScreen() {
+fun PreviewDarkManageChatScreen() {
     ChirpTheme(darkTheme = true) {
-        CreateChatScreen(
-            CreateChatState(
+        ManageChatScreen(
+            ManageChatState(
                 selectedChatParticipants = listOf(
                     ChatParticipantUi(
                         id = Uuid.random().toString(),
