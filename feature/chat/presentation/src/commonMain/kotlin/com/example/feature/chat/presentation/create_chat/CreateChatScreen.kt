@@ -129,6 +129,7 @@ fun ManageChatScreen(
         ChirpHorizontalDivider()
         ChatParticipantsSelectionSection(
             modifier = Modifier.fillMaxWidth(),
+            existingChatParticipants = existingChatParticipants,
             selectedParticipants = selectedChatParticipants,
             searchResult = currentSearchResult
         )
