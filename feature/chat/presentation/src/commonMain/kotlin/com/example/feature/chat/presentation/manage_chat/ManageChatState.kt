@@ -1,4 +1,4 @@
-package com.example.feature.chat.presentation.create_chat
+package com.example.feature.chat.presentation.manage_chat
 
 import androidx.compose.foundation.text.input.TextFieldState
 import com.example.core.presentation.util.UiText

@@ -1,4 +1,4 @@
-package com.example.feature.chat.presentation.create_chat
+package com.example.feature.chat.presentation.manage_chat
 
 sealed interface ManageChatAction {
     data object OnAddClick : ManageChatAction
