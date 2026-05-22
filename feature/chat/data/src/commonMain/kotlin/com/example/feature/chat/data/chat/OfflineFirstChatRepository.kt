@@ -26,7 +26,7 @@ class OfflineFirstChatRepository(
     override fun getChats(): Flow<List<Chat>> {
         return chirpChatDatabase
             .chatDao
-            .getChatsWithActiveParticipants()
+            .getChatsWithParticipants()
             .map { chatWithParticipants ->
                 chatWithParticipants.map { it.toDomain() }
             }
@@ -74,7 +74,7 @@ class OfflineFirstChatRepository(
 
     override fun getChatInfoById(chatId: String): Flow<ChatInfo> = with(chirpChatDatabase) {
         return@with chatDao
-            .getActiveChatInfoById(chatId)
+            .getChatInfoById(chatId)
             .filterNotNull()
             .map { it.toDomain() }
     }
