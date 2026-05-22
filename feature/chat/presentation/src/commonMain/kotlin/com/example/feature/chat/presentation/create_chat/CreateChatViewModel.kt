@@ -15,6 +15,8 @@ import com.example.core.presentation.ext.toUiText
 import com.example.core.presentation.util.UiText
 import com.example.feature.chat.domain.chat.ChatParticipantService
 import com.example.feature.chat.domain.chat.ChatRepository
+import com.example.feature.chat.presentation.manage_chat.ManageChatAction
+import com.example.feature.chat.presentation.manage_chat.ManageChatState
 import com.example.feature.chat.presentation.mappers.toUi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
@@ -37,7 +39,7 @@ class CreateChatViewModel(
     private var hasLoadedInitialData = false
     private val eventChannel = Channel<CreateChatEvent>()
     val events = eventChannel.receiveAsFlow()
-    private val _state = MutableStateFlow(CreateChatState())
+    private val _state = MutableStateFlow(ManageChatState())
     private val searchFlow = snapshotFlow { _state.value.queryTextState.text.toString() }
         .debounce(1.seconds)
         .onEach { query ->
@@ -52,7 +54,7 @@ class CreateChatViewModel(
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = CreateChatState()
+            initialValue = ManageChatState()
         )
 
     private fun performSearch(query: String) = with(viewModelScope) {
@@ -106,10 +108,10 @@ class CreateChatViewModel(
 
     }
 
-    fun onAction(createChatAction: CreateChatAction) {
-        when (createChatAction) {
-            CreateChatAction.OnAddClick -> addParticipant()
-            CreateChatAction.OnCreateChatClick -> createChat()
+    fun onAction(manageChatAction: ManageChatAction) {
+        when (manageChatAction) {
+            ManageChatAction.OnAddClick -> addParticipant()
+            ManageChatAction.OnCreateChatClick -> createChat()
             else -> Unit
         }
     }

@@ -1,11 +1,12 @@
-package com.example.feature.chat.presentation.create_chat
+package com.example.feature.chat.presentation.manage_chat
 
 import androidx.compose.foundation.text.input.TextFieldState
 import com.example.core.presentation.util.UiText
 import com.example.feature.chat.presentation.type_alias.ChatParticipantUi
 
-data class CreateChatState(
+data class ManageChatState(
     val queryTextState: TextFieldState = TextFieldState(),
+    val existingChatParticipants: List<ChatParticipantUi> = emptyList(),
     val selectedChatParticipants: List<ChatParticipantUi> = emptyList(),
     val isSearching: Boolean = false,
     val isCreatingChat: Boolean = false,
