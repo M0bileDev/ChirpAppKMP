@@ -22,7 +22,7 @@ import com.example.core.designsystem.theme.extended
 import com.example.core.presentation.util.DialogSheetScopedViewModel
 import com.example.feature.chat.presentation.chat_detail.ChatDetailRoot
 import com.example.feature.chat.presentation.chat_list.ChatListRoot
-import com.example.feature.chat.presentation.create_chat.CreateChatRoot
+import com.example.feature.chat.presentation.create_chat.ManageChatRoot
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -98,7 +98,7 @@ fun ChatListDetailAdaptiveLayout(
     DialogSheetScopedViewModel(
         visible = sharedState.dialogState is DialogState.CreateChat
     ) {
-        CreateChatRoot(
+        ManageChatRoot(
             onDismiss = {
                 viewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)
             },
