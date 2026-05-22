@@ -35,6 +35,7 @@ import kotlin.uuid.Uuid
 
 @Composable
 fun ColumnScope.ChatParticipantsSelectionSection(
+    existingChatParticipants: List<ChatParticipantUi>,
     selectedParticipants: List<ChatParticipantUi>,
     modifier: Modifier = Modifier,
     searchResult: ChatParticipantUi? = null
@@ -56,6 +57,20 @@ fun ColumnScope.ChatParticipantsSelectionSection(
         LazyColumn(
             modifier = Modifier.fillMaxWidth()
         ) {
+            items(
+                items = existingChatParticipants,
+                key = { "existing_${it.id}" }
+            ) { participant ->
+                ChatParticipantListItem(
+                    modifier = Modifier.fillMaxWidth(),
+                    participantUi = participant
+                )
+            }
+            if (existingChatParticipants.isNotEmpty()) {
+                item {
+                    ChirpHorizontalDivider()
+                }
+            }
             searchResult?.let {
                 item {
                     ChatParticipantListItem(
@@ -145,6 +160,18 @@ fun PreviewChatParticipantsSelectionSection() {
     ChirpTheme {
         Column {
             ChatParticipantsSelectionSection(
+                existingChatParticipants = listOf(
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum",
+                        initials = "LI"
+                    ),
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum 2",
+                        initials = "LI2"
+                    )
+                ),
                 selectedParticipants = listOf(
                     ChatParticipantUi(
                         id = Uuid.random().toString(),
@@ -170,6 +197,18 @@ fun PreviewDarkChatParticipantsSelectionSection() {
     ) {
         Column {
             ChatParticipantsSelectionSection(
+                existingChatParticipants = listOf(
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum",
+                        initials = "LI"
+                    ),
+                    ChatParticipantUi(
+                        id = Uuid.random().toString(),
+                        username = "Lorem ipsum 2",
+                        initials = "LI2"
+                    )
+                ),
                 selectedParticipants = listOf(
                     ChatParticipantUi(
                         id = Uuid.random().toString(),
