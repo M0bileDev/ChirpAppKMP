@@ -15,10 +15,13 @@ import com.example.feature.chat.domain.chat.ChatRepository
 import com.example.feature.chat.domain.chat.ChatService
 import com.example.feature.chat.domain.model.Chat
 import com.example.feature.chat.domain.model.ChatInfo
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.supervisorScope
 
 class OfflineFirstChatRepository(
     private val chatService: ChatService,
@@ -29,8 +32,22 @@ class OfflineFirstChatRepository(
         return chirpChatDatabase
             .chatDao
             .getChatsWithParticipants()
-            .map { chatWithParticipants ->
-                chatWithParticipants.map { it.toDomain() }
+            .map { chatsWithParticipants ->
+                supervisorScope {
+                    chatsWithParticipants
+                        .map { chatWithParticipants ->
+                            async {
+                                ChatWithParticipants(
+                                    chat = chatWithParticipants.chat,
+                                    participants = chatWithParticipants.participants.onlyActive(
+                                        chatWithParticipants.chat.chatId
+                                    ),
+                                    lastMessage = chatWithParticipants.lastMessage
+                                )
+                            }
+                        }.awaitAll()
+                        .map { it.toDomain() }
+                }
             }
 
     }
