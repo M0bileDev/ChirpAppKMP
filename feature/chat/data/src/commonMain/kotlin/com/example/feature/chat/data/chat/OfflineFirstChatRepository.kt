@@ -137,4 +137,23 @@ class OfflineFirstChatRepository(
 
         return this.filter { it.userId in activeParticipantIds }
     }
+
+    override suspend fun addParticipantsToChat(
+        chatId: String,
+        userIds: List<String>
+    ): Result<Chat, DataError.Remote> = with(chirpChatDatabase) {
+        return@with chatService
+            .addParticipantsToChat(
+                chatId = chatId,
+                userIds = userIds
+            )
+            .onSuccess { chat ->
+                chatDao.upsertChatWithParticipantsAndCrossRefs(
+                    chat = chat.toEntity(),
+                    participants = chat.participants.map { it.toEntity() },
+                    participantDao = chatParticipantDao,
+                    crossRefDao = chatParticipantsCrossRefDao
+                )
+            }
+    }
 }
