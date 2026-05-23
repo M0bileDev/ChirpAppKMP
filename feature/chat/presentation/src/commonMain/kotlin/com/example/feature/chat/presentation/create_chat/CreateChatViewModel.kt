@@ -111,7 +111,7 @@ class CreateChatViewModel(
     fun onAction(manageChatAction: ManageChatAction) {
         when (manageChatAction) {
             ManageChatAction.OnAddClick -> addParticipant()
-            ManageChatAction.OnCreateChatClick -> createChat()
+            ManageChatAction.OnPrimaryActionButton -> createChat()
             else -> Unit
         }
     }
