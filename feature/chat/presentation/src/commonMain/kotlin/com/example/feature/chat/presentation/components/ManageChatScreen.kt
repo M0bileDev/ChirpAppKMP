@@ -42,6 +42,7 @@ import kotlin.uuid.Uuid
 @Composable
 fun ManageChatScreen(
     state: ManageChatState,
+    title: String,
     primaryButtonText: String,
     onAction: (ManageChatAction) -> Unit
 ) = with(state) {
@@ -69,7 +70,7 @@ fun ManageChatScreen(
             Column {
                 ManageChatHeaderRow(
                     modifier = Modifier.fillMaxWidth(),
-                    title = primaryButtonText,
+                    title = title,
                     onCloseClick = {
                         onAction(ManageChatAction.OnDismissDialog)
                     }
@@ -102,7 +103,7 @@ fun ManageChatScreen(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp).padding(top = 16.dp),
             primaryButton = {
                 ChirpButton(
-                    text = stringResource(Res.string.create_chat),
+                    text = primaryButtonText,
                     onClick = {
                         onAction(ManageChatAction.OnPrimaryActionButton)
                     },
@@ -143,6 +144,7 @@ fun PreviewManageChatScreen() {
                     )
                 )
             ),
+            title = stringResource(Res.string.create_chat),
             primaryButtonText = stringResource(Res.string.create_chat),
             onAction = {}
         )
@@ -168,6 +170,7 @@ fun PreviewDarkManageChatScreen() {
                     )
                 )
             ),
+            title = stringResource(Res.string.create_chat),
             primaryButtonText = stringResource(Res.string.create_chat),
             onAction = {}
         )
