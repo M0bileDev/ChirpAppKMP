@@ -33,9 +33,12 @@ fun CreateChatRoot(
     ChirpAdaptiveDialogSheetLayout(
         onDismiss = onDismiss,
     ) {
+        val createChatTitle = stringResource(Res.string.create_chat)
+        
         ManageChatScreen(
             state = state,
-            primaryButtonText = stringResource(Res.string.create_chat),
+            title = createChatTitle,
+            primaryButtonText = createChatTitle,
             onAction = { action ->
                 when (action) {
                     ManageChatAction.OnDismissDialog -> onDismiss()
