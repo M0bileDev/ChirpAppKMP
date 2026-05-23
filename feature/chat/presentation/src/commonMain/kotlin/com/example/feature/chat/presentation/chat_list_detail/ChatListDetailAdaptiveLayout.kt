@@ -23,6 +23,7 @@ import com.example.core.presentation.util.DialogSheetScopedViewModel
 import com.example.feature.chat.presentation.chat_detail.ChatDetailRoot
 import com.example.feature.chat.presentation.chat_list.ChatListRoot
 import com.example.feature.chat.presentation.create_chat.CreateChatRoot
+import com.example.feature.chat.presentation.manage_chat.ManageChatRoot
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -108,6 +109,19 @@ fun ChatListDetailAdaptiveLayout(
                 scope.launch {
                     scaffoldNavigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
                 }
+            }
+        )
+    }
+
+    DialogSheetScopedViewModel(
+        visible = sharedState.dialogState is DialogState.ManageChat
+    ) {
+        ManageChatRoot(
+            onDismiss = {
+                viewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)
+            },
+            onMembersAdded = {
+                viewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)
             }
         )
     }
