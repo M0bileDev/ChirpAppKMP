@@ -10,6 +10,7 @@ import com.example.core.domain.util.asEmptyResult
 import com.example.core.domain.util.map
 import com.example.feature.chat.data.dto.ChatDto
 import com.example.feature.chat.data.dto.CreateChatRequest
+import com.example.feature.chat.data.dto.ParticipantsRequest
 import com.example.feature.chat.data.mappers.toDomain
 import com.example.feature.chat.domain.chat.ChatService
 import com.example.feature.chat.domain.model.Chat
@@ -47,5 +48,17 @@ class KtorChatService(
         return httpClient.delete<Unit>(
             route = "/chat/$chatId/leave"
         ).asEmptyResult()
+    }
+
+    override suspend fun addParticipantsToChat(
+        chatId: String,
+        userIds: List<String>
+    ): Result<Chat, DataError.Remote> {
+        return httpClient.post<ParticipantsRequest, ChatDto>(
+            route = "/chat/$chatId/add",
+            body = ParticipantsRequest(
+                userIds = userIds
+            )
+        ).map { it.toDomain() }
     }
 }
