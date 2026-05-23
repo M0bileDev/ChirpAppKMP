@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 class ManageChatViewModel(
     private val chatRepository: ChatRepository
 ) : ViewModel() {
-
+    private val _chatId = MutableStateFlow<String?>(null)
     private val _eventChannel = Channel<ManageChatEvent>()
     val events = _eventChannel.receiveAsFlow()
 
