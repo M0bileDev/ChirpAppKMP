@@ -84,6 +84,9 @@ fun ChatListDetailAdaptiveLayout(
                 ChatDetailRoot(
                     chatId = sharedState.selectedChatId,
                     isDetailPresent = detailPane == PaneAdaptedValue.Expanded && listPane == PaneAdaptedValue.Expanded,
+                    onChatMembersClick = {
+                        viewModel.onAction(ChatListDetailAction.OnManageChatClick)
+                    },
                     onBack = {
                         scope.launch {
                             if (scaffoldNavigator.canNavigateBack()) {
