@@ -31,4 +31,5 @@
     <string name="send">Send</string>
     <string name="no_chats">No chats</string>
     <string name="no_chats_subtitle">Create new chat to start messaging</string>
+    <string name="save">Save</string>
 </resources>
