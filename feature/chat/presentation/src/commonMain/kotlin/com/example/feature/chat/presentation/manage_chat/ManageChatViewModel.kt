@@ -17,5 +17,11 @@ class ManageChatViewModel(
     private val _state = MutableStateFlow(ManageChatState())
     val state = _state.asStateFlow()
 
-    fun onAction(manageChatAction: ManageChatAction) {}
+    fun onAction(manageChatAction: ManageChatAction) {
+        when (manageChatAction) {
+            ManageChatAction.ChatParticipantsAction.OnAddParticipantClick -> TODO()
+            is ManageChatAction.ChatParticipantsAction.OnSelectChat -> TODO()
+            else -> Unit
+        }
+    }
 }
