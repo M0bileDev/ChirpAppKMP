@@ -7,6 +7,7 @@ import chirpappkmp.feature.chat.presentation.generated.resources.Res
 import chirpappkmp.feature.chat.presentation.generated.resources.chat_members
 import chirpappkmp.feature.chat.presentation.generated.resources.save
 import com.example.core.designsystem.components.dialogs.ChirpAdaptiveDialogSheetLayout
+import com.example.core.presentation.util.ObserveAsEvents
 import com.example.feature.chat.presentation.components.ManageChatScreen
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -17,8 +18,13 @@ fun ManageChatRoot(
     onMembersAdded: () -> Unit,
     viewModel: ManageChatViewModel = koinViewModel(),
 ) {
-
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            ManageChatEvent.OnMembersAdded -> onMembersAdded()
+        }
+    }
 
     ChirpAdaptiveDialogSheetLayout(
         onDismiss = onDismiss,
