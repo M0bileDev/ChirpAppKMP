@@ -6,6 +6,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 
 class ManageChatViewModel(
     private val chatRepository: ChatRepository
@@ -19,9 +20,13 @@ class ManageChatViewModel(
 
     fun onAction(manageChatAction: ManageChatAction) {
         when (manageChatAction) {
-            ManageChatAction.ChatParticipantsAction.OnAddParticipantClick -> TODO()
-            is ManageChatAction.ChatParticipantsAction.OnSelectChat -> TODO()
+            ManageChatAction.OnAddClick -> TODO()
+            is ManageChatAction.ChatParticipantsAction.OnSelectChat -> onSelectChat(manageChatAction.chatId)
             else -> Unit
         }
+    }
+
+    private fun onSelectChat(chatId: String) {
+        _chatId.update { chatId }
     }
 }
