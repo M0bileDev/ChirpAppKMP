@@ -6,7 +6,6 @@ sealed interface ManageChatAction {
     data object OnPrimaryActionButton : ManageChatAction
 
     sealed interface ChatParticipantsAction : ManageChatAction {
-        data object OnAddParticipantClick : ManageChatAction
         data class OnSelectChat(val chatId: String) : ManageChatAction
     }
 }
