@@ -1,4 +1,4 @@
-@file:OptIn(FlowPreview::class)
+@file:OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 
 package com.example.feature.chat.presentation.manage_chat
 
@@ -16,11 +16,15 @@ import com.example.core.presentation.util.UiText
 import com.example.feature.chat.domain.chat.ChatParticipantService
 import com.example.feature.chat.domain.chat.ChatRepository
 import com.example.feature.chat.presentation.mappers.toUi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
@@ -44,7 +48,17 @@ class ManageChatViewModel(
         .onEach { query ->
             performSearch(query)
         }
-    val state = _state
+    val state = _chatId
+        .flatMapLatest { chatId ->
+            if (chatId != null) {
+                chatRepository.getActiveParticipantsByChatId(chatId)
+            } else emptyFlow()
+        }
+        .combine(_state) { participants, currentState ->
+            currentState.copy(
+                existingChatParticipants = participants.map { it.toUi() }
+            )
+        }
         .onStart {
             if (!hasLoadedInitialData) {
                 searchFlow.launchIn(viewModelScope)
