@@ -168,7 +168,7 @@ class ManageChatViewModel(
         }
     }
 
-    private fun onSelectChat(chatId: String) {
+    private fun onSelectChat(chatId: String?) {
         _chatId.update { chatId }
     }
 }
