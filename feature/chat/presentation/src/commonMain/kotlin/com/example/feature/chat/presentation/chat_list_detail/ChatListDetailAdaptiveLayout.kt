@@ -120,6 +120,7 @@ fun ChatListDetailAdaptiveLayout(
         visible = sharedState.dialogState is DialogState.ManageChat
     ) {
         ManageChatRoot(
+            chatId = sharedState.selectedChatId,
             onDismiss = {
                 viewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)
             },
