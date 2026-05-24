@@ -105,7 +105,7 @@ fun ManageChatScreen(
                 ChirpButton(
                     text = primaryButtonText,
                     onClick = {
-                        onAction(ManageChatAction.OnPrimaryActionButton)
+                        onAction(ManageChatAction.OnPrimaryActionButtonClick)
                     },
                     enabled = selectedChatParticipants.isNotEmpty(),
                     isLoading = isCreatingChat
