@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import kotlin.time.Duration.Companion.seconds
 
 class ManageChatViewModel(
@@ -99,6 +100,7 @@ class ManageChatViewModel(
     fun onAction(manageChatAction: ManageChatAction) {
         when (manageChatAction) {
             ManageChatAction.OnAddClick -> addParticipantToChat()
+            ManageChatAction.OnPrimaryActionButtonClick -> addParticipantsToChat()
             is ManageChatAction.ChatParticipantsAction.OnSelectChat -> onSelectChat(manageChatAction.chatId)
             else -> Unit
         }
@@ -125,6 +127,32 @@ class ManageChatViewModel(
             }.also {
                 state.value.queryTextState.clearText()
             }
+        }
+    }
+
+    private fun addParticipantsToChat() = with(state.value) {
+        if (selectedChatParticipants.isEmpty()) return@with
+
+        val chatId = _chatId.value ?: return
+        val selectedUserIds = selectedChatParticipants.map { it.id }
+
+        viewModelScope.launch {
+            chatRepository
+                .addParticipantsToChat(
+                    chatId = chatId,
+                    userIds = selectedUserIds
+                )
+                .onSuccess {
+                    _eventChannel.send(ManageChatEvent.OnMembersAdded)
+                }
+                .onFailure { error ->
+                    _state.update {
+                        it.copy(
+                            isSubmitting = false,
+                            submitError = error.toUiText()
+                        )
+                    }
+                }
         }
     }
 
