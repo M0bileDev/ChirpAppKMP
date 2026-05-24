@@ -108,7 +108,7 @@ fun ManageChatScreen(
                         onAction(ManageChatAction.OnPrimaryActionButtonClick)
                     },
                     enabled = selectedChatParticipants.isNotEmpty(),
-                    isLoading = isCreatingChat
+                    isLoading = isSubmitting
                 )
             },
             secondaryButton = {
@@ -120,7 +120,7 @@ fun ManageChatScreen(
                     style = ChirpButtonStyle.SECONDARY
                 )
             },
-            errorMessage = createChatError?.asString()
+            errorMessage = submitError?.asString()
         )
     }
 }
