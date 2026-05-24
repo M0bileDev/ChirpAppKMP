@@ -16,6 +16,7 @@ import com.example.feature.chat.domain.chat.ChatRepository
 import com.example.feature.chat.domain.chat.ChatService
 import com.example.feature.chat.domain.model.Chat
 import com.example.feature.chat.domain.model.ChatInfo
+import com.example.feature.chat.domain.model.ChatParticipant
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
@@ -154,6 +155,20 @@ class OfflineFirstChatRepository(
                     participantDao = chatParticipantDao,
                     crossRefDao = chatParticipantsCrossRefDao
                 )
+            }
+    }
+
+    override fun getActiveParticipantsByChatId(chatId: String): Flow<List<ChatParticipant>> {
+        return chirpChatDatabase
+            .chatDao
+            .getActiveParticipantsByChatId(
+                chatId = chatId
+            )
+            .map { participants ->
+                participants
+                    .map { participant ->
+                        participant.toDomain()
+                    }
             }
     }
 }

@@ -6,6 +6,7 @@ import com.example.core.domain.util.EmptyResult
 import com.example.core.domain.util.Result
 import com.example.feature.chat.domain.model.Chat
 import com.example.feature.chat.domain.model.ChatInfo
+import com.example.feature.chat.domain.model.ChatParticipant
 import kotlinx.coroutines.flow.Flow
 
 interface ChatRepository {
@@ -19,4 +20,5 @@ interface ChatRepository {
         chatId: String,
         userIds: List<String>
     ): Result<Chat, DataError.Remote>
+    fun getActiveParticipantsByChatId(chatId: String):Flow<List<ChatParticipant>>
 }
