@@ -19,13 +19,15 @@ import com.example.feature.chat.presentation.mappers.toUi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
 import kotlin.time.Duration.Companion.seconds
 
 class ManageChatViewModel(
@@ -35,15 +37,25 @@ class ManageChatViewModel(
     private val _chatId = MutableStateFlow<String?>(null)
     private val _eventChannel = Channel<ManageChatEvent>()
     val events = _eventChannel.receiveAsFlow()
-
+    private var hasLoadedInitialData = false
     private val _state = MutableStateFlow(ManageChatState())
-    val state = _state.asStateFlow()
-
     private val searchFlow = snapshotFlow { _state.value.queryTextState.text.toString() }
         .debounce(1.seconds)
         .onEach { query ->
             performSearch(query)
         }
+    val state = _state
+        .onStart {
+            if (!hasLoadedInitialData) {
+                searchFlow.launchIn(viewModelScope)
+                hasLoadedInitialData = true
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = ManageChatState()
+        )
+
 
     private fun performSearch(query: String) = with(viewModelScope) {
         if (query.isBlank()) {
