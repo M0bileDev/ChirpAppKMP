@@ -26,7 +26,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun EmptyListSection(
+fun EmptySection(
     title: String,
     description: String,
     modifier: Modifier = Modifier
@@ -66,7 +66,7 @@ fun EmptyListSection(
 @Composable
 fun PreviewEmptyChatSection() {
     ChirpTheme {
-        EmptyListSection(
+        EmptySection(
             modifier = Modifier.fillMaxSize(),
             title = stringResource(Res.string.no_messages),
             description = stringResource(Res.string.no_messages_subtitle)
@@ -80,7 +80,7 @@ fun PreviewDarkEmptyChatSection() {
     ChirpTheme(
         darkTheme = true
     ) {
-        EmptyListSection(
+        EmptySection(
             modifier = Modifier.fillMaxSize(),
             title = stringResource(Res.string.no_messages),
             description = stringResource(Res.string.no_messages_subtitle)
