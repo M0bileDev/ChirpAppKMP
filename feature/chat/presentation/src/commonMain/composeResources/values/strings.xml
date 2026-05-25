@@ -32,4 +32,6 @@
     <string name="no_chats">No chats</string>
     <string name="no_chats_subtitle">Create new chat to start messaging</string>
     <string name="save">Save</string>
+    <string name="no_chat_selected">No chat selected</string>
+    <string name="select_a_chat">No chat selected</string>
 </resources>
