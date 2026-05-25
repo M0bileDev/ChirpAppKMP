@@ -20,7 +20,7 @@ import chirpappkmp.feature.chat.presentation.generated.resources.no_messages_sub
 import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.presentation.util.UiText
 import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
-import com.example.feature.chat.presentation.components.EmptyListSection
+import com.example.feature.chat.presentation.components.EmptySection
 import com.example.feature.chat.presentation.model.MessageUi
 import com.example.feature.chat.presentation.type_alias.ChatParticipantUi
 import org.jetbrains.compose.resources.stringResource
@@ -43,7 +43,7 @@ fun MessageList(
             modifier = modifier,
             contentAlignment = Alignment.Center
         ) {
-            EmptyListSection(
+            EmptySection(
                 title = stringResource(Res.string.no_messages),
                 description = stringResource(Res.string.no_messages_subtitle)
             )
