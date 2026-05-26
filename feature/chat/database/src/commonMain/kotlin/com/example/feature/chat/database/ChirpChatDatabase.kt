@@ -1,5 +1,6 @@
 package com.example.feature.chat.database
 
+import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.feature.chat.database.dao.ChatDao
@@ -24,6 +25,7 @@ import com.example.feature.chat.database.view.LastMessageView
     ],
     version = 1
 )
+@ConstructedBy(ChirpChatDatabaseConstructor::class)
 abstract class ChirpChatDatabase : RoomDatabase() {
 
     abstract val chatDao: ChatDao
