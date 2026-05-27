@@ -5,9 +5,25 @@ import platform.Foundation.NSError
 import platform.Foundation.NSURLErrorDomain
 import platform.Foundation.NSURLErrorNetworkConnectionLost
 import platform.Foundation.NSURLErrorNotConnectedToInternet
+import platform.Foundation.NSURLErrorTimedOut
 
 actual class ConnectionErrorHandler {
     actual fun getConnectionStateFromError(cause: Throwable): ConnectionState {
+        val nsError = cause.extractNsError()
+
+        return if (nsError != null) {
+            when (nsError.code) {
+                NSURLErrorNotConnectedToInternet,
+                NSURLErrorNetworkConnectionLost,
+                NSURLErrorTimedOut -> ConnectionState.ERROR_NETWORK
+
+                else -> ConnectionState.ERROR_UNKNOWN
+            }
+        } else if (cause is IOSNetworkCancellationException) {
+            ConnectionState.ERROR_NETWORK
+        } else {
+            ConnectionState.ERROR_UNKNOWN
+        }
     }
 
     actual fun transformException(exception: Throwable): Throwable {
