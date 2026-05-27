@@ -48,7 +48,17 @@ actual class ConnectionErrorHandler {
     }
 
     actual fun isRetriableError(cause: Throwable): Boolean {
-        TODO("Not yet implemented")
+        if (cause is IOSNetworkCancellationException) {
+            return true
+        }
+
+        return when (cause.extractNsError()?.code) {
+            NSURLErrorNotConnectedToInternet,
+            NSURLErrorNetworkConnectionLost,
+            NSURLErrorTimedOut -> true
+
+            else -> false
+        }
     }
 
     private fun Throwable.extractNsError(): NSError? {
