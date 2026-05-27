@@ -1,6 +1,7 @@
 package com.example.feature.chat.data.network
 
 import com.example.feature.chat.domain.model.ConnectionState
+import kotlinx.coroutines.CancellationException
 import platform.Foundation.NSError
 import platform.Foundation.NSURLErrorDomain
 import platform.Foundation.NSURLErrorNetworkConnectionLost
@@ -27,7 +28,23 @@ actual class ConnectionErrorHandler {
     }
 
     actual fun transformException(exception: Throwable): Throwable {
-        TODO("Not yet implemented")
+        if (exception is CancellationException) {
+            val cause = exception.cause ?: return exception
+            val isDarwinException = cause.message?.contains("DarwinHttpRequestException") == true
+            val isConnectionLostException =
+                cause.message?.contains("NSURLErrorDomain Code=-1005") == true
+            val isNotConnectedException =
+                cause.message?.contains("NSURLErrorDomain Code=-1009") == true
+
+            if (isDarwinException || isConnectionLostException || isNotConnectedException) {
+                return IOSNetworkCancellationException(
+                    message = "Network connection lost (extracted from cancellation)",
+                    cause = cause
+                )
+            }
+        }
+
+        return exception
     }
 
     actual fun isRetriableError(cause: Throwable): Boolean {
