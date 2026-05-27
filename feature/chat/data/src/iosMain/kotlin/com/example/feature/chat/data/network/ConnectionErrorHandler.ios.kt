@@ -8,7 +8,6 @@ import platform.Foundation.NSURLErrorNotConnectedToInternet
 
 actual class ConnectionErrorHandler {
     actual fun getConnectionStateFromError(cause: Throwable): ConnectionState {
-        TODO("Not yet implemented")
     }
 
     actual fun transformException(exception: Throwable): Throwable {
@@ -19,25 +18,25 @@ actual class ConnectionErrorHandler {
         TODO("Not yet implemented")
     }
 
-    private fun extractNsError(cause: Throwable): NSError? {
-        val throwableCause = cause.cause
+    private fun Throwable.extractNsError(): NSError? {
+        val throwableCause = cause
 
         if (throwableCause is NSError) {
             return throwableCause
         }
 
-        if (cause is NSError) {
-            return cause
+        if (this is NSError) {
+            return this
         }
 
-        val exceptionNSError = cause.toNSError()
-        val causeNSError = cause.cause?.toNSError()
+        val exceptionNSError = this.toNSError()
+        val causeNSError = this.cause?.toNSError()
 
         return exceptionNSError ?: causeNSError
     }
 
-    private fun Throwable.toNSError(): NSError? {
-        return message?.let { message ->
+    private fun Throwable.toNSError(): NSError? =
+        message?.let { message ->
             when {
                 message.contains(NSURLErrorNotConnectedToInternetPattern) -> {
                     return NSError.errorWithDomain(
@@ -58,7 +57,7 @@ actual class ConnectionErrorHandler {
                 else -> null
             }
         }
-    }
+
 
     companion object {
         private val NSURLErrorNotConnectedToInternetPattern =
