@@ -21,6 +21,10 @@ class ConnectionRetryHandler(
         }
     }
 
+    fun resetDelay() {
+        shouldSkipBackoff = true
+    }
+
     private fun createBackoffDelay(attempt: Int): Long {
         // 2 to power of attempt * 2 seconds
         val delayTime = 2f.pow(attempt).toLong() * 2_000L
