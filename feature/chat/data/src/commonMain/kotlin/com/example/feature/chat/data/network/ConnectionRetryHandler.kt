@@ -1,5 +1,6 @@
 package com.example.feature.chat.data.network
 
+import kotlinx.coroutines.delay
 import kotlin.math.pow
 
 class ConnectionRetryHandler(
@@ -9,6 +10,15 @@ class ConnectionRetryHandler(
 
     fun shouldRetry(cause: Throwable): Boolean {
         return connectionErrorHandler.isRetriableError(cause)
+    }
+
+    suspend fun applyRetryDelay(attempt: Int) {
+        if (!shouldSkipBackoff) {
+            val delay = createBackoffDelay(attempt)
+            delay(delay)
+        } else {
+            shouldSkipBackoff = false
+        }
     }
 
     private fun createBackoffDelay(attempt: Int): Long {
