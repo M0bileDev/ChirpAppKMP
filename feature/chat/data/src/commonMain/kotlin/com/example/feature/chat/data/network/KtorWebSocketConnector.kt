@@ -14,9 +14,12 @@ import io.ktor.client.plugins.websocket.webSocketSession
 import io.ktor.client.request.header
 import io.ktor.websocket.Frame
 import io.ktor.websocket.WebSocketSession
+import io.ktor.websocket.close
 import io.ktor.websocket.readText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,6 +29,8 @@ import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlin.time.Duration.Companion.seconds
 
@@ -102,6 +107,17 @@ class KtorWebSocketConnector(
                         else -> Unit
                     }
                 }
+        } ?: error("Failed to establish WebSocket connection")
+
+        awaitClose {
+            launch {
+                withContext(NonCancellable) {
+                    logger.info("Disconnecting from WebSocket session...")
+                    _connectionState.value = ConnectionState.DISCONNECTED
+                    webSocketSession?.close()
+                    webSocketSession = null
+                }
+            }
         }
     }
 }
