@@ -1,4 +1,4 @@
-@file:OptIn(FlowPreview::class)
+@file:OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 
 package com.example.feature.chat.data.network
 
@@ -17,6 +17,7 @@ import io.ktor.websocket.WebSocketSession
 import io.ktor.websocket.close
 import io.ktor.websocket.readText
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.awaitClose
@@ -28,6 +29,8 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -72,6 +75,59 @@ class KtorWebSocketConnector(
             false
         )
 
+    val messages = combine(
+        sessionStorage.observeAuthInfo(),
+        isConnected,
+        isInForeground
+    ) { authInfo, isConnected, isInForeground ->
+        when {
+            authInfo == null -> {
+                logger.info("No authentication details. Clearing session and disconnecting...")
+                _connectionState.value = ConnectionState.DISCONNECTED
+                webSocketSession?.close()
+                webSocketSession = null
+                connectionRetryHandler.resetDelay()
+                null
+            }
+
+            !isInForeground -> {
+                logger.info("Application in background, disconnecting socket proactively.")
+                _connectionState.value = ConnectionState.DISCONNECTED
+                webSocketSession?.close()
+                webSocketSession = null
+                null
+            }
+
+            !isConnected -> {
+                logger.info("Device is disconnected, closing WebSocket connection.")
+                _connectionState.value = ConnectionState.ERROR_NETWORK
+                webSocketSession?.close()
+                webSocketSession = null
+                null
+            }
+
+            else -> {
+                logger.info("Application in foreground and connected, establishing connection...")
+
+                if (_connectionState.value !in listOf(
+                        ConnectionState.CONNECTING,
+                        ConnectionState.CONNECTED
+                    )
+                ) {
+                    _connectionState.value = ConnectionState.CONNECTING
+                }
+
+                authInfo
+            }
+        }
+    }.flatMapLatest { authInfo ->
+        if (authInfo == null) {
+            emptyFlow()
+        } else {
+            createWebSocketFlow(authInfo.accessToken)
+        }
+    }
+
     private fun createWebSocketFlow(accessToken: String) = callbackFlow {
         _connectionState.value = ConnectionState.CONNECTING
 
@@ -109,53 +165,6 @@ class KtorWebSocketConnector(
                     }
                 }
         } ?: error("Failed to establish WebSocket connection")
-
-        val messages = combine(
-            sessionStorage.observeAuthInfo(),
-            isConnected,
-            isInForeground
-        ) { authInfo, isConnected, isInForeground ->
-            when {
-                authInfo == null -> {
-                    logger.info("No authentication details. Clearing session and disconnecting...")
-                    _connectionState.value = ConnectionState.DISCONNECTED
-                    webSocketSession?.close()
-                    webSocketSession = null
-                    connectionRetryHandler.resetDelay()
-                    null
-                }
-
-                !isInForeground -> {
-                    logger.info("Application in background, disconnecting socket proactively.")
-                    _connectionState.value = ConnectionState.DISCONNECTED
-                    webSocketSession?.close()
-                    webSocketSession = null
-                    null
-                }
-
-                !isConnected -> {
-                    logger.info("Device is disconnected, closing WebSocket connection.")
-                    _connectionState.value = ConnectionState.ERROR_NETWORK
-                    webSocketSession?.close()
-                    webSocketSession = null
-                    null
-                }
-
-                else -> {
-                    logger.info("Application in foreground and connected, establishing connection...")
-
-                    if (_connectionState.value !in listOf(
-                            ConnectionState.CONNECTING,
-                            ConnectionState.CONNECTED
-                        )
-                    ) {
-                        _connectionState.value = ConnectionState.CONNECTING
-                    }
-
-                    authInfo
-                }
-            }
-        }
 
         awaitClose {
             launch {
