@@ -5,9 +5,12 @@ package com.example.feature.chat.data.network
 import com.example.core.data.network.UrlConstants.BASE_URL_WS
 import com.example.core.domain.auth.SessionStorage
 import com.example.core.domain.logging.ChirpLogger
+import com.example.core.domain.util.EmptyResult
+import com.example.core.domain.util.Result
 import com.example.feature.chat.data.BuildKonfig
 import com.example.feature.chat.data.dto.websocket.WebSocketMessageDto
 import com.example.feature.chat.data.lifecycle.AppLifecycleObserver
+import com.example.feature.chat.domain.error.ConnectionError
 import com.example.feature.chat.domain.model.ConnectionState
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.webSocketSession
@@ -16,11 +19,14 @@ import io.ktor.websocket.Frame
 import io.ktor.websocket.WebSocketSession
 import io.ktor.websocket.close
 import io.ktor.websocket.readText
+import io.ktor.websocket.send
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -206,6 +212,21 @@ class KtorWebSocketConnector(
                     webSocketSession = null
                 }
             }
+        }
+    }
+
+    suspend fun sendMessage(message: String): EmptyResult<ConnectionError> {
+        if (webSocketSession == null || connectionState.value != ConnectionState.CONNECTED) {
+            return Result.Failure(ConnectionError.NOT_CONNECTED)
+        }
+
+        return try {
+            webSocketSession?.send(content = message)
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            currentCoroutineContext().ensureActive()
+            logger.error("Unable to send WebSocket message", e)
+            Result.Failure(ConnectionError.MESSAGE_SEND_FAILED)
         }
     }
 }
