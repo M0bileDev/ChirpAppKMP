@@ -6,6 +6,7 @@ import com.example.core.data.network.UrlConstants.BASE_URL_WS
 import com.example.core.domain.auth.SessionStorage
 import com.example.core.domain.logging.ChirpLogger
 import com.example.feature.chat.data.BuildKonfig
+import com.example.feature.chat.data.dto.websocket.WebSocketMessageDto
 import com.example.feature.chat.data.lifecycle.AppLifecycleObserver
 import com.example.feature.chat.domain.model.ConnectionState
 import io.ktor.client.HttpClient
@@ -13,6 +14,7 @@ import io.ktor.client.plugins.websocket.webSocketSession
 import io.ktor.client.request.header
 import io.ktor.websocket.Frame
 import io.ktor.websocket.WebSocketSession
+import io.ktor.websocket.readText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -82,11 +84,16 @@ class KtorWebSocketConnector(
                 .incoming
                 .consumeAsFlow()
                 .buffer(capacity = 100)
-                .collect {frame ->
-                    when(frame){
+                .collect { frame ->
+                    when (frame) {
                         is Frame.Text -> {
-                            // TODO:
+                            val text = frame.readText()
+                            logger.info("Received raw text frame: $text")
+
+                            val messageDto = json.decodeFromString<WebSocketMessageDto>(text)
+                            send(messageDto)
                         }
+
                         is Frame.Pong -> TODO()
                         else -> Unit
                     }
