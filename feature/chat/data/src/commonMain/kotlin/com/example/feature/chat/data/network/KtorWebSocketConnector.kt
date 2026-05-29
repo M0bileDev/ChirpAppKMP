@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.debounce
@@ -125,6 +126,15 @@ class KtorWebSocketConnector(
             emptyFlow()
         } else {
             createWebSocketFlow(authInfo.accessToken)
+                .catch { e ->
+                    logger.error("Exception in WebSocket", e)
+
+                    webSocketSession?.close()
+                    webSocketSession = null
+
+                    val transformedException = connectionErrorHandler.transformException(e)
+                    throw transformedException
+                }
         }
     }
 
