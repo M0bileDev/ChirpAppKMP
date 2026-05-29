@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.onEach
@@ -108,6 +109,53 @@ class KtorWebSocketConnector(
                     }
                 }
         } ?: error("Failed to establish WebSocket connection")
+
+        val messages = combine(
+            sessionStorage.observeAuthInfo(),
+            isConnected,
+            isInForeground
+        ) { authInfo, isConnected, isInForeground ->
+            when {
+                authInfo == null -> {
+                    logger.info("No authentication details. Clearing session and disconnecting...")
+                    _connectionState.value = ConnectionState.DISCONNECTED
+                    webSocketSession?.close()
+                    webSocketSession = null
+                    connectionRetryHandler.resetDelay()
+                    null
+                }
+
+                !isInForeground -> {
+                    logger.info("Application in background, disconnecting socket proactively.")
+                    _connectionState.value = ConnectionState.DISCONNECTED
+                    webSocketSession?.close()
+                    webSocketSession = null
+                    null
+                }
+
+                !isConnected -> {
+                    logger.info("Device is disconnected, closing WebSocket connection.")
+                    _connectionState.value = ConnectionState.ERROR_NETWORK
+                    webSocketSession?.close()
+                    webSocketSession = null
+                    null
+                }
+
+                else -> {
+                    logger.info("Application in foreground and connected, establishing connection...")
+
+                    if (_connectionState.value !in listOf(
+                            ConnectionState.CONNECTING,
+                            ConnectionState.CONNECTED
+                        )
+                    ) {
+                        _connectionState.value = ConnectionState.CONNECTING
+                    }
+
+                    authInfo
+                }
+            }
+        }
 
         awaitClose {
             launch {
