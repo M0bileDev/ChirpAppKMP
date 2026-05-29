@@ -94,7 +94,11 @@ class KtorWebSocketConnector(
                             send(messageDto)
                         }
 
-                        is Frame.Pong -> TODO()
+                        is Frame.Ping -> {
+                            logger.debug("Received ping from server, sending pong...")
+                            session.send(Frame.Pong(frame.data))
+                        }
+
                         else -> Unit
                     }
                 }
