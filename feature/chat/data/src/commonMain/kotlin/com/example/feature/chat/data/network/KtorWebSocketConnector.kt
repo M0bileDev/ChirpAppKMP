@@ -127,25 +127,34 @@ class KtorWebSocketConnector(
             emptyFlow()
         } else {
             createWebSocketFlow(authInfo.accessToken)
-                .catch { e ->
-                    logger.error("Exception in WebSocket", e)
+                // Catch and transform exceptions to platform compatibility
+                .catch { throwable ->
+                    logger.error("Exception in WebSocket", throwable)
 
                     webSocketSession?.close()
                     webSocketSession = null
 
-                    val transformedException = connectionErrorHandler.transformException(e)
+                    val transformedException = connectionErrorHandler.transformException(throwable)
                     throw transformedException
                 }
+                // When conditions are met re-subscribe to original flow -> createWebSocketFlow
                 .retryWhen { cause, attempt ->
                     logger.info("Connection failed on attempt $attempt")
 
                     val shouldRetry = connectionRetryHandler.shouldRetry(cause = cause)
-                    if(shouldRetry){
+                    if (shouldRetry) {
                         _connectionState.value = ConnectionState.CONNECTING
                         connectionRetryHandler.applyRetryDelay(attempt.toInt())
                     }
 
                     shouldRetry
+                }
+                // Catch non-retriable errors
+                .catch { throwable ->
+                    logger.error("Unhandled WebSocket error", throwable)
+
+                    _connectionState.value =
+                        connectionErrorHandler.getConnectionStateFromError(throwable)
                 }
         }
     }
