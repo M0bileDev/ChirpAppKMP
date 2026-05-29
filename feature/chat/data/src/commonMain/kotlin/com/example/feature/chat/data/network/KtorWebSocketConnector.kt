@@ -33,6 +33,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -134,6 +135,17 @@ class KtorWebSocketConnector(
 
                     val transformedException = connectionErrorHandler.transformException(e)
                     throw transformedException
+                }
+                .retryWhen { cause, attempt ->
+                    logger.info("Connection failed on attempt $attempt")
+
+                    val shouldRetry = connectionRetryHandler.shouldRetry(cause = cause)
+                    if(shouldRetry){
+                        _connectionState.value = ConnectionState.CONNECTING
+                        connectionRetryHandler.applyRetryDelay(attempt.toInt())
+                    }
+
+                    shouldRetry
                 }
         }
     }
