@@ -10,5 +10,5 @@ import kotlinx.coroutines.flow.StateFlow
 interface ChatConnectionClient {
     val chatMessages: Flow<ChatMessage>
     val connectionState: StateFlow<ConnectionState>
-    suspend fun sendChatMessage(message: String): EmptyResult<ConnectionError>
+    suspend fun sendChatMessage(message: ChatMessage): EmptyResult<ConnectionError>
 }
