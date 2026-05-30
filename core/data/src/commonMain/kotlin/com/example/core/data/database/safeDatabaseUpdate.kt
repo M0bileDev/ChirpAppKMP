@@ -4,9 +4,9 @@ import androidx.sqlite.SQLiteException
 import com.example.core.domain.util.DataError
 import com.example.core.domain.util.Result
 
-fun <T> safeDatabaseUpdate(update: () -> Result<T, DataError.Local>): Result<T, DataError.Local> {
+fun <T> safeDatabaseUpdate(update: () -> T): Result<T, DataError.Local> {
     return try {
-        update()
+        Result.Success(update())
     } catch (_: SQLiteException) {
         Result.Failure(DataError.Local.DISK_FULL)
     }
