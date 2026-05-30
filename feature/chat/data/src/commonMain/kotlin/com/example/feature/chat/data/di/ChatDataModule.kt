@@ -5,11 +5,13 @@ import com.example.feature.chat.data.chat.WebSocketChatConnectionClient
 import com.example.feature.chat.data.chat.KtorChatParticipantService
 import com.example.feature.chat.data.chat.KtorChatService
 import com.example.feature.chat.data.chat.OfflineFirstChatRepository
+import com.example.feature.chat.data.message.OfflineFirstMessageRepository
 import com.example.feature.chat.database.ChirpDatabaseFactory
 import com.example.feature.chat.domain.chat.ChatParticipantService
 import com.example.feature.chat.domain.chat.ChatRepository
 import com.example.feature.chat.domain.chat.ChatService
 import com.example.feature.chat.domain.chat.ChatConnectionClient
+import com.example.feature.chat.domain.message.MessageRepository
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -30,4 +32,5 @@ val chatDataModule = module {
     }
     singleOf(::OfflineFirstChatRepository) bind ChatRepository::class
     singleOf(::WebSocketChatConnectionClient) bind ChatConnectionClient::class
+    singleOf(::OfflineFirstMessageRepository) bind MessageRepository::class
 }
