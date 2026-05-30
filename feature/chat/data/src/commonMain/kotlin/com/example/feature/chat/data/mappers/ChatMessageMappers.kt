@@ -1,6 +1,7 @@
 package com.example.feature.chat.data.mappers
 
 import com.example.feature.chat.data.dto.ChatMessageDto
+import com.example.feature.chat.data.dto.websocket.OutgoingWebSocketDto
 import com.example.feature.chat.database.entities.ChatMessageEntity
 import com.example.feature.chat.database.view.LastMessageView
 import com.example.feature.chat.domain.model.ChatMessage
@@ -59,5 +60,13 @@ fun ChatMessageEntity.toDomain(): ChatMessage {
         createdAt = Instant.fromEpochMilliseconds(timestamp),
         senderId = senderId,
         deliveryStatus = ChatMessageDeliveryStatus.SENT
+    )
+}
+
+fun ChatMessage.toNewMessage(): OutgoingWebSocketDto.NewMessage {
+    return OutgoingWebSocketDto.NewMessage(
+        chatId = chatId,
+        messageId = id,
+        content = content
     )
 }
