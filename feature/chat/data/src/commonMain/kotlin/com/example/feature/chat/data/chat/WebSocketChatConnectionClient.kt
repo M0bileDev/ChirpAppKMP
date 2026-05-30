@@ -22,8 +22,7 @@ class WebSocketChatConnectionClient(
 ) : ChatConnectionClient {
     override val chatMessages: Flow<ChatMessage>
         get() = TODO("Not yet implemented")
-    override val connectionState: StateFlow<ConnectionState>
-        get() = TODO("Not yet implemented")
+    override val connectionState = ktorWebSocketConnector.connectionState
 
     override suspend fun sendChatMessage(message: String): EmptyResult<ConnectionError> {
         TODO("Not yet implemented")
