@@ -4,7 +4,7 @@ import androidx.sqlite.SQLiteException
 import com.example.core.domain.util.DataError
 import com.example.core.domain.util.Result
 
-fun <T> safeDatabaseUpdate(update: () -> T): Result<T, DataError.Local> {
+suspend inline fun <T> safeDatabaseUpdate(update: suspend () -> T): Result<T, DataError.Local> {
     return try {
         Result.Success(update())
     } catch (_: SQLiteException) {
