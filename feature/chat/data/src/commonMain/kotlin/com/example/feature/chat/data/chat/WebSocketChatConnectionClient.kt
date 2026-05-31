@@ -87,9 +87,9 @@ class WebSocketChatConnectionClient(
     private suspend fun IncomingWebSocketDto.ChatParticipantsChangedDto.refreshChat() =
         chatRepository.fetchChatById(chatId = chatId)
 
-    private suspend fun IncomingWebSocketDto.MessageDeletedDto.deleteMessage() {
-        // TODO: implement
-    }
+    private suspend fun IncomingWebSocketDto.MessageDeletedDto.deleteMessage() =
+        chirpChatDatabase.chatMessageDao.deleteMessageById(messageId = messageId)
+
 
     private suspend fun IncomingWebSocketDto.NewMessageDto.handleNewMessage() {
         // TODO: implement
