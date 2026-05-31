@@ -84,9 +84,8 @@ class WebSocketChatConnectionClient(
         }
     }
 
-    private suspend fun IncomingWebSocketDto.ChatParticipantsChangedDto.refreshChat() {
-        // TODO: implement
-    }
+    private suspend fun IncomingWebSocketDto.ChatParticipantsChangedDto.refreshChat() =
+        chatRepository.fetchChatById(chatId = chatId)
 
     private suspend fun IncomingWebSocketDto.MessageDeletedDto.deleteMessage() {
         // TODO: implement
