@@ -3,6 +3,8 @@ package com.example.feature.chat.data.chat
 import com.example.core.domain.auth.SessionStorage
 import com.example.core.domain.util.EmptyResult
 import com.example.core.domain.util.onFailure
+import com.example.feature.chat.data.dto.websocket.IncomingWebSocketDto
+import com.example.feature.chat.data.dto.websocket.IncomingWebSocketType
 import com.example.feature.chat.data.dto.websocket.WebSocketMessageDto
 import com.example.feature.chat.data.mappers.toNewMessage
 import com.example.feature.chat.data.network.KtorWebSocketConnector
@@ -13,7 +15,8 @@ import com.example.feature.chat.domain.error.ConnectionError
 import com.example.feature.chat.domain.message.MessageRepository
 import com.example.feature.chat.domain.model.ChatMessage
 import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onEach
 import kotlinx.serialization.json.Json
 
 class WebSocketChatConnectionClient(
@@ -24,8 +27,12 @@ class WebSocketChatConnectionClient(
     private val json: Json,
     private val messageRepository: MessageRepository
 ) : ChatConnectionClient {
-    override val chatMessages: Flow<ChatMessage>
-        get() = TODO("Not yet implemented")
+    override val chatMessages =
+        ktorWebSocketConnector
+            .messages
+            .mapNotNull { webSocketMessageDto -> webSocketMessageDto.parseIncomingMessage() }
+            .onEach { incomingWebSocketDto -> incomingWebSocketDto.handleIncomingMessage() }
+
     override val connectionState = ktorWebSocketConnector.connectionState
 
     override suspend fun sendChatMessage(message: ChatMessage): EmptyResult<ConnectionError> {
@@ -44,5 +51,51 @@ class WebSocketChatConnectionClient(
                     status = ChatMessageDeliveryStatus.FAILED
                 )
             }
+    }
+
+    private fun WebSocketMessageDto.parseIncomingMessage(): IncomingWebSocketDto? {
+        return when (type) {
+            IncomingWebSocketType.NEW_MESSAGE.name -> {
+                json.decodeFromString<IncomingWebSocketDto.NewMessageDto>(payload)
+            }
+
+            IncomingWebSocketType.MESSAGE_DELETED.name -> {
+                json.decodeFromString<IncomingWebSocketDto.MessageDeletedDto>(payload)
+            }
+
+            IncomingWebSocketType.PROFILE_PICTURE_UPDATED.name -> {
+                json.decodeFromString<IncomingWebSocketDto.ProfilePictureUpdated>(payload)
+            }
+
+            IncomingWebSocketType.CHAT_PARTICIPANTS_CHANGED.name -> {
+                json.decodeFromString<IncomingWebSocketDto.ChatParticipantsChangedDto>(payload)
+            }
+
+            else -> null
+        }
+    }
+
+    private suspend fun IncomingWebSocketDto.handleIncomingMessage() {
+        when (this) {
+            is IncomingWebSocketDto.ChatParticipantsChangedDto -> refreshChat()
+            is IncomingWebSocketDto.MessageDeletedDto -> deleteMessage()
+            is IncomingWebSocketDto.NewMessageDto -> handleNewMessage()
+            is IncomingWebSocketDto.ProfilePictureUpdated -> updateProfilePicture()
+        }
+    }
+
+    private suspend fun IncomingWebSocketDto.ChatParticipantsChangedDto.refreshChat() =
+        chatRepository.fetchChatById(chatId = chatId)
+
+    private suspend fun IncomingWebSocketDto.MessageDeletedDto.deleteMessage() =
+        chirpChatDatabase.chatMessageDao.deleteMessageById(messageId = messageId)
+
+
+    private suspend fun IncomingWebSocketDto.NewMessageDto.handleNewMessage() {
+        // TODO: implement
+    }
+
+    private suspend fun IncomingWebSocketDto.ProfilePictureUpdated.updateProfilePicture() {
+        // TODO: implement
     }
 }
