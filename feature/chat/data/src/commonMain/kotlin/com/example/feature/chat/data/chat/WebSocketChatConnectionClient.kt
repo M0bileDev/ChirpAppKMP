@@ -3,6 +3,8 @@ package com.example.feature.chat.data.chat
 import com.example.core.domain.auth.SessionStorage
 import com.example.core.domain.util.EmptyResult
 import com.example.core.domain.util.onFailure
+import com.example.feature.chat.data.dto.websocket.IncomingWebSocketDto
+import com.example.feature.chat.data.dto.websocket.IncomingWebSocketType
 import com.example.feature.chat.data.dto.websocket.WebSocketMessageDto
 import com.example.feature.chat.data.mappers.toNewMessage
 import com.example.feature.chat.data.network.KtorWebSocketConnector
@@ -44,5 +46,27 @@ class WebSocketChatConnectionClient(
                     status = ChatMessageDeliveryStatus.FAILED
                 )
             }
+    }
+
+    private fun parseIncomingMessage(message: WebSocketMessageDto): IncomingWebSocketDto? {
+        return when (message.type) {
+            IncomingWebSocketType.NEW_MESSAGE.name -> {
+                json.decodeFromString<IncomingWebSocketDto.NewMessageDto>(message.payload)
+            }
+
+            IncomingWebSocketType.MESSAGE_DELETED.name -> {
+                json.decodeFromString<IncomingWebSocketDto.MessageDeletedDto>(message.payload)
+            }
+
+            IncomingWebSocketType.PROFILE_PICTURE_UPDATED.name -> {
+                json.decodeFromString<IncomingWebSocketDto.ProfilePictureUpdated>(message.payload)
+            }
+
+            IncomingWebSocketType.CHAT_PARTICIPANTS_CHANGED.name -> {
+                json.decodeFromString<IncomingWebSocketDto.ChatParticipantsChangedDto>(message.payload)
+            }
+
+            else -> null
+        }
     }
 }
