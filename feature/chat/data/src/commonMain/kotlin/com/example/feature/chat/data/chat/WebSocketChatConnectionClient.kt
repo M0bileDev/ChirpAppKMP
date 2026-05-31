@@ -83,4 +83,20 @@ class WebSocketChatConnectionClient(
             is IncomingWebSocketDto.ProfilePictureUpdated -> updateProfilePicture()
         }
     }
+
+    private suspend fun IncomingWebSocketDto.ChatParticipantsChangedDto.refreshChat() {
+        // TODO: implement
+    }
+
+    private suspend fun IncomingWebSocketDto.MessageDeletedDto.deleteMessage() {
+        // TODO: implement
+    }
+
+    private suspend fun IncomingWebSocketDto.NewMessageDto.handleNewMessage() {
+        // TODO: implement
+    }
+
+    private suspend fun IncomingWebSocketDto.ProfilePictureUpdated.updateProfilePicture() {
+        // TODO: implement
+    }
 }
