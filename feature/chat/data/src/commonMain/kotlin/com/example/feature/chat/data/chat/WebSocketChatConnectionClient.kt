@@ -48,22 +48,22 @@ class WebSocketChatConnectionClient(
             }
     }
 
-    private fun parseIncomingMessage(message: WebSocketMessageDto): IncomingWebSocketDto? {
-        return when (message.type) {
+    private fun WebSocketMessageDto.parseIncomingMessage(): IncomingWebSocketDto? {
+        return when (type) {
             IncomingWebSocketType.NEW_MESSAGE.name -> {
-                json.decodeFromString<IncomingWebSocketDto.NewMessageDto>(message.payload)
+                json.decodeFromString<IncomingWebSocketDto.NewMessageDto>(payload)
             }
 
             IncomingWebSocketType.MESSAGE_DELETED.name -> {
-                json.decodeFromString<IncomingWebSocketDto.MessageDeletedDto>(message.payload)
+                json.decodeFromString<IncomingWebSocketDto.MessageDeletedDto>(payload)
             }
 
             IncomingWebSocketType.PROFILE_PICTURE_UPDATED.name -> {
-                json.decodeFromString<IncomingWebSocketDto.ProfilePictureUpdated>(message.payload)
+                json.decodeFromString<IncomingWebSocketDto.ProfilePictureUpdated>(payload)
             }
 
             IncomingWebSocketType.CHAT_PARTICIPANTS_CHANGED.name -> {
-                json.decodeFromString<IncomingWebSocketDto.ChatParticipantsChangedDto>(message.payload)
+                json.decodeFromString<IncomingWebSocketDto.ChatParticipantsChangedDto>(payload)
             }
 
             else -> null
