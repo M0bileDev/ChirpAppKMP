@@ -15,7 +15,8 @@ import com.example.feature.chat.domain.error.ConnectionError
 import com.example.feature.chat.domain.message.MessageRepository
 import com.example.feature.chat.domain.model.ChatMessage
 import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onEach
 import kotlinx.serialization.json.Json
 
 class WebSocketChatConnectionClient(
@@ -26,8 +27,12 @@ class WebSocketChatConnectionClient(
     private val json: Json,
     private val messageRepository: MessageRepository
 ) : ChatConnectionClient {
-    override val chatMessages: Flow<ChatMessage>
-        get() = TODO("Not yet implemented")
+    override val chatMessages =
+        ktorWebSocketConnector
+            .messages
+            .mapNotNull { webSocketMessageDto -> webSocketMessageDto.parseIncomingMessage() }
+            .onEach { incomingWebSocketDto -> incomingWebSocketDto.handleIncomingMessage() }
+
     override val connectionState = ktorWebSocketConnector.connectionState
 
     override suspend fun sendChatMessage(message: ChatMessage): EmptyResult<ConnectionError> {
@@ -67,6 +72,15 @@ class WebSocketChatConnectionClient(
             }
 
             else -> null
+        }
+    }
+
+    private suspend fun IncomingWebSocketDto.handleIncomingMessage() {
+        when (this) {
+            is IncomingWebSocketDto.ChatParticipantsChangedDto -> refreshChat()
+            is IncomingWebSocketDto.MessageDeletedDto -> deleteMessage()
+            is IncomingWebSocketDto.NewMessageDto -> handleNewMessage()
+            is IncomingWebSocketDto.ProfilePictureUpdated -> updateProfilePicture()
         }
     }
 }
