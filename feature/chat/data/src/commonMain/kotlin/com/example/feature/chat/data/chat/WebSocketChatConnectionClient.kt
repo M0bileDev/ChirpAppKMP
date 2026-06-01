@@ -16,6 +16,7 @@ import com.example.feature.chat.domain.error.ConnectionError
 import com.example.feature.chat.domain.message.MessageRepository
 import com.example.feature.chat.domain.model.ChatMessage
 import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.serialization.json.Json
@@ -104,6 +105,22 @@ class WebSocketChatConnectionClient(
         }
 
     private suspend fun IncomingWebSocketDto.ProfilePictureUpdated.updateProfilePicture() {
-        // TODO: implement
+        chirpChatDatabase
+            .chatParticipantDao
+            .updateProfilePictureUrl(
+                userId = userId,
+                newProfilePictureUrl = newUrl
+            )
+
+        val authInfo = sessionStorage.observeAuthInfo().firstOrNull()
+        if (authInfo != null) {
+            sessionStorage.set(
+                info = authInfo.copy(
+                    user = authInfo.user.copy(
+                        profilePictureUrl = newUrl
+                    )
+                )
+            )
+        }
     }
 }
