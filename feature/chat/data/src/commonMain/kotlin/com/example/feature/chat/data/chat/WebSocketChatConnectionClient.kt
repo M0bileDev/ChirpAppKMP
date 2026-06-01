@@ -17,10 +17,13 @@ import com.example.feature.chat.domain.error.ConnectionError
 import com.example.feature.chat.domain.message.MessageRepository
 import com.example.feature.chat.domain.model.ChatMessage
 import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.serialization.json.Json
 
 class WebSocketChatConnectionClient(
@@ -29,7 +32,8 @@ class WebSocketChatConnectionClient(
     private val chirpChatDatabase: ChirpChatDatabase,
     private val sessionStorage: SessionStorage,
     private val json: Json,
-    private val messageRepository: MessageRepository
+    private val messageRepository: MessageRepository,
+    private val applicationScope: CoroutineScope
 ) : ChatConnectionClient {
 
     override val chatMessages =
@@ -43,6 +47,10 @@ class WebSocketChatConnectionClient(
                     newMessageDto.id
                 )?.toDomain()
             }
+            .shareIn(
+                applicationScope,
+                SharingStarted.WhileSubscribed(5_000L)
+            )
 
     override val connectionState = ktorWebSocketConnector.connectionState
 
