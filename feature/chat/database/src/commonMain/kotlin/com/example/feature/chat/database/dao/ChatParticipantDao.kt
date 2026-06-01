@@ -22,5 +22,5 @@ interface ChatParticipantDao {
             SET profilePictureUrl = :newProfilePictureUrl
             WHERE userId = :userId
     """)
-    suspend fun updateProfilePictureUrl(userId: String, newProfilePictureUrl: String)
+    suspend fun updateProfilePictureUrl(userId: String, newProfilePictureUrl: String?)
 }
