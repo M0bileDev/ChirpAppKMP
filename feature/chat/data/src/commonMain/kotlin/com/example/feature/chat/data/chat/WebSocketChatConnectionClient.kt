@@ -6,6 +6,7 @@ import com.example.core.domain.util.onFailure
 import com.example.feature.chat.data.dto.websocket.IncomingWebSocketDto
 import com.example.feature.chat.data.dto.websocket.IncomingWebSocketType
 import com.example.feature.chat.data.dto.websocket.WebSocketMessageDto
+import com.example.feature.chat.data.mappers.toEntity
 import com.example.feature.chat.data.mappers.toNewMessage
 import com.example.feature.chat.data.network.KtorWebSocketConnector
 import com.example.feature.chat.database.ChirpChatDatabase
@@ -91,9 +92,16 @@ class WebSocketChatConnectionClient(
         chirpChatDatabase.chatMessageDao.deleteMessageById(messageId = messageId)
 
 
-    private suspend fun IncomingWebSocketDto.NewMessageDto.handleNewMessage() {
-        // TODO: implement
-    }
+    private suspend fun IncomingWebSocketDto.NewMessageDto.handleNewMessage() =
+        with(chirpChatDatabase) {
+            val chatExists = chatDao.getChatById(chatId) != null
+            if (!chatExists) {
+                chatRepository.fetchChatById(chatId)
+            }
+
+            val entity = toEntity()
+            chatMessageDao.upsertMessage(entity)
+        }
 
     private suspend fun IncomingWebSocketDto.ProfilePictureUpdated.updateProfilePicture() {
         // TODO: implement
