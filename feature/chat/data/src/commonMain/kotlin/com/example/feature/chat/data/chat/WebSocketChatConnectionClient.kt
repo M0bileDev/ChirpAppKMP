@@ -6,6 +6,7 @@ import com.example.core.domain.util.onFailure
 import com.example.feature.chat.data.dto.websocket.IncomingWebSocketDto
 import com.example.feature.chat.data.dto.websocket.IncomingWebSocketType
 import com.example.feature.chat.data.dto.websocket.WebSocketMessageDto
+import com.example.feature.chat.data.mappers.toDomain
 import com.example.feature.chat.data.mappers.toEntity
 import com.example.feature.chat.data.mappers.toNewMessage
 import com.example.feature.chat.data.network.KtorWebSocketConnector
@@ -16,6 +17,7 @@ import com.example.feature.chat.domain.error.ConnectionError
 import com.example.feature.chat.domain.message.MessageRepository
 import com.example.feature.chat.domain.model.ChatMessage
 import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
@@ -29,11 +31,18 @@ class WebSocketChatConnectionClient(
     private val json: Json,
     private val messageRepository: MessageRepository
 ) : ChatConnectionClient {
+
     override val chatMessages =
         ktorWebSocketConnector
             .messages
             .mapNotNull { webSocketMessageDto -> webSocketMessageDto.parseIncomingMessage() }
             .onEach { incomingWebSocketDto -> incomingWebSocketDto.handleIncomingMessage() }
+            .filterIsInstance<IncomingWebSocketDto.NewMessageDto>()
+            .mapNotNull { newMessageDto ->
+                chirpChatDatabase.chatMessageDao.getMessageById(
+                    newMessageDto.id
+                )?.toDomain()
+            }
 
     override val connectionState = ktorWebSocketConnector.connectionState
 
