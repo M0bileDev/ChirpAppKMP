@@ -2,9 +2,11 @@ package com.example.feature.chat.database.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
 import com.example.feature.chat.database.entities.ChatMessageEntity
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 
 @Dao
 interface ChatMessageDao {
@@ -24,13 +26,54 @@ interface ChatMessageDao {
     @Query("SELECT * FROM chatmessageentity WHERE chatId = :chatId ORDER BY timestamp DESC")
     fun getMessagesByChatId(chatId: String): Flow<List<ChatMessageEntity>>
 
+    @Query(
+        """
+        SELECT * 
+        FROM chatmessageentity   
+        WHERE chatId = :chatId 
+        ORDER BY timestamp DESC
+        LIMIT :limit
+    """
+    )
+    fun getMessagesByChatIdLimited(chatId: String, limit: Int): Flow<List<ChatMessageEntity>>
+
     @Query("SELECT * FROM chatmessageentity WHERE messageId = :messageId")
     suspend fun getMessageById(messageId: String): ChatMessageEntity?
 
-    @Query("""
+    @Query(
+        """
         UPDATE chatmessageentity
         SET deliveryStatus = :status, deliveryStatusTimeStamp = :status
         WHERE messageId = :messageId
-    """)
+    """
+    )
     suspend fun updateDeliveryStatus(messageId: String, status: String, timestamp: Long)
+
+    @Transaction
+    suspend fun upsertMessagesAndSyncIfNecessary(
+        chatId: String,
+        serverMessages: List<ChatMessageEntity>,
+        pageSize: Int,
+        shouldSync: Boolean = false
+    ) {
+        upsertMessages(messages = serverMessages)
+        if (!shouldSync) return
+
+        val localMessages = getMessagesByChatIdLimited(
+            chatId = chatId,
+            limit = pageSize
+        ).firstOrNull()
+        if (localMessages == null) return
+
+        val serverIds = serverMessages.map { it.messageId }.toSet()
+        val messagesToDelete = localMessages.filter { localMessage ->
+            val missingOnServer = localMessage.messageId !in serverIds
+            val isSent = localMessage.deliveryStatus == "SENT"
+
+            missingOnServer && isSent
+        }
+
+        val messageByIds = messagesToDelete.map { it.messageId }
+        deleteMessagesByIds(messageIds = messageByIds)
+    }
 }
