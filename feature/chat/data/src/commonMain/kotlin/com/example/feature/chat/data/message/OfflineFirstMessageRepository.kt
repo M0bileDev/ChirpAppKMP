@@ -13,6 +13,7 @@ import com.example.feature.chat.domain.message.ChatMessageService
 import com.example.feature.chat.domain.message.MessageRepository
 import com.example.feature.chat.domain.model.ChatMessage
 import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
+import com.example.feature.chat.domain.model.MessageWithSender
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlin.time.Clock
@@ -55,10 +56,10 @@ class OfflineFirstMessageRepository(
             }
     }
 
-    override fun getMessagesForChat(chatId: String): Flow<List<ChatMessage>> {
+    override fun getMessagesForChat(chatId: String): Flow<List<MessageWithSender>> {
         return chirpChatDatabase
             .chatMessageDao
-            .getMessagesByChatId(chatId)
+            .getMessagesWithSenderByChatId(chatId)
             .map { messages ->
                 messages.map { message -> message.toDomain() }
             }
