@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.TextFieldState
@@ -59,6 +60,8 @@ import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+const val FIRST_LIST_ITEM = 0
+
 @Composable
 fun ChatDetailRoot(
     chatId: String?,
@@ -69,12 +72,17 @@ fun ChatDetailRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarState = remember { SnackbarHostState() }
+    val messageLazyListState = rememberLazyListState()
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
             ChatDetailEvent.OnChatLeft -> onBack()
             is ChatDetailEvent.OnError -> {
                 snackbarState.showSnackbar(event.error.asStringAsync())
+            }
+
+            ChatDetailEvent.OnNewMessage -> {
+                messageLazyListState.animateScrollToItem(FIRST_LIST_ITEM)
             }
         }
     }
@@ -94,6 +102,7 @@ fun ChatDetailRoot(
         state = state,
         snackbarState = snackbarState,
         isDetailPresent = isDetailPresent,
+        lazyListState = messageLazyListState,
         onAction = { action ->
             when (action) {
                 is ChatDetailAction.OnChatMembersClick -> onChatMembersClick()
@@ -109,6 +118,7 @@ fun ChatDetailScreen(
     state: ChatDetailState,
     snackbarState: SnackbarHostState,
     isDetailPresent: Boolean,
+    lazyListState: LazyListState,
     onAction: (ChatDetailAction) -> Unit
 ) = with(state) {
     val configuration = currentDeviceConfiguration()
@@ -117,7 +127,6 @@ fun ChatDetailScreen(
     } else {
         MaterialTheme.colorScheme.extended.surfaceLower
     }
-    val messageLazyListState = rememberLazyListState()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -179,7 +188,7 @@ fun ChatDetailScreen(
                         MessageList(
                             modifier = Modifier.fillMaxWidth().weight(1f),
                             messages = messages,
-                            listState = messageLazyListState,
+                            listState = lazyListState,
                             onMessageLongClick = { message ->
                                 onAction(ChatDetailAction.OnMessageLongClick(message))
                             },
@@ -276,6 +285,7 @@ fun PreviewChatDetailScreen() {
             state = ChatDetailState(),
             snackbarState = SnackbarHostState(),
             isDetailPresent = false,
+            lazyListState = rememberLazyListState(),
             onAction = {}
         )
     }
@@ -335,6 +345,7 @@ fun PreviewChatDetailScreenMessages() {
             ),
             snackbarState = SnackbarHostState(),
             isDetailPresent = true,
+            lazyListState = rememberLazyListState(),
             onAction = {}
         )
     }
@@ -350,6 +361,7 @@ fun PreviewDarkChatDetailScreen() {
             state = ChatDetailState(),
             snackbarState = SnackbarHostState(),
             isDetailPresent = false,
+            lazyListState = rememberLazyListState(),
             onAction = {}
         )
     }
@@ -411,6 +423,7 @@ fun PreviewDarkChatDetailScreenMessages() {
             ),
             snackbarState = SnackbarHostState(),
             isDetailPresent = true,
+            lazyListState = rememberLazyListState(),
             onAction = {}
         )
     }

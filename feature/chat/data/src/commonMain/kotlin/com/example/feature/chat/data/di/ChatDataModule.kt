@@ -7,6 +7,7 @@ import com.example.feature.chat.data.chat.OfflineFirstChatRepository
 import com.example.feature.chat.data.chat.WebSocketChatConnectionClient
 import com.example.feature.chat.data.message.KtorChatMessageService
 import com.example.feature.chat.data.message.OfflineFirstMessageRepository
+import com.example.feature.chat.data.network.ConnectionRetryHandler
 import com.example.feature.chat.data.network.KtorWebSocketConnector
 import com.example.feature.chat.database.ChirpDatabaseFactory
 import com.example.feature.chat.domain.chat.ChatConnectionClient
@@ -32,6 +33,7 @@ val chatDataModule = module {
     singleOf(::OfflineFirstMessageRepository) bind MessageRepository::class
     singleOf(::WebSocketChatConnectionClient) bind ChatConnectionClient::class
     singleOf(::KtorChatMessageService) bind ChatMessageService::class
+    singleOf(::ConnectionRetryHandler)
     singleOf(::KtorWebSocketConnector)
     single {
         Json {

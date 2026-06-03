@@ -58,10 +58,10 @@ fun MessageList(
         ) {
             items(
                 items = messages,
-                key = { it.id }
             ) { message ->
                 MessageListItem(
-                    modifier = Modifier.fillMaxWidth().animateItem(),
+                    modifier = Modifier
+                        .fillMaxWidth(),
                     messageUi = message,
                     onMessageLongClick = onMessageLongClick,
                     onDismissMessageMenu = onDismissMessageMenu,
