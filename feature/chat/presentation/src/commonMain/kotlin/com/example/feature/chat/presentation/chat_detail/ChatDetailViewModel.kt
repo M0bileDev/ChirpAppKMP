@@ -12,8 +12,8 @@ import com.example.core.presentation.ext.toUiText
 import com.example.feature.chat.domain.chat.ChatConnectionClient
 import com.example.feature.chat.domain.chat.ChatRepository
 import com.example.feature.chat.domain.message.MessageRepository
-import com.example.feature.chat.domain.model.ChatMessage
 import com.example.feature.chat.domain.model.ConnectionState
+import com.example.feature.chat.domain.model.MessageWithSender
 import com.example.feature.chat.presentation.mappers.toUi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -77,6 +77,7 @@ class ChatDetailViewModel(
             if (!hasLoadedInitialData) {
                 observeConnectionState()
                 observeNewMessage()
+                observeMessages()
                 hasLoadedInitialData = true
             }
         }.stateIn(
@@ -177,7 +178,7 @@ class ChatDetailViewModel(
             .map { it.messages }
             .distinctUntilChanged()
 
-        val newMessages = getNewMessagesByChatIdFlow()
+        val newMessages = getNewMessagesWithSenderByChatIdFlow()
 
         val isNearBottom = state.map { it.isNearBottom }.distinctUntilChanged()
 
@@ -186,7 +187,7 @@ class ChatDetailViewModel(
             newMessages,
             isNearBottom
         ) { currentMessages, newMessages, isNearBottom ->
-            val lastNewId = newMessages.lastOrNull()?.id
+            val lastNewId = newMessages.lastOrNull()?.message?.id
             val lastCurrentId = currentMessages.lastOrNull()?.id
 
             if (lastNewId != lastCurrentId && isNearBottom) {
@@ -195,7 +196,21 @@ class ChatDetailViewModel(
         }.launchIn(viewModelScope)
     }
 
-    private fun getNewMessagesByChatIdFlow(): Flow<List<ChatMessage>> {
+    private fun observeMessages() {
+        getNewMessagesWithSenderByChatIdFlow()
+            .combine(sessionStorage.observeAuthInfo())
+            { messages, authInfo ->
+                if (authInfo == null) return@combine
+
+                _state.update {
+                    it.copy(
+                        messages = messages.map { message -> message.toUi(authInfo.user.id) }
+                    )
+                }
+            }.launchIn(viewModelScope)
+    }
+
+    private fun getNewMessagesWithSenderByChatIdFlow(): Flow<List<MessageWithSender>> {
         return _chatId
             .flatMapLatest { chatId ->
                 if (chatId != null) {
