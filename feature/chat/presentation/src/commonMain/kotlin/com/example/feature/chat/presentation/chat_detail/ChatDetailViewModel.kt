@@ -12,10 +12,12 @@ import com.example.core.presentation.ext.toUiText
 import com.example.feature.chat.domain.chat.ChatConnectionClient
 import com.example.feature.chat.domain.chat.ChatRepository
 import com.example.feature.chat.domain.message.MessageRepository
+import com.example.feature.chat.domain.model.ChatMessage
 import com.example.feature.chat.domain.model.ConnectionState
 import com.example.feature.chat.presentation.mappers.toUi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -175,12 +177,7 @@ class ChatDetailViewModel(
             .map { it.messages }
             .distinctUntilChanged()
 
-        val newMessages = _chatId
-            .flatMapLatest { chatId ->
-                if (chatId != null) {
-                    messageRepository.getMessagesForChat(chatId)
-                } else emptyFlow()
-            }
+        val newMessages = getNewMessagesByChatIdFlow()
 
         val isNearBottom = state.map { it.isNearBottom }.distinctUntilChanged()
 
@@ -196,5 +193,14 @@ class ChatDetailViewModel(
                 eventChannel.send(ChatDetailEvent.OnNewMessage)
             }
         }.launchIn(viewModelScope)
+    }
+
+    private fun getNewMessagesByChatIdFlow(): Flow<List<ChatMessage>> {
+        return _chatId
+            .flatMapLatest { chatId ->
+                if (chatId != null) {
+                    messageRepository.getMessagesForChat(chatId)
+                } else emptyFlow()
+            }
     }
 }
