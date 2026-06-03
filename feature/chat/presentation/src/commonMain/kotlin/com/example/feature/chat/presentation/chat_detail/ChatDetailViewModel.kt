@@ -9,7 +9,10 @@ import com.example.core.domain.auth.SessionStorage
 import com.example.core.domain.util.onFailure
 import com.example.core.domain.util.onSuccess
 import com.example.core.presentation.ext.toUiText
+import com.example.feature.chat.domain.chat.ChatConnectionClient
 import com.example.feature.chat.domain.chat.ChatRepository
+import com.example.feature.chat.domain.message.MessageRepository
+import com.example.feature.chat.domain.model.ConnectionState
 import com.example.feature.chat.presentation.mappers.toUi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -18,6 +21,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -26,7 +31,9 @@ import kotlinx.coroutines.launch
 
 class ChatDetailViewModel(
     private val chatRepository: ChatRepository,
-    private val sessionStorage: SessionStorage
+    private val sessionStorage: SessionStorage,
+    private val messageRepository: MessageRepository,
+    private val connectionClient: ChatConnectionClient
 ) : ViewModel() {
 
     private val eventChannel = Channel<ChatDetailEvent>()
@@ -64,7 +71,7 @@ class ChatDetailViewModel(
         }
         .onStart {
             if (!hasLoadedInitialData) {
-                // TODO: init data logic
+                observeConnectionState()
                 hasLoadedInitialData = true
             }
         }.stateIn(
@@ -141,4 +148,22 @@ class ChatDetailViewModel(
         }
     }
 
+    private fun observeConnectionState() {
+        connectionClient
+            .connectionState
+            .onEach { connectionState ->
+                if (connectionState == ConnectionState.CONNECTED) {
+                    _chatId.value?.let { chatId ->
+                        //before = null, most recent page of messages
+                        messageRepository.fetchMessages(chatId = chatId, before = null)
+                    }
+
+                    _state.update {
+                        it.copy(
+                            connectionState = connectionState
+                        )
+                    }
+                }
+            }.launchIn(viewModelScope)
+    }
 }
