@@ -1,6 +1,7 @@
 package com.example.feature.chat.data.di
 
 import com.example.feature.chat.data.lifecycle.AppLifecycleObserver
+import com.example.feature.chat.data.network.ConnectionErrorHandler
 import com.example.feature.chat.data.network.ConnectivityObserver
 import com.example.feature.chat.database.ChirpDatabaseFactory
 import org.koin.core.module.Module
@@ -11,4 +12,5 @@ actual val platformChatDataModule: Module = module {
     single { ChirpDatabaseFactory() }
     singleOf(::AppLifecycleObserver)
     singleOf(::ConnectivityObserver)
+    singleOf(::ConnectionErrorHandler)
 }
