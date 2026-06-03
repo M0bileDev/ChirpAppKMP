@@ -5,6 +5,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
 import com.example.feature.chat.database.entities.ChatMessageEntity
+import com.example.feature.chat.database.entities.MessageWithSender
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 
@@ -23,8 +24,9 @@ interface ChatMessageDao {
     @Query("DELETE FROM chatmessageentity WHERE messageId IN (:messageIds)")
     suspend fun deleteMessagesByIds(messageIds: List<String>)
 
+    @Transaction
     @Query("SELECT * FROM chatmessageentity WHERE chatId = :chatId ORDER BY timestamp DESC")
-    fun getMessagesByChatId(chatId: String): Flow<List<ChatMessageEntity>>
+    fun getMessagesWithSenderByChatId(chatId: String): Flow<List<MessageWithSender>>
 
     @Query(
         """
@@ -43,7 +45,7 @@ interface ChatMessageDao {
     @Query(
         """
         UPDATE chatmessageentity
-        SET deliveryStatus = :status, deliveryStatusTimeStamp = :status
+        SET deliveryStatus = :status, deliveryStatusTimeStamp = :timestamp
         WHERE messageId = :messageId
     """
     )
