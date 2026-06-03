@@ -4,7 +4,11 @@ import com.example.core.data.database.safeDatabaseUpdate
 import com.example.core.domain.util.DataError
 import com.example.core.domain.util.EmptyResult
 import com.example.core.domain.util.Result
+import com.example.core.domain.util.onSuccess
+import com.example.feature.chat.data.mappers.toEntity
+import com.example.feature.chat.data.message.ChatMessageConstants.PAGE_SIZE
 import com.example.feature.chat.database.ChirpChatDatabase
+import com.example.feature.chat.domain.message.ChatMessageService
 import com.example.feature.chat.domain.message.MessageRepository
 import com.example.feature.chat.domain.model.ChatMessage
 import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
@@ -12,7 +16,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlin.time.Clock
 
 class OfflineFirstMessageRepository(
-    private val chirpChatDatabase: ChirpChatDatabase
+    private val chirpChatDatabase: ChirpChatDatabase,
+    private val chatMessageService: ChatMessageService
 ) : MessageRepository {
     override suspend fun updateMessageDeliveryStatus(
         messageId: String,
@@ -31,7 +36,21 @@ class OfflineFirstMessageRepository(
         chatId: String,
         before: String?
     ): Result<List<ChatMessage>, DataError> {
-        TODO("Not yet implemented")
+        return chatMessageService
+            .fetchMessages(chatId, before)
+            .onSuccess { messages ->
+                safeDatabaseUpdate {
+                    val entities = messages.map { it.toEntity() }
+                    val mostRecentPage = before == null
+
+                    chirpChatDatabase.chatMessageDao.upsertMessagesAndSyncIfNecessary(
+                        chatId = chatId,
+                        serverMessages = entities,
+                        pageSize = PAGE_SIZE,
+                        shouldSync = mostRecentPage
+                    )
+                }
+            }
     }
 
     override fun getMessagesForChat(chatId: String): Flow<List<ChatMessage>> {
