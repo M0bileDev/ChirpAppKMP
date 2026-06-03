@@ -19,9 +19,11 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -72,6 +74,7 @@ class ChatDetailViewModel(
         .onStart {
             if (!hasLoadedInitialData) {
                 observeConnectionState()
+                observeNewMessage()
                 hasLoadedInitialData = true
             }
         }.stateIn(
@@ -165,5 +168,33 @@ class ChatDetailViewModel(
                     }
                 }
             }.launchIn(viewModelScope)
+    }
+
+    private fun observeNewMessage() {
+        val currentMessages = state
+            .map { it.messages }
+            .distinctUntilChanged()
+
+        val newMessages = _chatId
+            .flatMapLatest { chatId ->
+                if (chatId != null) {
+                    messageRepository.getMessagesForChat(chatId)
+                } else emptyFlow()
+            }
+
+        val isNearBottom = state.map { it.isNearBottom }.distinctUntilChanged()
+
+        combine(
+            currentMessages,
+            newMessages,
+            isNearBottom
+        ) { currentMessages, newMessages, isNearBottom ->
+            val lastNewId = newMessages.lastOrNull()?.id
+            val lastCurrentId = currentMessages.lastOrNull()?.id
+
+            if (lastNewId != lastCurrentId && isNearBottom) {
+                eventChannel.send(ChatDetailEvent.OnNewMessage)
+            }
+        }.launchIn(viewModelScope)
     }
 }
