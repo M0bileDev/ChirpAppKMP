@@ -6,6 +6,7 @@ import com.example.core.domain.util.Result
 import com.example.core.domain.util.map
 import com.example.feature.chat.data.dto.ChatMessageDto
 import com.example.feature.chat.data.mappers.toDomain
+import com.example.feature.chat.data.message.ChatMessageConstants.PAGE_SIZE
 import com.example.feature.chat.domain.message.ChatMessageService
 import com.example.feature.chat.domain.model.ChatMessage
 import io.ktor.client.HttpClient
@@ -21,6 +22,7 @@ class KtorChatMessageService(
         return httpClient.get<List<ChatMessageDto>>(
             route = "/chat/$chatId/messages",
             queryParams = buildMap {
+                this["pageSize"] = PAGE_SIZE.toString()
                 if (before != null) {
                     this["before"] = before
                 }
