@@ -1,27 +1,43 @@
 package com.example.feature.chat.data.message
 
 import com.example.core.data.database.safeDatabaseUpdate
+import com.example.core.domain.auth.SessionStorage
 import com.example.core.domain.util.DataError
 import com.example.core.domain.util.EmptyResult
 import com.example.core.domain.util.Result
+import com.example.core.domain.util.onFailure
 import com.example.core.domain.util.onSuccess
+import com.example.feature.chat.data.dto.websocket.OutgoingWebSocketDto
+import com.example.feature.chat.data.dto.websocket.WebSocketMessageDto
 import com.example.feature.chat.data.mappers.toDomain
 import com.example.feature.chat.data.mappers.toEntity
+import com.example.feature.chat.data.mappers.toWebsocketDto
 import com.example.feature.chat.data.message.ChatMessageConstants.PAGE_SIZE
+import com.example.feature.chat.data.network.KtorWebSocketConnector
 import com.example.feature.chat.database.ChirpChatDatabase
 import com.example.feature.chat.domain.message.ChatMessageService
 import com.example.feature.chat.domain.message.MessageRepository
 import com.example.feature.chat.domain.model.ChatMessage
 import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
 import com.example.feature.chat.domain.model.MessageWithSender
+import com.example.feature.chat.domain.model.OutgoingNewMessage
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import kotlin.time.Clock
 
 class OfflineFirstMessageRepository(
     private val chirpChatDatabase: ChirpChatDatabase,
-    private val chatMessageService: ChatMessageService
+    private val chatMessageService: ChatMessageService,
+    private val sessionStorage: SessionStorage,
+    private val json: Json,
+    private val webSocketConnector: KtorWebSocketConnector,
+    private val applicationScope: CoroutineScope
 ) : MessageRepository {
+
     override suspend fun updateMessageDeliveryStatus(
         messageId: String,
         status: ChatMessageDeliveryStatus
@@ -63,5 +79,48 @@ class OfflineFirstMessageRepository(
             .map { messages ->
                 messages.map { message -> message.toDomain() }
             }
+    }
+
+    override suspend fun sendMessage(message: OutgoingNewMessage): EmptyResult<DataError> =
+        with(chirpChatDatabase.chatMessageDao) {
+            return safeDatabaseUpdate {
+                val dto = message.toWebsocketDto()
+                val localUser =
+                    sessionStorage.observeAuthInfo().first()?.user ?: return Result.Failure(
+                        DataError.Local.NOT_FOUND
+                    )
+
+                val entity = dto.toEntity(
+                    senderId = localUser.id,
+                    deliveryStatus = ChatMessageDeliveryStatus.SENDING
+                )
+                upsertMessage(
+                    message = entity
+                )
+
+                val message = dto.toJsonPayload()
+                return@with webSocketConnector
+                    .sendMessage(message = message)
+                    .onFailure {
+                        applicationScope.launch {
+                            val entity = dto.toEntity(
+                                senderId = localUser.id,
+                                deliveryStatus = ChatMessageDeliveryStatus.FAILED
+                            )
+                            upsertMessage(
+                                message = entity
+                            )
+                        }.join()
+                    }
+            }
+        }
+
+    private fun OutgoingWebSocketDto.NewMessage.toJsonPayload(): String {
+        val webSocketMessage = WebSocketMessageDto(
+            type = type.name,
+            payload = json.encodeToString(this)
+        )
+
+        return json.encodeToString(webSocketMessage)
     }
 }
