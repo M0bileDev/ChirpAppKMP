@@ -1,6 +1,7 @@
 package com.example.feature.chat.data.chat
 
 import com.example.core.domain.auth.SessionStorage
+import com.example.core.domain.util.DataError
 import com.example.core.domain.util.EmptyResult
 import com.example.core.domain.util.onFailure
 import com.example.feature.chat.data.dto.websocket.IncomingWebSocketDto
@@ -13,7 +14,6 @@ import com.example.feature.chat.data.network.KtorWebSocketConnector
 import com.example.feature.chat.database.ChirpChatDatabase
 import com.example.feature.chat.domain.chat.ChatConnectionClient
 import com.example.feature.chat.domain.chat.ChatRepository
-import com.example.feature.chat.domain.error.ConnectionError
 import com.example.feature.chat.domain.message.MessageRepository
 import com.example.feature.chat.domain.model.ChatMessage
 import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
@@ -54,7 +54,7 @@ class WebSocketChatConnectionClient(
 
     override val connectionState = ktorWebSocketConnector.connectionState
 
-    override suspend fun sendChatMessage(message: ChatMessage): EmptyResult<ConnectionError> {
+    override suspend fun sendChatMessage(message: ChatMessage): EmptyResult<DataError.Connection> {
         val outgoingDto = message.toNewMessage()
         val webSocketMessage = WebSocketMessageDto(
             type = outgoingDto.type.name,
