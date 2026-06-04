@@ -7,6 +7,7 @@ import com.example.feature.chat.database.entities.ChatMessageEntity
 import com.example.feature.chat.database.view.LastMessageView
 import com.example.feature.chat.domain.model.ChatMessage
 import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
+import com.example.feature.chat.domain.model.OutgoingNewMessage
 import kotlin.time.Instant
 
 fun ChatMessageDto.toDomain(): ChatMessage {
@@ -80,5 +81,13 @@ fun IncomingWebSocketDto.NewMessageDto.toEntity(): ChatMessageEntity {
         content = content,
         timestamp = Instant.parse(createdAt).toEpochMilliseconds(),
         deliveryStatus = ChatMessageDeliveryStatus.SENT.name
+    )
+}
+
+fun OutgoingNewMessage.toWebsocketDto(): OutgoingWebSocketDto.NewMessage {
+    return OutgoingWebSocketDto.NewMessage(
+        chatId = chatId,
+        messageId = messageId,
+        content = content
     )
 }
