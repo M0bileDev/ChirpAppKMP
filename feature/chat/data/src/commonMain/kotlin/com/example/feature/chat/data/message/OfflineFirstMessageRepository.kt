@@ -6,6 +6,8 @@ import com.example.core.domain.util.DataError
 import com.example.core.domain.util.EmptyResult
 import com.example.core.domain.util.Result
 import com.example.core.domain.util.onSuccess
+import com.example.feature.chat.data.dto.websocket.OutgoingWebSocketDto
+import com.example.feature.chat.data.dto.websocket.WebSocketMessageDto
 import com.example.feature.chat.data.mappers.toDomain
 import com.example.feature.chat.data.mappers.toEntity
 import com.example.feature.chat.data.mappers.toWebsocketDto
@@ -20,12 +22,14 @@ import com.example.feature.chat.domain.model.OutgoingNewMessage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.Json
 import kotlin.time.Clock
 
 class OfflineFirstMessageRepository(
     private val chirpChatDatabase: ChirpChatDatabase,
     private val chatMessageService: ChatMessageService,
-    private val sessionStorage: SessionStorage
+    private val sessionStorage: SessionStorage,
+    private val json: Json
 ) : MessageRepository {
 
     override suspend fun updateMessageDeliveryStatus(
@@ -89,5 +93,14 @@ class OfflineFirstMessageRepository(
 
             // TODO: send message through websocket
         }
+    }
+
+    private fun OutgoingWebSocketDto.NewMessage.toJsonPayload(): String {
+        val webSocketMessage = WebSocketMessageDto(
+            type = type.name,
+            payload = json.encodeToString(this)
+        )
+
+        return json.encodeToString(webSocketMessage)
     }
 }
