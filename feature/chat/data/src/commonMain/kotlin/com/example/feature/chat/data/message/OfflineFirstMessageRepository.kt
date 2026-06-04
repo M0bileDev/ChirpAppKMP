@@ -21,9 +21,11 @@ import com.example.feature.chat.domain.model.ChatMessage
 import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
 import com.example.feature.chat.domain.model.MessageWithSender
 import com.example.feature.chat.domain.model.OutgoingNewMessage
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlin.time.Clock
 
@@ -33,6 +35,7 @@ class OfflineFirstMessageRepository(
     private val sessionStorage: SessionStorage,
     private val json: Json,
     private val webSocketConnector: KtorWebSocketConnector,
+    private val applicationScope: CoroutineScope
 ) : MessageRepository {
 
     override suspend fun updateMessageDeliveryStatus(
@@ -86,26 +89,28 @@ class OfflineFirstMessageRepository(
                     sessionStorage.observeAuthInfo().first()?.user ?: return Result.Failure(
                         DataError.Local.NOT_FOUND
                     )
+
                 val entity = dto.toEntity(
                     senderId = localUser.id,
                     deliveryStatus = ChatMessageDeliveryStatus.SENDING
                 )
-
                 upsertMessage(
                     message = entity
                 )
 
                 val message = dto.toJsonPayload()
-                webSocketConnector
+                return@with webSocketConnector
                     .sendMessage(message = message)
                     .onFailure {
-                        val entity = dto.toEntity(
-                            senderId = localUser.id,
-                            deliveryStatus = ChatMessageDeliveryStatus.FAILED
-                        )
-                        upsertMessage(
-                            message = entity
-                        )
+                        applicationScope.launch {
+                            val entity = dto.toEntity(
+                                senderId = localUser.id,
+                                deliveryStatus = ChatMessageDeliveryStatus.FAILED
+                            )
+                            upsertMessage(
+                                message = entity
+                            )
+                        }.join()
                     }
             }
         }
