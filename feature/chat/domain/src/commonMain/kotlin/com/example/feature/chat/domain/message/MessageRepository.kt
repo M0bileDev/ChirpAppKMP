@@ -6,6 +6,7 @@ import com.example.core.domain.util.Result
 import com.example.feature.chat.domain.model.ChatMessage
 import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
 import com.example.feature.chat.domain.model.MessageWithSender
+import com.example.feature.chat.domain.model.OutgoingNewMessage
 import kotlinx.coroutines.flow.Flow
 
 interface MessageRepository {
@@ -22,4 +23,6 @@ interface MessageRepository {
     fun getMessagesForChat(
         chatId: String
     ): Flow<List<MessageWithSender>>
+
+    suspend fun sendMessage(message: OutgoingNewMessage): EmptyResult<DataError>
 }
