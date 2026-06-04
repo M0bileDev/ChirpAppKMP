@@ -5,6 +5,7 @@ import com.example.core.domain.auth.SessionStorage
 import com.example.core.domain.util.DataError
 import com.example.core.domain.util.EmptyResult
 import com.example.core.domain.util.Result
+import com.example.core.domain.util.onFailure
 import com.example.core.domain.util.onSuccess
 import com.example.feature.chat.data.dto.websocket.OutgoingWebSocketDto
 import com.example.feature.chat.data.dto.websocket.WebSocketMessageDto
@@ -12,6 +13,7 @@ import com.example.feature.chat.data.mappers.toDomain
 import com.example.feature.chat.data.mappers.toEntity
 import com.example.feature.chat.data.mappers.toWebsocketDto
 import com.example.feature.chat.data.message.ChatMessageConstants.PAGE_SIZE
+import com.example.feature.chat.data.network.KtorWebSocketConnector
 import com.example.feature.chat.database.ChirpChatDatabase
 import com.example.feature.chat.domain.message.ChatMessageService
 import com.example.feature.chat.domain.message.MessageRepository
@@ -29,7 +31,8 @@ class OfflineFirstMessageRepository(
     private val chirpChatDatabase: ChirpChatDatabase,
     private val chatMessageService: ChatMessageService,
     private val sessionStorage: SessionStorage,
-    private val json: Json
+    private val json: Json,
+    private val webSocketConnector: KtorWebSocketConnector,
 ) : MessageRepository {
 
     override suspend fun updateMessageDeliveryStatus(
@@ -75,25 +78,37 @@ class OfflineFirstMessageRepository(
             }
     }
 
-    override suspend fun sendMessage(message: OutgoingNewMessage): EmptyResult<DataError> {
-        return safeDatabaseUpdate {
-            val dto = message.toWebsocketDto()
-            val localUser =
-                sessionStorage.observeAuthInfo().first()?.user ?: return Result.Failure(
-                    DataError.Local.NOT_FOUND
+    override suspend fun sendMessage(message: OutgoingNewMessage): EmptyResult<DataError> =
+        with(chirpChatDatabase.chatMessageDao) {
+            return safeDatabaseUpdate {
+                val dto = message.toWebsocketDto()
+                val localUser =
+                    sessionStorage.observeAuthInfo().first()?.user ?: return Result.Failure(
+                        DataError.Local.NOT_FOUND
+                    )
+                val entity = dto.toEntity(
+                    senderId = localUser.id,
+                    deliveryStatus = ChatMessageDeliveryStatus.SENDING
                 )
-            val entity = dto.toEntity(
-                senderId = localUser.id,
-                deliveryStatus = ChatMessageDeliveryStatus.SENDING
-            )
 
-            chirpChatDatabase.chatMessageDao.upsertMessage(
-                message = entity
-            )
+                upsertMessage(
+                    message = entity
+                )
 
-            // TODO: send message through websocket
+                val message = dto.toJsonPayload()
+                webSocketConnector
+                    .sendMessage(message = message)
+                    .onFailure {
+                        val entity = dto.toEntity(
+                            senderId = localUser.id,
+                            deliveryStatus = ChatMessageDeliveryStatus.FAILED
+                        )
+                        upsertMessage(
+                            message = entity
+                        )
+                    }
+            }
         }
-    }
 
     private fun OutgoingWebSocketDto.NewMessage.toJsonPayload(): String {
         val webSocketMessage = WebSocketMessageDto(
