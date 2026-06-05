@@ -3,6 +3,7 @@
 package com.example.feature.chat.presentation.chat_detail
 
 import androidx.compose.foundation.text.input.clearText
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.domain.auth.SessionStorage
@@ -49,7 +50,12 @@ class ChatDetailViewModel(
     private val _chatId = MutableStateFlow<String?>(null)
     private var hasLoadedInitialData = false
     private val _state = MutableStateFlow(ChatDetailState())
-
+    private val canSandMessage =
+        snapshotFlow { _state.value.messageTextFieldState.text.toString() }
+            .map { it.isBlank() }
+            .combine(connectionClient.connectionState) { isMessageBlank, connectionState ->
+                !isMessageBlank && connectionState == ConnectionState.CONNECTED
+            }
     private val chatInfoFlow = _chatId
         .flatMapLatest { chatId ->
             if (chatId != null) {
@@ -81,6 +87,7 @@ class ChatDetailViewModel(
                 observeConnectionState()
                 observeNewMessage()
                 observeMessages()
+                observeCanSendMessage()
                 hasLoadedInitialData = true
             }
         }.stateIn(
@@ -244,5 +251,16 @@ class ChatDetailViewModel(
                     messageRepository.getMessagesForChat(chatId)
                 } else emptyFlow()
             }
+    }
+
+    private fun observeCanSendMessage() {
+        canSandMessage
+            .onEach { canSendMessage ->
+                _state.update {
+                    it.copy(
+                        canSendMessage = canSendMessage
+                    )
+                }
+            }.launchIn(viewModelScope)
     }
 }
