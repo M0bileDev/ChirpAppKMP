@@ -15,6 +15,7 @@ import chirpappkmp.core.presentation.generated.resources.error_service_unavailab
 import chirpappkmp.core.presentation.generated.resources.error_too_many_requests
 import chirpappkmp.core.presentation.generated.resources.error_unauthorized
 import chirpappkmp.core.presentation.generated.resources.error_unknown
+import chirpappkmp.core.presentation.generated.resources.unable_to_send_message
 import com.example.core.domain.util.DataError
 import com.example.core.presentation.util.UiText
 
@@ -35,6 +36,8 @@ fun DataError.toUiText(): UiText {
         DataError.Remote.SERVICE_UNAVAILABLE -> Res.string.error_service_unavailable
         DataError.Remote.SERIALIZATION -> Res.string.error_serialization
         DataError.Local.UNKNOWN, DataError.Remote.UNKNOWN -> Res.string.error_unknown
+        DataError.Connection.NOT_CONNECTED -> Res.string.error_no_internet
+        DataError.Connection.MESSAGE_SEND_FAILED -> Res.string.unable_to_send_message
     }
 
     return UiText.Resource(resource)
