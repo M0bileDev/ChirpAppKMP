@@ -214,7 +214,7 @@ fun ChatDetailScreen(
                                         horizontal = 16.dp
                                     ),
                                 messageTextFieldState = messageTextFieldState,
-                                isTextInputEnabled = canSendMessage,
+                                isSendButtonEnabled = canSendMessage,
                                 connectionState = connectionState,
                                 onSendClick = {
                                     onAction(ChatDetailAction.OnSendMessageClick)
@@ -240,7 +240,7 @@ fun ChatDetailScreen(
                                 .fillMaxWidth()
                                 .padding(8.dp),
                             messageTextFieldState = messageTextFieldState,
-                            isTextInputEnabled = canSendMessage,
+                            isSendButtonEnabled = canSendMessage,
                             connectionState = connectionState,
                             onSendClick = {
                                 onAction(ChatDetailAction.OnSendMessageClick)
