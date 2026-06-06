@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -51,6 +52,8 @@ import com.example.feature.chat.presentation.components.EmptySection
 import com.example.feature.chat.presentation.model.ChatUi
 import com.example.feature.chat.presentation.model.MessageUi
 import com.example.feature.chat.presentation.type_alias.ChatParticipantUi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -71,6 +74,7 @@ fun ChatDetailRoot(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarState = remember { SnackbarHostState() }
     val messageLazyListState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
@@ -92,7 +96,10 @@ fun ChatDetailRoot(
     BackHandler(
         enabled = !isDetailPresent
     ) {
-        viewModel.onAction(ChatDetailAction.OnSelectChat(null))
+        scope.launch {
+            delay(300L)
+            viewModel.onAction(ChatDetailAction.OnSelectChat(null))
+        }
         onBack()
     }
 
