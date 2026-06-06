@@ -31,7 +31,7 @@ class ChatListDetailViewModel(
 
     fun onAction(action: ChatListDetailAction) {
         when (action) {
-            is ChatListDetailAction.OnChatClick -> chatClick(action.chatId)
+            is ChatListDetailAction.OnSelectChat -> chatClick(action.chatId)
             ChatListDetailAction.OnCreateChatClick -> createChat()
             ChatListDetailAction.OnDismissCurrentDialog -> dismissDialog()
             ChatListDetailAction.OnManageChatClick -> manageChat()
