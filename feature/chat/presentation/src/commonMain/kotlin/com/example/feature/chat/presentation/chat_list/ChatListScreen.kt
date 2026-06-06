@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,7 +41,6 @@ import com.example.core.designsystem.theme.extended
 import com.example.feature.chat.presentation.chat_list.components.ChatListHeader
 import com.example.feature.chat.presentation.chat_list.components.ChatListItem
 import com.example.feature.chat.presentation.components.EmptySection
-import com.example.feature.chat.presentation.model.ChatUi
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -48,7 +48,8 @@ import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
 fun ChatListRoot(
-    onChatClick: (ChatUi) -> Unit,
+    selectedChatId: String?,
+    onSelectChat: (String?) -> Unit,
     onLogout: () -> Unit,
     onCreateChatClick: () -> Unit,
     onProfileSettingsClick: () -> Unit,
@@ -56,11 +57,15 @@ fun ChatListRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    LaunchedEffect(selectedChatId) {
+        viewModel.onAction(ChatListAction.OnSelectChat(selectedChatId))
+    }
+
     ChatListScreen(
         state = state,
         onAction = { action ->
             when (action) {
-                is ChatListAction.OnChatClick -> onChatClick(action.chat)
+                is ChatListAction.OnSelectChat -> onSelectChat(action.chatId)
                 ChatListAction.OnConfirmLogout -> onLogout()
                 ChatListAction.OnCreateChatClick -> onCreateChatClick()
                 ChatListAction.OnProfileSettingsClick -> onProfileSettingsClick()
@@ -151,7 +156,7 @@ fun ChatListScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clickable {
-                                        onAction(ChatListAction.OnChatClick(chat = chatUi))
+                                        onAction(ChatListAction.OnSelectChat(chatId = chatUi.id))
                                     },
                                 chatUi = chatUi,
                                 isSelected = chatUi.id == selectedChatId
