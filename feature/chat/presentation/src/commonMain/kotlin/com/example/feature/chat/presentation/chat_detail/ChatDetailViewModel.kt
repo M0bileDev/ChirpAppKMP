@@ -72,7 +72,8 @@ class ChatDetailViewModel(
         if (authInfo == null) return@combine ChatDetailState()
 
         currentState.copy(
-            chatUi = chatInfo.chat.toUi(localParticipantId = authInfo.user.id)
+            chatUi = chatInfo.chat.toUi(localParticipantId = authInfo.user.id),
+            messages = chatInfo.messagesWithSenders.map { it.toUi(authInfo.user.id) }
         )
     }
     val state = _chatId
