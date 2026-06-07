@@ -25,4 +25,6 @@ interface MessageRepository {
     ): Flow<List<MessageWithSender>>
 
     suspend fun sendMessage(message: OutgoingNewMessage): EmptyResult<DataError>
+
+    suspend fun retryMessage(messageId: String): EmptyResult<DataError>
 }

@@ -103,12 +103,10 @@ class OfflineFirstMessageRepository(
                     .sendMessage(message = message)
                     .onFailure {
                         applicationScope.launch {
-                            val entity = dto.toEntity(
-                                senderId = localUser.id,
-                                deliveryStatus = ChatMessageDeliveryStatus.FAILED
-                            )
-                            upsertMessage(
-                                message = entity
+                            updateDeliveryStatus(
+                                messageId = entity.messageId,
+                                timestamp = Clock.System.now().toEpochMilliseconds(),
+                                status = ChatMessageDeliveryStatus.FAILED.name
                             )
                         }.join()
                     }
@@ -123,4 +121,36 @@ class OfflineFirstMessageRepository(
 
         return json.encodeToString(webSocketMessage)
     }
+
+    override suspend fun retryMessage(messageId: String): EmptyResult<DataError> =
+        with(chirpChatDatabase.chatMessageDao) {
+            return safeDatabaseUpdate {
+                val message = getMessageById(messageId) ?: return@with Result.Failure(
+                    DataError.Local.NOT_FOUND
+                )
+                updateDeliveryStatus(
+                    messageId = messageId,
+                    timestamp = Clock.System.now().toEpochMilliseconds(),
+                    status = ChatMessageDeliveryStatus.SENDING.name
+                )
+
+                val outgoingNewMessage = OutgoingWebSocketDto.NewMessage(
+                    chatId = message.chatId,
+                    messageId = messageId,
+                    content = message.content
+                )
+
+                return@with webSocketConnector
+                    .sendMessage(outgoingNewMessage.toJsonPayload())
+                    .onFailure {
+                        applicationScope.launch {
+                            updateDeliveryStatus(
+                                messageId = messageId,
+                                timestamp = Clock.System.now().toEpochMilliseconds(),
+                                status = ChatMessageDeliveryStatus.FAILED.name
+                            )
+                        }.join()
+                    }
+            }
+        }
 }
