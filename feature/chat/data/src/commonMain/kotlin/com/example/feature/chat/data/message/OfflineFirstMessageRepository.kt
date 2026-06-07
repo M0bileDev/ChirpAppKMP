@@ -123,4 +123,37 @@ class OfflineFirstMessageRepository(
 
         return json.encodeToString(webSocketMessage)
     }
+
+    override suspend fun retryMessage(messageId: String): EmptyResult<DataError> =
+        with(chirpChatDatabase.chatMessageDao) {
+            return safeDatabaseUpdate {
+                val message = getMessageById(messageId) ?: return@with Result.Failure(
+                    DataError.Local.NOT_FOUND
+                )
+                updateDeliveryStatus(
+                    messageId = messageId,
+                    timestamp = Clock.System.now().toEpochMilliseconds(),
+                    status = ChatMessageDeliveryStatus.SENDING.name
+                )
+
+                val outgoingNewMessage = OutgoingWebSocketDto.NewMessage(
+                    chatId = message.chatId,
+                    messageId = messageId,
+                    content = message.content
+                )
+
+                return@with webSocketConnector
+                    .sendMessage(outgoingNewMessage.toJsonPayload())
+                    .onFailure {
+                        applicationScope.launch {
+                            upsertMessage(
+                                message.copy(
+                                    deliveryStatus = ChatMessageDeliveryStatus.FAILED.name,
+                                    timestamp = Clock.System.now().toEpochMilliseconds()
+                                )
+                            )
+                        }.join()
+                    }
+            }
+        }
 }
