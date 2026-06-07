@@ -103,12 +103,10 @@ class OfflineFirstMessageRepository(
                     .sendMessage(message = message)
                     .onFailure {
                         applicationScope.launch {
-                            val entity = dto.toEntity(
-                                senderId = localUser.id,
-                                deliveryStatus = ChatMessageDeliveryStatus.FAILED
-                            )
-                            upsertMessage(
-                                message = entity
+                            updateDeliveryStatus(
+                                messageId = entity.messageId,
+                                timestamp = Clock.System.now().toEpochMilliseconds(),
+                                status = ChatMessageDeliveryStatus.FAILED.name
                             )
                         }.join()
                     }
@@ -146,11 +144,10 @@ class OfflineFirstMessageRepository(
                     .sendMessage(outgoingNewMessage.toJsonPayload())
                     .onFailure {
                         applicationScope.launch {
-                            upsertMessage(
-                                message.copy(
-                                    deliveryStatus = ChatMessageDeliveryStatus.FAILED.name,
-                                    timestamp = Clock.System.now().toEpochMilliseconds()
-                                )
+                            updateDeliveryStatus(
+                                messageId = messageId,
+                                timestamp = Clock.System.now().toEpochMilliseconds(),
+                                status = ChatMessageDeliveryStatus.FAILED.name
                             )
                         }.join()
                     }
