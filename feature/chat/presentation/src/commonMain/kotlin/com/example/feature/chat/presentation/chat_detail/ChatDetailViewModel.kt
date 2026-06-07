@@ -17,6 +17,7 @@ import com.example.feature.chat.domain.model.ConnectionState
 import com.example.feature.chat.domain.model.MessageWithSender
 import com.example.feature.chat.domain.model.OutgoingNewMessage
 import com.example.feature.chat.presentation.mappers.toUi
+import com.example.feature.chat.presentation.model.MessageUi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -103,30 +104,8 @@ class ChatDetailViewModel(
             ChatDetailAction.OnDismissChatOptions -> dismissChatOptions()
             ChatDetailAction.OnLeaveChatClick -> onLeaveChatClick()
             ChatDetailAction.OnSendMessageClick -> sendMessage()
+            is ChatDetailAction.OnRetryClick -> retryMessage(action.message)
             else -> Unit
-        }
-    }
-
-    private fun sendMessage() = with(viewModelScope) {
-        val currentChatId = _chatId.value
-        val content = state.value.messageTextFieldState.text.toString().trim()
-        if (content.isBlank() || currentChatId == null) return@with
-
-        launch {
-            val message = OutgoingNewMessage(
-                chatId = currentChatId,
-                messageId = Uuid.random().toString(),
-                content = content
-            )
-
-            messageRepository
-                .sendMessage(message)
-                .onSuccess {
-                    state.value.messageTextFieldState.clearText()
-                }
-                .onFailure { error ->
-                    eventChannel.send(ChatDetailEvent.OnError(error.toUiText()))
-                }
         }
     }
 
@@ -184,6 +163,39 @@ class ChatDetailViewModel(
                             error.toUiText()
                         )
                     )
+                }
+        }
+    }
+
+    private fun sendMessage() = with(viewModelScope) {
+        val currentChatId = _chatId.value
+        val content = state.value.messageTextFieldState.text.toString().trim()
+        if (content.isBlank() || currentChatId == null) return@with
+
+        launch {
+            val message = OutgoingNewMessage(
+                chatId = currentChatId,
+                messageId = Uuid.random().toString(),
+                content = content
+            )
+
+            messageRepository
+                .sendMessage(message)
+                .onSuccess {
+                    state.value.messageTextFieldState.clearText()
+                }
+                .onFailure { error ->
+                    eventChannel.send(ChatDetailEvent.OnError(error.toUiText()))
+                }
+        }
+    }
+
+    private fun retryMessage(message: MessageUi.LocalUserMessage) {
+        viewModelScope.launch {
+            messageRepository
+                .retryMessage(message.id)
+                .onFailure { error ->
+                    eventChannel.send(ChatDetailEvent.OnError(error.toUiText()))
                 }
         }
     }
