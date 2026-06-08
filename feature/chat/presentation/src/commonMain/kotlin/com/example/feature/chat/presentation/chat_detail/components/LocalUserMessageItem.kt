@@ -39,6 +39,7 @@ import kotlin.uuid.Uuid
 @Composable
 fun LocalUserMessageItem(
     messageUi: MessageUi.LocalUserMessage,
+    messageWithOpenMenu: MessageUi.LocalUserMessage? = null,
     onMessageLongClick: () -> Unit,
     onDismissMessageMenu: () -> Unit,
     onDeleteClick: () -> Unit,
@@ -65,7 +66,7 @@ fun LocalUserMessageItem(
             )
 
             ChirpDropDownMenu(
-                isOpen = isMenuOpen,
+                isOpen = messageWithOpenMenu != null,
                 onDismiss = onDismissMessageMenu,
                 items = listOf(
                     DropDownItem(
@@ -102,9 +103,7 @@ fun PreviewLocalUserMessageItem() {
                     id = Uuid.random().toString(),
                     content = "Lorem ipsum",
                     deliveryStatus = ChatMessageDeliveryStatus.FAILED,
-                    canRetry = true,
                     formattedSentAt = UiText.DynamicString("01/01/1900 00:00"),
-                    isMenuOpen = true
                 ),
                 onMessageLongClick = {},
                 onDismissMessageMenu = {},
@@ -128,9 +127,7 @@ fun PreviewDarkLocalUserMessageItem() {
                     id = Uuid.random().toString(),
                     content = "Lorem ipsum",
                     deliveryStatus = ChatMessageDeliveryStatus.FAILED,
-                    canRetry = true,
                     formattedSentAt = UiText.DynamicString("01/01/1900 00:00"),
-                    isMenuOpen = true
                 ),
                 onMessageLongClick = {},
                 onDismissMessageMenu = {},
