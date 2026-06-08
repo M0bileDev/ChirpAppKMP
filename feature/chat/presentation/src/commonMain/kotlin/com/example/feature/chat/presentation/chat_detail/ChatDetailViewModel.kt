@@ -106,6 +106,7 @@ class ChatDetailViewModel(
             ChatDetailAction.OnLeaveChatClick -> onLeaveChatClick()
             ChatDetailAction.OnSendMessageClick -> sendMessage()
             is ChatDetailAction.OnRetryClick -> retryMessage(action.message)
+            is ChatDetailAction.OnDeleteMessageClick -> deleteMessage(action.message)
             else -> Unit
         }
     }
@@ -195,6 +196,16 @@ class ChatDetailViewModel(
         viewModelScope.launch {
             messageRepository
                 .retryMessage(message.id)
+                .onFailure { error ->
+                    eventChannel.send(ChatDetailEvent.OnError(error.toUiText()))
+                }
+        }
+    }
+
+    private fun deleteMessage(message: MessageUi.LocalUserMessage) {
+        viewModelScope.launch {
+            messageRepository
+                .deleteMessage(message.id)
                 .onFailure { error ->
                     eventChannel.send(ChatDetailEvent.OnError(error.toUiText()))
                 }
