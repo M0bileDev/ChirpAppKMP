@@ -14,11 +14,9 @@ fun MessageWithSender.toUi(
             id = message.id,
             content = message.content,
             deliveryStatus = message.deliveryStatus,
-            isMenuOpen = false,
             formattedSentAt = formatMessageTime(
                 instant = message.createdAt
             ),
-            canRetry = false
         )
     } else {
         MessageUi.OtherUserMessage(
