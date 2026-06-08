@@ -107,6 +107,7 @@ class ChatDetailViewModel(
             ChatDetailAction.OnSendMessageClick -> sendMessage()
             is ChatDetailAction.OnRetryClick -> retryMessage(action.message)
             is ChatDetailAction.OnDeleteMessageClick -> deleteMessage(action.message)
+            ChatDetailAction.OnDismissMessageMenu -> dismissMessageMenu()
             else -> Unit
         }
     }
@@ -209,6 +210,14 @@ class ChatDetailViewModel(
                 .onFailure { error ->
                     eventChannel.send(ChatDetailEvent.OnError(error.toUiText()))
                 }
+        }
+    }
+
+    private fun dismissMessageMenu() {
+        _state.update {
+            it.copy(
+                messageWitOpenMenu = null
+            )
         }
     }
 
