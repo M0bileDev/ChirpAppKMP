@@ -106,6 +106,9 @@ class ChatDetailViewModel(
             ChatDetailAction.OnLeaveChatClick -> onLeaveChatClick()
             ChatDetailAction.OnSendMessageClick -> sendMessage()
             is ChatDetailAction.OnRetryClick -> retryMessage(action.message)
+            is ChatDetailAction.OnDeleteMessageClick -> deleteMessage(action.message)
+            ChatDetailAction.OnDismissMessageMenu -> dismissMessageMenu()
+            is ChatDetailAction.OnMessageLongClick -> onMessageLongClick(action.message)
             else -> Unit
         }
     }
@@ -198,6 +201,32 @@ class ChatDetailViewModel(
                 .onFailure { error ->
                     eventChannel.send(ChatDetailEvent.OnError(error.toUiText()))
                 }
+        }
+    }
+
+    private fun deleteMessage(message: MessageUi.LocalUserMessage) {
+        viewModelScope.launch {
+            messageRepository
+                .deleteMessage(message.id)
+                .onFailure { error ->
+                    eventChannel.send(ChatDetailEvent.OnError(error.toUiText()))
+                }
+        }
+    }
+
+    private fun dismissMessageMenu() {
+        _state.update {
+            it.copy(
+                messageWitOpenMenu = null
+            )
+        }
+    }
+
+    private fun onMessageLongClick(message: MessageUi.LocalUserMessage) {
+        _state.update {
+            it.copy(
+                messageWitOpenMenu = message
+            )
         }
     }
 

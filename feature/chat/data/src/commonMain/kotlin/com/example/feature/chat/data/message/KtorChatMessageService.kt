@@ -1,7 +1,9 @@
 package com.example.feature.chat.data.message
 
+import com.example.core.data.network.delete
 import com.example.core.data.network.get
 import com.example.core.domain.util.DataError
+import com.example.core.domain.util.EmptyResult
 import com.example.core.domain.util.Result
 import com.example.core.domain.util.map
 import com.example.feature.chat.data.dto.ChatMessageDto
@@ -30,6 +32,12 @@ class KtorChatMessageService(
         ).map { chatMessagesDto ->
             chatMessagesDto.map { chatMessageDto -> chatMessageDto.toDomain() }
         }
+    }
+
+    override suspend fun deleteMessage(messageId: String): EmptyResult<DataError.Remote> {
+        return httpClient.delete(
+            route = "/messages/$messageId"
+        )
     }
 
 }

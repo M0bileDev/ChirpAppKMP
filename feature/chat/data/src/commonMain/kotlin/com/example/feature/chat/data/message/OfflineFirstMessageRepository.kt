@@ -153,4 +153,16 @@ class OfflineFirstMessageRepository(
                     }
             }
         }
+
+    override suspend fun deleteMessage(messageId: String): EmptyResult<DataError.Remote> {
+        return chatMessageService
+            .deleteMessage(messageId = messageId)
+            .onSuccess {
+                applicationScope.launch {
+                    chirpChatDatabase
+                        .chatMessageDao
+                        .deleteMessageById(messageId = messageId)
+                }.join()
+            }
+    }
 }

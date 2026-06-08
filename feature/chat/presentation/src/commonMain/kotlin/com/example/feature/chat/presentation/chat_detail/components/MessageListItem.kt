@@ -10,6 +10,7 @@ import com.example.feature.chat.presentation.util.getChatBubbleColorForUser
 @Composable
 fun MessageListItem(
     messageUi: MessageUi,
+    messageWithOpenMenu: MessageUi.LocalUserMessage? = null,
     onMessageLongClick: (MessageUi.LocalUserMessage) -> Unit,
     onDismissMessageMenu: () -> Unit,
     onDeleteClick: (MessageUi.LocalUserMessage) -> Unit,
@@ -33,6 +34,7 @@ fun MessageListItem(
 
             is MessageUi.LocalUserMessage -> LocalUserMessageItem(
                 messageUi = messageUi,
+                messageWithOpenMenu = messageWithOpenMenu,
                 modifier = Modifier.fillMaxWidth(),
                 onMessageLongClick = { onMessageLongClick(messageUi) },
                 onDismissMessageMenu = onDismissMessageMenu,

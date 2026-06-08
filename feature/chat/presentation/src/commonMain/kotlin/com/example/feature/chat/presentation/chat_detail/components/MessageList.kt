@@ -32,6 +32,7 @@ import kotlin.uuid.Uuid
 fun MessageList(
     messages: List<MessageUi>,
     listState: LazyListState,
+    messageWithOpenMenu: MessageUi.LocalUserMessage? = null,
     onMessageLongClick: (MessageUi.LocalUserMessage) -> Unit,
     onMessageRetryClick: (MessageUi.LocalUserMessage) -> Unit,
     onDismissMessageMenu: () -> Unit,
@@ -58,11 +59,14 @@ fun MessageList(
         ) {
             items(
                 items = messages,
+                key = { it.id }
             ) { message ->
                 MessageListItem(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .animateItem(),
                     messageUi = message,
+                    messageWithOpenMenu = messageWithOpenMenu,
                     onMessageLongClick = onMessageLongClick,
                     onDismissMessageMenu = onDismissMessageMenu,
                     onDeleteClick = onDeleteMessageClick,
@@ -83,9 +87,7 @@ fun PreviewMessageList() {
                     id = Uuid.random().toString(),
                     content = "Lorem ipsum",
                     deliveryStatus = ChatMessageDeliveryStatus.SENT,
-                    canRetry = false,
                     formattedSentAt = UiText.DynamicString("01/01/1990 00:00"),
-                    isMenuOpen = false
                 ),
                 MessageUi.DateSeparator(
                     id = Uuid.random().toString(),
@@ -124,9 +126,7 @@ fun PreviewDarkMessageList() {
                     id = Uuid.random().toString(),
                     content = "Lorem ipsum",
                     deliveryStatus = ChatMessageDeliveryStatus.SENT,
-                    canRetry = false,
                     formattedSentAt = UiText.DynamicString("01/01/1990 00:00"),
-                    isMenuOpen = false
                 ),
                 MessageUi.DateSeparator(
                     id = Uuid.random().toString(),

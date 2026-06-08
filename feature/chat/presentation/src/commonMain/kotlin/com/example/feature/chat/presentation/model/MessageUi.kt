@@ -9,9 +9,7 @@ sealed class MessageUi(open val id: String) {
         override val id: String,
         val content: String,
         val deliveryStatus: ChatMessageDeliveryStatus,
-        val canRetry: Boolean,
         val formattedSentAt: UiText,
-        val isMenuOpen: Boolean
     ) : MessageUi(id)
 
     data class OtherUserMessage(
