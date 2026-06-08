@@ -66,7 +66,7 @@ fun LocalUserMessageItem(
             )
 
             ChirpDropDownMenu(
-                isOpen = messageWithOpenMenu != null,
+                isOpen = messageWithOpenMenu?.id == id,
                 onDismiss = onDismissMessageMenu,
                 items = listOf(
                     DropDownItem(
