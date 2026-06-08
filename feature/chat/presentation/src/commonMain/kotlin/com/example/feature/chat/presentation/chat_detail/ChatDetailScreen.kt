@@ -192,6 +192,7 @@ fun ChatDetailScreen(
                         MessageList(
                             modifier = Modifier.fillMaxWidth().weight(1f),
                             messages = messages,
+                            messageWithOpenMenu = state.messageWitOpenMenu,
                             listState = lazyListState,
                             onMessageLongClick = { message ->
                                 onAction(ChatDetailAction.OnMessageLongClick(message))
@@ -329,9 +330,7 @@ fun PreviewChatDetailScreenMessages() {
                             id = Uuid.random().toString(),
                             content = "Lorem ipsum",
                             deliveryStatus = ChatMessageDeliveryStatus.SENT,
-                            isMenuOpen = false,
                             formattedSentAt = UiText.DynamicString("01/01/1900 00:00"),
-                            canRetry = true
                         )
                     } else {
                         MessageUi.OtherUserMessage(
@@ -407,9 +406,7 @@ fun PreviewDarkChatDetailScreenMessages() {
                             id = Uuid.random().toString(),
                             content = "Lorem ipsum",
                             deliveryStatus = ChatMessageDeliveryStatus.SENT,
-                            isMenuOpen = false,
                             formattedSentAt = UiText.DynamicString("01/01/1900 00:00"),
-                            canRetry = true
                         )
                     } else {
                         MessageUi.OtherUserMessage(
