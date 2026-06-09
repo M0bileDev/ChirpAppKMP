@@ -61,6 +61,13 @@ class ChatDetailViewModel(
                 !isMessageBlank && connectionState == ConnectionState.CONNECTED
             }
     private val chatInfoFlow = _chatId
+        .onEach { chatId ->
+            if (chatId != null) {
+                setupPaginatorForChat(chatId = chatId)
+            } else {
+                chatMessagePaginator = null
+            }
+        }
         .flatMapLatest { chatId ->
             if (chatId != null) {
                 chatRepository.getChatInfoById(chatId)
