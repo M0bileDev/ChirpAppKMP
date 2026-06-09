@@ -65,7 +65,7 @@ class ChatDetailViewModel(
             if (chatId != null) {
                 setupPaginatorForChat(chatId = chatId)
             } else {
-                chatMessagePaginator = null
+                clearPaginator()
             }
         }
         .flatMapLatest { chatId ->
@@ -350,5 +350,15 @@ class ChatDetailViewModel(
                 }
             }
         )
+    }
+
+    private fun clearPaginator() {
+        chatMessagePaginator = null
+        _state.update {
+            it.copy(
+                endReached = false,
+                isPaginationLoading = false
+            )
+        }
     }
 }
