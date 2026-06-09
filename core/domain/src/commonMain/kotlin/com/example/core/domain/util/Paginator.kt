@@ -1,5 +1,8 @@
 package com.example.core.domain.util
 
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
+
 class Paginator<Key, Item>(
     // representation of initial generic key
     private val initialKey: Key,
@@ -12,4 +15,38 @@ class Paginator<Key, Item>(
     private val onError: suspend (Throwable?) -> Unit,
     private val onSuccess: suspend (items: List<Item>, newKey: Key) -> Unit
 ) {
+    private var currentKey = initialKey
+    private var isOngoingRequest = false
+    private var lastRequestKey: Key? = null
+
+    suspend fun loadNextItems() {
+        if (isOngoingRequest) return
+
+        val tryToCallMoreThenOnce = currentKey == lastRequestKey
+        if (currentKey != null && tryToCallMoreThenOnce) return
+
+        isOngoingRequest = true
+        lastRequestKey = currentKey
+        // notify ui to show loading
+        onLoadUpdated(true)
+
+        try {
+            onRequest(currentKey)
+                .onSuccess { items ->
+                    val nextKey = getNextKey(items)
+
+                    onSuccess(items, nextKey)
+                    currentKey = nextKey
+                }.onFailure { error ->
+                    onError(PaginationErrorException(error))
+                }
+        } catch (e: Exception) {
+            currentCoroutineContext().ensureActive()
+            onError(e)
+        } finally {
+            // notify ui to hide loading
+            onLoadUpdated(false)
+            isOngoingRequest = false
+        }
+    }
 }
