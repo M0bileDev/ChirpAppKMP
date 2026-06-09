@@ -350,7 +350,18 @@ class ChatDetailViewModel(
                 }
             }
         )
+
+        // load first page
+        loadPaginatorNextPage()
     }
+
+    private fun loadPaginatorNextPage() =
+        chatMessagePaginator?.let { paginator ->
+            viewModelScope.launch {
+                paginator.loadNextItems()
+            }
+        }
+
 
     private fun clearPaginator() {
         chatMessagePaginator = null
