@@ -49,4 +49,9 @@ class Paginator<Key, Item>(
             isOngoingRequest = false
         }
     }
+
+    fun reset() {
+        currentKey = initialKey
+        lastRequestKey = null
+    }
 }
