@@ -47,6 +47,7 @@ import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
 import com.example.feature.chat.presentation.chat_detail.components.ChatDetailHeader
 import com.example.feature.chat.presentation.chat_detail.components.MessageBox
 import com.example.feature.chat.presentation.chat_detail.components.MessageList
+import com.example.feature.chat.presentation.chat_detail.components.PaginationScrollListener
 import com.example.feature.chat.presentation.components.ChatHeader
 import com.example.feature.chat.presentation.components.EmptySection
 import com.example.feature.chat.presentation.model.ChatUi
@@ -75,6 +76,21 @@ fun ChatDetailRoot(
     val snackbarState = remember { SnackbarHostState() }
     val messageLazyListState = rememberLazyListState()
     val scope = rememberCoroutineScope()
+
+    val realMessageCount = remember(state.messages) {
+        state.messages.filter {
+            it is MessageUi.LocalUserMessage || it is MessageUi.OtherUserMessage
+        }.size
+    }
+    PaginationScrollListener(
+        lazyListState = messageLazyListState,
+        itemsCount = realMessageCount,
+        isPaginationLoading = state.isPaginationLoading,
+        isEndReached = state.endReached,
+        onNearTop = {
+            viewModel.onAction(ChatDetailAction.OnScrollToTop)
+        }
+    )
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {

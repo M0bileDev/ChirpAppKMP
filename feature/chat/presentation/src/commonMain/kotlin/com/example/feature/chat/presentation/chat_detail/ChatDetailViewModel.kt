@@ -119,6 +119,7 @@ class ChatDetailViewModel(
             is ChatDetailAction.OnDeleteMessageClick -> deleteMessage(action.message)
             ChatDetailAction.OnDismissMessageMenu -> dismissMessageMenu()
             is ChatDetailAction.OnMessageLongClick -> onMessageLongClick(action.message)
+            ChatDetailAction.OnScrollToTop -> loadPaginatorNextPage()
             else -> Unit
         }
     }
