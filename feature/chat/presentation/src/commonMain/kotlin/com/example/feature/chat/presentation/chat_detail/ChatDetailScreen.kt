@@ -225,7 +225,7 @@ fun ChatDetailScreen(
                                 onAction(ChatDetailAction.OnDeleteMessageClick(message))
                             },
                             onPaginationRetryClick = {
-
+                                onAction(ChatDetailAction.OnPaginationRetryClick)
                             }
                         )
 
