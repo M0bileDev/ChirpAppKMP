@@ -20,6 +20,7 @@ import com.example.feature.chat.domain.model.ConnectionState
 import com.example.feature.chat.domain.model.MessageWithSender
 import com.example.feature.chat.domain.model.OutgoingNewMessage
 import com.example.feature.chat.presentation.mappers.toUi
+import com.example.feature.chat.presentation.mappers.toSortedByCreateAtUiList
 import com.example.feature.chat.presentation.model.MessageUi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -83,9 +84,10 @@ class ChatDetailViewModel(
 
         currentState.copy(
             chatUi = chatInfo.chat.toUi(localParticipantId = authInfo.user.id),
-            messages = chatInfo.messagesWithSenders.map { it.toUi(authInfo.user.id) }
+            messages = chatInfo.messagesWithSenders.toSortedByCreateAtUiList(authInfo.user.id)
         )
     }
+
     val state = _chatId
         .flatMapLatest { chatId ->
             if (chatId != null) {
@@ -120,6 +122,7 @@ class ChatDetailViewModel(
             ChatDetailAction.OnDismissMessageMenu -> dismissMessageMenu()
             is ChatDetailAction.OnMessageLongClick -> onMessageLongClick(action.message)
             ChatDetailAction.OnScrollToTop -> loadPaginatorNextPage()
+            ChatDetailAction.OnPaginationRetryClick -> loadPaginatorNextPage()
             else -> Unit
         }
     }
@@ -246,17 +249,16 @@ class ChatDetailViewModel(
             .connectionState
             .onEach { connectionState ->
                 if (connectionState == ConnectionState.CONNECTED) {
-                    _chatId.value?.let { chatId ->
-                        //before = null, most recent page of messages
-                        messageRepository.fetchMessages(chatId = chatId, before = null)
-                    }
-
-                    _state.update {
-                        it.copy(
-                            connectionState = connectionState
-                        )
-                    }
+                    //before == null -> load most recent page of messages
+                    chatMessagePaginator?.loadNextItems()
                 }
+
+                _state.update {
+                    it.copy(
+                        connectionState = connectionState
+                    )
+                }
+
             }.launchIn(viewModelScope)
     }
 
@@ -336,24 +338,22 @@ class ChatDetailViewModel(
             },
             onError = { throwable ->
                 if (throwable is PaginationErrorException) {
-                    eventChannel.send(
-                        ChatDetailEvent.OnError(
-                            throwable.error.toUiText()
+                    _state.update {
+                        it.copy(
+                            paginationError = throwable.error.toUiText()
                         )
-                    )
+                    }
                 }
             },
             onSuccess = { messages, _ ->
                 _state.update {
                     it.copy(
-                        endReached = messages.isEmpty()
+                        endReached = messages.isEmpty(),
+                        paginationError = null
                     )
                 }
             }
         )
-
-        // load first page
-        loadPaginatorNextPage()
     }
 
     private fun loadPaginatorNextPage() =
@@ -362,7 +362,6 @@ class ChatDetailViewModel(
                 paginator.loadNextItems()
             }
         }
-
 
     private fun clearPaginator() {
         chatMessagePaginator = null

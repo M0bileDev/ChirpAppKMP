@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,10 +32,13 @@ import kotlin.uuid.Uuid
 @Composable
 fun MessageList(
     messages: List<MessageUi>,
+    paginationError: String?,
+    isPaginationLoading: Boolean,
     listState: LazyListState,
     messageWithOpenMenu: MessageUi.LocalUserMessage? = null,
     onMessageLongClick: (MessageUi.LocalUserMessage) -> Unit,
     onMessageRetryClick: (MessageUi.LocalUserMessage) -> Unit,
+    onPaginationRetryClick: () -> Unit,
     onDismissMessageMenu: () -> Unit,
     onDeleteMessageClick: (MessageUi.LocalUserMessage) -> Unit,
     modifier: Modifier = Modifier
@@ -73,6 +77,28 @@ fun MessageList(
                     onRetryClick = onMessageRetryClick
                 )
             }
+
+            when {
+                isPaginationLoading -> {
+                    item {
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
+
+                paginationError != null -> {
+                    item {
+                        PaginationErrorRetryItem(
+                            paginationErrorText = paginationError,
+                            onPaginationRetryClick = onPaginationRetryClick
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -110,6 +136,9 @@ fun PreviewMessageList() {
             onMessageRetryClick = {},
             onDismissMessageMenu = {},
             onDeleteMessageClick = {},
+            onPaginationRetryClick = {},
+            paginationError = "Lorem ipsum",
+            isPaginationLoading = false
         )
     }
 }
@@ -149,6 +178,9 @@ fun PreviewDarkMessageList() {
             onMessageRetryClick = {},
             onDismissMessageMenu = {},
             onDeleteMessageClick = {},
+            onPaginationRetryClick = {},
+            paginationError = null,
+            isPaginationLoading = true
         )
     }
 }

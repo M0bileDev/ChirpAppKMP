@@ -26,7 +26,6 @@ class Paginator<Key, Item>(
         if (currentKey != null && tryToCallMoreThenOnce) return
 
         isOngoingRequest = true
-        lastRequestKey = currentKey
         // notify ui to show loading
         onLoadUpdated(true)
 
@@ -37,6 +36,7 @@ class Paginator<Key, Item>(
 
                     onSuccess(items, nextKey)
                     currentKey = nextKey
+                    lastRequestKey = currentKey
                 }.onFailure { error ->
                     onError(PaginationErrorException(error))
                 }
