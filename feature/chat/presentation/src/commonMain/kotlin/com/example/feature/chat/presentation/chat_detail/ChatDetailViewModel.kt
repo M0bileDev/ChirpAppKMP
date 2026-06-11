@@ -120,6 +120,7 @@ class ChatDetailViewModel(
             ChatDetailAction.OnDismissMessageMenu -> dismissMessageMenu()
             is ChatDetailAction.OnMessageLongClick -> onMessageLongClick(action.message)
             ChatDetailAction.OnScrollToTop -> loadPaginatorNextPage()
+            ChatDetailAction.OnPaginationRetryClick -> loadPaginatorNextPage()
             else -> Unit
         }
     }
@@ -362,7 +363,6 @@ class ChatDetailViewModel(
                 paginator.loadNextItems()
             }
         }
-
 
     private fun clearPaginator() {
         chatMessagePaginator = null
