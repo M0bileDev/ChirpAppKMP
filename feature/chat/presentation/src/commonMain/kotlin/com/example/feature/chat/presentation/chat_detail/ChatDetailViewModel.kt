@@ -20,6 +20,7 @@ import com.example.feature.chat.domain.model.ConnectionState
 import com.example.feature.chat.domain.model.MessageWithSender
 import com.example.feature.chat.domain.model.OutgoingNewMessage
 import com.example.feature.chat.presentation.mappers.toUi
+import com.example.feature.chat.presentation.mappers.toSortedByCreateAtUiList
 import com.example.feature.chat.presentation.model.MessageUi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -83,7 +84,7 @@ class ChatDetailViewModel(
 
         currentState.copy(
             chatUi = chatInfo.chat.toUi(localParticipantId = authInfo.user.id),
-            messages = chatInfo.messagesWithSenders.map { it.toUi(authInfo.user.id) }
+            messages = chatInfo.messagesWithSenders.toSortedByCreateAtUiList(authInfo.user.id)
         )
     }
 
