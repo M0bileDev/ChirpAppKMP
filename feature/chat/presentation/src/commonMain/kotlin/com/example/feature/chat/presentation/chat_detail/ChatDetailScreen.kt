@@ -210,6 +210,8 @@ fun ChatDetailScreen(
                             messages = messages,
                             messageWithOpenMenu = state.messageWitOpenMenu,
                             listState = lazyListState,
+                            paginationError = paginationError?.asString(),
+                            isPaginationLoading = isPaginationLoading,
                             onMessageLongClick = { message ->
                                 onAction(ChatDetailAction.OnMessageLongClick(message))
                             },
@@ -221,6 +223,9 @@ fun ChatDetailScreen(
                             },
                             onDeleteMessageClick = { message ->
                                 onAction(ChatDetailAction.OnDeleteMessageClick(message))
+                            },
+                            onPaginationRetryClick = {
+
                             }
                         )
 
