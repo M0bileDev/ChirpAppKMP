@@ -337,17 +337,18 @@ class ChatDetailViewModel(
             },
             onError = { throwable ->
                 if (throwable is PaginationErrorException) {
-                    eventChannel.send(
-                        ChatDetailEvent.OnError(
-                            throwable.error.toUiText()
+                    _state.update {
+                        it.copy(
+                            paginationError = throwable.error.toUiText()
                         )
-                    )
+                    }
                 }
             },
             onSuccess = { messages, _ ->
                 _state.update {
                     it.copy(
-                        endReached = messages.isEmpty()
+                        endReached = messages.isEmpty(),
+                        paginationError = null
                     )
                 }
             }
