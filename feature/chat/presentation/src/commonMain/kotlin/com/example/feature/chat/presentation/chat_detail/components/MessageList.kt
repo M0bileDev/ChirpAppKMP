@@ -79,15 +79,6 @@ fun MessageList(
             }
 
             when {
-                paginationError != null -> {
-                    item {
-                        PaginationErrorRetryItem(
-                            paginationErrorText = paginationError,
-                            onPaginationRetryClick = onPaginationRetryClick
-                        )
-                    }
-                }
-
                 isPaginationLoading -> {
                     item {
                         Box(
@@ -96,6 +87,15 @@ fun MessageList(
                         ) {
                             CircularProgressIndicator()
                         }
+                    }
+                }
+
+                paginationError != null -> {
+                    item {
+                        PaginationErrorRetryItem(
+                            paginationErrorText = paginationError,
+                            onPaginationRetryClick = onPaginationRetryClick
+                        )
                     }
                 }
             }
@@ -138,7 +138,7 @@ fun PreviewMessageList() {
             onDeleteMessageClick = {},
             onPaginationRetryClick = {},
             paginationError = "Lorem ipsum",
-            isPaginationLoading = true
+            isPaginationLoading = false
         )
     }
 }
