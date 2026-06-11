@@ -86,6 +86,7 @@ class ChatDetailViewModel(
             messages = chatInfo.messagesWithSenders.map { it.toUi(authInfo.user.id) }
         )
     }
+
     val state = _chatId
         .flatMapLatest { chatId ->
             if (chatId != null) {
@@ -247,17 +248,16 @@ class ChatDetailViewModel(
             .connectionState
             .onEach { connectionState ->
                 if (connectionState == ConnectionState.CONNECTED) {
-                    _chatId.value?.let { chatId ->
-                        //before = null, most recent page of messages
-                        messageRepository.fetchMessages(chatId = chatId, before = null)
-                    }
-
-                    _state.update {
-                        it.copy(
-                            connectionState = connectionState
-                        )
-                    }
+                    //before == null -> load most recent page of messages
+                    chatMessagePaginator?.loadNextItems()
                 }
+
+                _state.update {
+                    it.copy(
+                        connectionState = connectionState
+                    )
+                }
+
             }.launchIn(viewModelScope)
     }
 
@@ -353,9 +353,6 @@ class ChatDetailViewModel(
                 }
             }
         )
-
-        // load first page
-        loadPaginatorNextPage()
     }
 
     private fun loadPaginatorNextPage() =
