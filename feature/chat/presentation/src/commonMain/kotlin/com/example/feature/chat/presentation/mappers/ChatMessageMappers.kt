@@ -28,7 +28,7 @@ fun MessageWithSender.toUi(
     }
 }
 
-fun List<MessageWithSender>.toUiList(localUserId: String): List<MessageUi> {
+fun List<MessageWithSender>.toSortedByCreateAtUiList(localUserId: String): List<MessageUi> {
     return sortedByDescending { messageWithSender ->
         messageWithSender.message.createdAt
     }.map { sortedMessageWithSender ->
