@@ -28,6 +28,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -62,6 +63,7 @@ import com.example.feature.chat.presentation.model.ChatUi
 import com.example.feature.chat.presentation.model.MessageUi
 import com.example.feature.chat.presentation.type_alias.ChatParticipantUi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -99,12 +101,13 @@ fun ChatDetailRoot(
             viewModel.onAction(ChatDetailAction.OnScrollToTop)
         }
     )
+
     MessageBannerScrollListener(
         lazyListState = messageLazyListState,
         messages = state.messages,
         isBannerVisible = state.bannerState.isVisible,
         onShowBanner = { topVisibleIndex ->
-            viewModel.onAction(ChatDetailAction.OnMessagesScrollIndexChanged(topVisibleIndex = topVisibleIndex))
+            viewModel.onAction(ChatDetailAction.OnMessagesScrollTopIndexChanged(topVisibleIndex = topVisibleIndex))
         },
         onHideBanner = {
             viewModel.onAction(ChatDetailAction.OnHideMessagesBanner)
@@ -126,6 +129,16 @@ fun ChatDetailRoot(
 
     LaunchedEffect(chatId) {
         viewModel.onAction(ChatDetailAction.OnSelectChat(chatId))
+    }
+
+    LaunchedEffect(messageLazyListState) {
+        snapshotFlow {
+            messageLazyListState.firstVisibleItemIndex to messageLazyListState.layoutInfo.totalItemsCount
+        }.filter { (firstVisibleIndex, totalItemsCount) ->
+            firstVisibleIndex >= 0 && totalItemsCount > 0
+        }.collect { (firstVisibleIndex, _) ->
+            viewModel.onAction(ChatDetailAction.OnMessagesScrollFirstIndexChanged(firstVisibleIndex))
+        }
     }
 
     BackHandler(
