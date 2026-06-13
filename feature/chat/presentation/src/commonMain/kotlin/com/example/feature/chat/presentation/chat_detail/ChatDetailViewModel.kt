@@ -128,6 +128,7 @@ class ChatDetailViewModel(
             ChatDetailAction.OnPaginationRetryClick -> loadPaginatorNextPage()
             ChatDetailAction.OnHideMessagesBanner -> hideBanner()
             is ChatDetailAction.OnMessagesScrollTopIndexChanged -> updateBanner(action.topVisibleIndex)
+            is ChatDetailAction.OnMessagesScrollFirstIndexChanged -> updateNearBottom(action.firstVisibleIndex)
             else -> Unit
         }
     }
@@ -390,6 +391,14 @@ class ChatDetailViewModel(
                     formattedDate = visibleDate,
                     isVisible = visibleDate != null
                 )
+            )
+        }
+    }
+
+    private fun updateNearBottom(firstVisibleIndex: Int) {
+        _state.update {
+            it.copy(
+                isNearBottom = firstVisibleIndex <= 3
             )
         }
     }
