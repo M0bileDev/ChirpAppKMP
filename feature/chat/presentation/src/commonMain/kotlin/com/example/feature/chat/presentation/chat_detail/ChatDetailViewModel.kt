@@ -6,12 +6,15 @@ import androidx.compose.foundation.text.input.clearText
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import chirpappkmp.feature.chat.presentation.generated.resources.Res
+import chirpappkmp.feature.chat.presentation.generated.resources.today
 import com.example.core.domain.auth.SessionStorage
 import com.example.core.domain.util.PaginationErrorException
 import com.example.core.domain.util.Paginator
 import com.example.core.domain.util.onFailure
 import com.example.core.domain.util.onSuccess
 import com.example.core.presentation.ext.toUiText
+import com.example.core.presentation.util.UiText
 import com.example.feature.chat.domain.chat.ChatConnectionClient
 import com.example.feature.chat.domain.chat.ChatRepository
 import com.example.feature.chat.domain.message.MessageRepository
@@ -124,6 +127,7 @@ class ChatDetailViewModel(
             ChatDetailAction.OnScrollToTop -> loadPaginatorNextPage()
             ChatDetailAction.OnPaginationRetryClick -> loadPaginatorNextPage()
             ChatDetailAction.OnHideMessagesBanner -> hideBanner()
+            is ChatDetailAction.OnMessagesScrollIndexChanged -> updateBanner(action.topVisibleIndex)
             else -> Unit
         }
     }
@@ -371,6 +375,30 @@ class ChatDetailViewModel(
                     isVisible = false
                 )
             )
+        }
+    }
+
+    private fun updateBanner(topVisibleIndex: Int) {
+
+    }
+
+    private fun calculateBannerDateFromIndex(
+        messages: List<MessageUi>,
+        index: Int
+    ): UiText? {
+        if (messages.isEmpty() || index < 0 || index >= messages.size) return null
+
+        val nearestDateSeparator = (index until messages.size).firstNotNullOfOrNull { index ->
+                val item = messages.getOrNull(index)
+                if (item is MessageUi.DateSeparator) item.date else null
+            }
+
+        return when (nearestDateSeparator) {
+            is UiText.Resource -> {
+                if (nearestDateSeparator.id == Res.string.today) null else nearestDateSeparator
+            }
+
+            else -> nearestDateSeparator
         }
     }
 
