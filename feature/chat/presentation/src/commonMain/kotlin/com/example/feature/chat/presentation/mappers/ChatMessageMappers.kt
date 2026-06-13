@@ -2,7 +2,10 @@ package com.example.feature.chat.presentation.mappers
 
 import com.example.feature.chat.domain.model.MessageWithSender
 import com.example.feature.chat.presentation.model.MessageUi
+import com.example.feature.chat.presentation.util.DateUtils
 import com.example.feature.chat.presentation.util.DateUtils.formatMessageTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 fun MessageWithSender.toUi(
     localUserId: String,
@@ -28,10 +31,19 @@ fun MessageWithSender.toUi(
     }
 }
 
-fun List<MessageWithSender>.toSortedByCreateAtUiList(localUserId: String): List<MessageUi> {
+/**
+ * First sort messages by descending order, then group by "created at" date and finally
+ * add separator to each group
+ */
+fun List<MessageWithSender>.toUiList(localUserId: String): List<MessageUi> {
     return sortedByDescending { messageWithSender ->
         messageWithSender.message.createdAt
-    }.map { sortedMessageWithSender ->
-        sortedMessageWithSender.toUi(localUserId = localUserId)
+    }.groupBy { sortedMessageWithSender ->
+        sortedMessageWithSender.message.createdAt.toLocalDateTime(TimeZone.currentSystemDefault()).date
+    }.flatMap { (dateKey, messageValue) ->
+        messageValue.map { groupedMessage -> groupedMessage.toUi(localUserId) } + MessageUi.DateSeparator(
+            id = dateKey.toString(),
+            date = DateUtils.formatDateSeparator(dateKey)
+        )
     }
 }
