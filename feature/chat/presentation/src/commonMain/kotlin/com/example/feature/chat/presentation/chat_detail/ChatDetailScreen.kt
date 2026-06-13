@@ -45,6 +45,7 @@ import com.example.core.presentation.util.UiText
 import com.example.core.presentation.util.clearFocusOnTap
 import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
 import com.example.feature.chat.presentation.chat_detail.components.ChatDetailHeader
+import com.example.feature.chat.presentation.chat_detail.components.MessageBannerScrollListener
 import com.example.feature.chat.presentation.chat_detail.components.MessageBox
 import com.example.feature.chat.presentation.chat_detail.components.MessageList
 import com.example.feature.chat.presentation.chat_detail.components.PaginationScrollListener
@@ -89,6 +90,17 @@ fun ChatDetailRoot(
         isEndReached = state.endReached,
         onNearTop = {
             viewModel.onAction(ChatDetailAction.OnScrollToTop)
+        }
+    )
+    MessageBannerScrollListener(
+        lazyListState = messageLazyListState,
+        messages = state.messages,
+        isBannerVisible = state.bannerState.isVisible,
+        onShowBanner = { topVisibleIndex ->
+            viewModel.onAction(ChatDetailAction.OnMessagesScrollIndexChanged(topVisibleIndex = topVisibleIndex))
+        },
+        onHideBanner = {
+            viewModel.onAction(ChatDetailAction.OnHideMessagesBanner)
         }
     )
 
