@@ -146,6 +146,7 @@ fun ChatDetailRoot(
         onAction = { action ->
             when (action) {
                 is ChatDetailAction.OnChatMembersClick -> onChatMembersClick()
+                is ChatDetailAction.OnBackClick -> onBack()
                 else -> Unit
             }
             viewModel.onAction(action)
