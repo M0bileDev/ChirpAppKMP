@@ -6,12 +6,15 @@ import androidx.compose.foundation.text.input.clearText
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import chirpappkmp.feature.chat.presentation.generated.resources.Res
+import chirpappkmp.feature.chat.presentation.generated.resources.today
 import com.example.core.domain.auth.SessionStorage
 import com.example.core.domain.util.PaginationErrorException
 import com.example.core.domain.util.Paginator
 import com.example.core.domain.util.onFailure
 import com.example.core.domain.util.onSuccess
 import com.example.core.presentation.ext.toUiText
+import com.example.core.presentation.util.UiText
 import com.example.feature.chat.domain.chat.ChatConnectionClient
 import com.example.feature.chat.domain.chat.ChatRepository
 import com.example.feature.chat.domain.message.MessageRepository
@@ -123,6 +126,9 @@ class ChatDetailViewModel(
             is ChatDetailAction.OnMessageLongClick -> onMessageLongClick(action.message)
             ChatDetailAction.OnScrollToTop -> loadPaginatorNextPage()
             ChatDetailAction.OnPaginationRetryClick -> loadPaginatorNextPage()
+            ChatDetailAction.OnHideMessagesBanner -> hideBanner()
+            is ChatDetailAction.OnMessagesScrollTopIndexChanged -> updateBanner(action.topVisibleIndex)
+            is ChatDetailAction.OnMessagesScrollFirstIndexChanged -> updateNearBottom(action.firstVisibleIndex)
             else -> Unit
         }
     }
@@ -362,6 +368,60 @@ class ChatDetailViewModel(
                 paginator.loadNextItems()
             }
         }
+
+    private fun hideBanner() {
+        _state.update {
+            it.copy(
+                bannerState = it.bannerState.copy(
+                    isVisible = false
+                )
+            )
+        }
+    }
+
+    private fun updateBanner(topVisibleIndex: Int) {
+        val visibleDate = calculateBannerDateFromIndex(
+            messages = state.value.messages,
+            index = topVisibleIndex
+        )
+
+        _state.update {
+            it.copy(
+                bannerState = BannerState(
+                    formattedDate = visibleDate,
+                    isVisible = visibleDate != null
+                )
+            )
+        }
+    }
+
+    private fun updateNearBottom(firstVisibleIndex: Int) {
+        _state.update {
+            it.copy(
+                isNearBottom = firstVisibleIndex <= 3
+            )
+        }
+    }
+
+    private fun calculateBannerDateFromIndex(
+        messages: List<MessageUi>,
+        index: Int
+    ): UiText? {
+        if (messages.isEmpty() || index < 0 || index >= messages.size) return null
+
+        val nearestDateSeparator = (index until messages.size).firstNotNullOfOrNull { index ->
+            val item = messages.getOrNull(index)
+            if (item is MessageUi.DateSeparator) item.date else null
+        }
+
+        return when (nearestDateSeparator) {
+            is UiText.Resource -> {
+                if (nearestDateSeparator.id == Res.string.today) null else nearestDateSeparator
+            }
+
+            else -> nearestDateSeparator
+        }
+    }
 
     private fun clearPaginator() {
         chatMessagePaginator = null

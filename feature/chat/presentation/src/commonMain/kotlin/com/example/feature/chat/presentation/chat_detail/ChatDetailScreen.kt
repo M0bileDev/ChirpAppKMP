@@ -5,6 +5,7 @@ package com.example.feature.chat.presentation.chat_detail
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
@@ -23,8 +24,11 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -32,6 +36,9 @@ import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import chirpappkmp.feature.chat.presentation.generated.resources.Res
@@ -45,6 +52,8 @@ import com.example.core.presentation.util.UiText
 import com.example.core.presentation.util.clearFocusOnTap
 import com.example.feature.chat.domain.model.ChatMessageDeliveryStatus
 import com.example.feature.chat.presentation.chat_detail.components.ChatDetailHeader
+import com.example.feature.chat.presentation.chat_detail.components.DateChip
+import com.example.feature.chat.presentation.chat_detail.components.MessageBannerScrollListener
 import com.example.feature.chat.presentation.chat_detail.components.MessageBox
 import com.example.feature.chat.presentation.chat_detail.components.MessageList
 import com.example.feature.chat.presentation.chat_detail.components.PaginationScrollListener
@@ -54,6 +63,7 @@ import com.example.feature.chat.presentation.model.ChatUi
 import com.example.feature.chat.presentation.model.MessageUi
 import com.example.feature.chat.presentation.type_alias.ChatParticipantUi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -92,6 +102,18 @@ fun ChatDetailRoot(
         }
     )
 
+    MessageBannerScrollListener(
+        lazyListState = messageLazyListState,
+        messages = state.messages,
+        isBannerVisible = state.bannerState.isVisible,
+        onShowBanner = { topVisibleIndex ->
+            viewModel.onAction(ChatDetailAction.OnMessagesScrollTopIndexChanged(topVisibleIndex = topVisibleIndex))
+        },
+        onHideBanner = {
+            viewModel.onAction(ChatDetailAction.OnHideMessagesBanner)
+        }
+    )
+
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
             ChatDetailEvent.OnChatLeft -> onBack()
@@ -107,6 +129,16 @@ fun ChatDetailRoot(
 
     LaunchedEffect(chatId) {
         viewModel.onAction(ChatDetailAction.OnSelectChat(chatId))
+    }
+
+    LaunchedEffect(messageLazyListState) {
+        snapshotFlow {
+            messageLazyListState.firstVisibleItemIndex to messageLazyListState.layoutInfo.totalItemsCount
+        }.filter { (firstVisibleIndex, totalItemsCount) ->
+            firstVisibleIndex >= 0 && totalItemsCount > 0
+        }.collect { (firstVisibleIndex, _) ->
+            viewModel.onAction(ChatDetailAction.OnMessagesScrollFirstIndexChanged(firstVisibleIndex))
+        }
     }
 
     BackHandler(
@@ -127,6 +159,7 @@ fun ChatDetailRoot(
         onAction = { action ->
             when (action) {
                 is ChatDetailAction.OnChatMembersClick -> onChatMembersClick()
+                is ChatDetailAction.OnBackClick -> onBack()
                 else -> Unit
             }
             viewModel.onAction(action)
@@ -148,6 +181,10 @@ fun ChatDetailScreen(
     } else {
         MaterialTheme.colorScheme.extended.surfaceLower
     }
+    var headerHeight by remember {
+        mutableStateOf(0.dp)
+    }
+    val density = LocalDensity.current
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -182,7 +219,13 @@ fun ChatDetailScreen(
                             description = stringResource(Res.string.select_a_chat),
                         )
                     } else {
-                        ChatHeader {
+                        ChatHeader(
+                            modifier = Modifier.onSizeChanged {
+                                headerHeight = with(density) {
+                                    it.height.toDp()
+                                }
+                            }
+                        ) {
                             ChatDetailHeader(
                                 modifier = Modifier.fillMaxWidth(),
                                 chatUi = chatUi,
@@ -275,6 +318,27 @@ fun ChatDetailScreen(
                     }
                 }
             }
+
+            AnimatedDateChip(bannerState, headerHeight)
+        }
+    }
+}
+
+@Composable
+private fun BoxScope.AnimatedDateChip(
+    bannerState: BannerState,
+    headerHeight: Dp
+) = with(bannerState) {
+    AnimatedVisibility(
+        modifier = Modifier
+            .align(Alignment.TopCenter)
+            .padding(top = headerHeight + 16.dp),
+        visible = isVisible
+    ) {
+        if (formattedDate != null) {
+            DateChip(
+                date = formattedDate.asString()
+            )
         }
     }
 }
