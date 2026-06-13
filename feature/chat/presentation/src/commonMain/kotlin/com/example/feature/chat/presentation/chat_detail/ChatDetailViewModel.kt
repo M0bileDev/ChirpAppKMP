@@ -123,6 +123,7 @@ class ChatDetailViewModel(
             is ChatDetailAction.OnMessageLongClick -> onMessageLongClick(action.message)
             ChatDetailAction.OnScrollToTop -> loadPaginatorNextPage()
             ChatDetailAction.OnPaginationRetryClick -> loadPaginatorNextPage()
+            ChatDetailAction.OnHideMessagesBanner -> hideBanner()
             else -> Unit
         }
     }
@@ -362,6 +363,16 @@ class ChatDetailViewModel(
                 paginator.loadNextItems()
             }
         }
+
+    private fun hideBanner() {
+        _state.update {
+            it.copy(
+                bannerState = it.bannerState.copy(
+                    isVisible = false
+                )
+            )
+        }
+    }
 
     private fun clearPaginator() {
         chatMessagePaginator = null
