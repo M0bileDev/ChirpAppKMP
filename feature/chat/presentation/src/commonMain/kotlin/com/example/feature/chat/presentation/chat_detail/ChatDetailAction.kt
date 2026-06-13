@@ -16,4 +16,5 @@ sealed interface ChatDetailAction {
     data object OnLeaveChatClick : ChatDetailAction
     data object OnDismissChatOptions : ChatDetailAction
     data object OnPaginationRetryClick : ChatDetailAction
+    data class OnMessagesScrollIndexChanged(val topVisibleIndex: Int) : ChatDetailAction
 }
