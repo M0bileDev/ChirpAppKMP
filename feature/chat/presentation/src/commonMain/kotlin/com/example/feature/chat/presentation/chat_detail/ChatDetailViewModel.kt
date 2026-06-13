@@ -379,7 +379,19 @@ class ChatDetailViewModel(
     }
 
     private fun updateBanner(topVisibleIndex: Int) {
+        val visibleDate = calculateBannerDateFromIndex(
+            messages = state.value.messages,
+            index = topVisibleIndex
+        )
 
+        _state.update {
+            it.copy(
+                bannerState = BannerState(
+                    formattedDate = visibleDate,
+                    isVisible = visibleDate != null
+                )
+            )
+        }
     }
 
     private fun calculateBannerDateFromIndex(
@@ -389,9 +401,9 @@ class ChatDetailViewModel(
         if (messages.isEmpty() || index < 0 || index >= messages.size) return null
 
         val nearestDateSeparator = (index until messages.size).firstNotNullOfOrNull { index ->
-                val item = messages.getOrNull(index)
-                if (item is MessageUi.DateSeparator) item.date else null
-            }
+            val item = messages.getOrNull(index)
+            if (item is MessageUi.DateSeparator) item.date else null
+        }
 
         return when (nearestDateSeparator) {
             is UiText.Resource -> {
