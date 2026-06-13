@@ -127,7 +127,7 @@ class ChatDetailViewModel(
             ChatDetailAction.OnScrollToTop -> loadPaginatorNextPage()
             ChatDetailAction.OnPaginationRetryClick -> loadPaginatorNextPage()
             ChatDetailAction.OnHideMessagesBanner -> hideBanner()
-            is ChatDetailAction.OnMessagesScrollIndexChanged -> updateBanner(action.topVisibleIndex)
+            is ChatDetailAction.OnMessagesScrollTopIndexChanged -> updateBanner(action.topVisibleIndex)
             else -> Unit
         }
     }
