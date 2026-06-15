@@ -16,8 +16,10 @@ import chirpappkmp.feature.chat.presentation.generated.resources.Res
 import chirpappkmp.feature.chat.presentation.generated.resources.close
 import chirpappkmp.feature.chat.presentation.generated.resources.profile_settings
 import com.example.core.designsystem.components.buttons.ChirpIconButton
+import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ProfileHeaderSection(
@@ -54,5 +56,29 @@ fun ProfileHeaderSection(
                 tint = MaterialTheme.colorScheme.extended.textPrimary
             )
         }
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
+@Composable
+fun PreviewProfileHeaderSection() {
+    ChirpTheme {
+        ProfileHeaderSection(
+            username = "Lorem ipsum",
+            onCloseClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF000000)
+@Composable
+fun PreviewDarkProfileHeaderSection() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ProfileHeaderSection(
+            username = "Lorem ipsum",
+            onCloseClick = {}
+        )
     }
 }
