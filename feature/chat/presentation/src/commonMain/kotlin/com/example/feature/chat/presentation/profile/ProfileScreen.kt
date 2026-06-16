@@ -20,14 +20,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import chirpappkmp.feature.chat.presentation.generated.resources.Res
+import chirpappkmp.feature.chat.presentation.generated.resources.cancel
 import chirpappkmp.feature.chat.presentation.generated.resources.contact_chirp_support_change_email
+import chirpappkmp.feature.chat.presentation.generated.resources.current_password
 import chirpappkmp.feature.chat.presentation.generated.resources.delete
 import chirpappkmp.feature.chat.presentation.generated.resources.email
+import chirpappkmp.feature.chat.presentation.generated.resources.new_password
+import chirpappkmp.feature.chat.presentation.generated.resources.password
+import chirpappkmp.feature.chat.presentation.generated.resources.password_hint
 import chirpappkmp.feature.chat.presentation.generated.resources.profile_image
+import chirpappkmp.feature.chat.presentation.generated.resources.save
 import chirpappkmp.feature.chat.presentation.generated.resources.upload_icon
 import chirpappkmp.feature.chat.presentation.generated.resources.upload_image
 import com.example.core.designsystem.components.avatar.AvatarSize
@@ -35,6 +42,7 @@ import com.example.core.designsystem.components.avatar.ChirpAvatarPhoto
 import com.example.core.designsystem.components.brand.ChirpHorizontalDivider
 import com.example.core.designsystem.components.buttons.ChirpButton
 import com.example.core.designsystem.components.buttons.ChirpButtonStyle
+import com.example.core.designsystem.components.textfields.ChirpPasswordTextField
 import com.example.core.designsystem.components.textfields.ChirpTextField
 import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.presentation.util.UiText
@@ -147,7 +155,53 @@ fun ProfileScreen(
                 supportingText = stringResource(Res.string.contact_chirp_support_change_email)
             )
         }
-
+        ChirpHorizontalDivider()
+        ProfileSectionLayout(
+            headerText = stringResource(Res.string.password)
+        ) {
+            ChirpPasswordTextField(
+                state = currentPasswordTextState,
+                isPasswordVisible = isCurrentPasswordVisible,
+                onToggleVisibilityClick = {
+                    onAction(ProfileAction.OnToggleCurrentPasswordVisibility)
+                },
+                placeholder = stringResource(Res.string.current_password),
+                isError = currentPasswordError != null,
+                supportingText = currentPasswordError?.asString()
+            )
+            ChirpPasswordTextField(
+                state = newPasswordTextState,
+                isPasswordVisible = isNewPasswordVisible,
+                onToggleVisibilityClick = {
+                    onAction(ProfileAction.OnToggleNewPasswordVisibility)
+                },
+                placeholder = stringResource(Res.string.new_password),
+                isError = newPasswordError != null,
+                supportingText = newPasswordError?.asString()
+                    ?: stringResource(Res.string.password_hint)
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.End)
+            ) {
+                ChirpButton(
+                    text = stringResource(Res.string.cancel),
+                    style = ChirpButtonStyle.SECONDARY,
+                    onClick = {
+                        onAction(ProfileAction.OnDismiss)
+                    }
+                )
+                ChirpButton(
+                    text = stringResource(Res.string.save),
+                    onClick = {
+                        onAction(ProfileAction.OnChangePasswordClick)
+                    },
+                    enabled = canChangePassword,
+                    isLoading = isChangingPassword
+                )
+            }
+        }
     }
 }
 
