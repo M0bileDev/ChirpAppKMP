@@ -23,7 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import chirpappkmp.feature.chat.presentation.generated.resources.Res
+import chirpappkmp.feature.chat.presentation.generated.resources.contact_chirp_support_change_email
 import chirpappkmp.feature.chat.presentation.generated.resources.delete
+import chirpappkmp.feature.chat.presentation.generated.resources.email
 import chirpappkmp.feature.chat.presentation.generated.resources.profile_image
 import chirpappkmp.feature.chat.presentation.generated.resources.upload_icon
 import chirpappkmp.feature.chat.presentation.generated.resources.upload_image
@@ -32,6 +34,7 @@ import com.example.core.designsystem.components.avatar.ChirpAvatarPhoto
 import com.example.core.designsystem.components.brand.ChirpHorizontalDivider
 import com.example.core.designsystem.components.buttons.ChirpButton
 import com.example.core.designsystem.components.buttons.ChirpButtonStyle
+import com.example.core.designsystem.components.textfields.ChirpTextField
 import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.presentation.util.UiText
 import com.example.core.presentation.util.clearFocusOnTap
@@ -131,6 +134,17 @@ fun ProfileScreen(
                     color = MaterialTheme.colorScheme.error
                 )
             }
+        }
+        ChirpHorizontalDivider()
+        ProfileSectionLayout(
+            headerText = stringResource(Res.string.email)
+        ) {
+            ChirpTextField(
+                state = emailTextState,
+                // email address cannot be changed by user
+                enabled = false,
+                supportingText = stringResource(Res.string.contact_chirp_support_change_email)
+            )
         }
     }
 }
