@@ -49,4 +49,5 @@
     <string name="close">Hide password</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="password_hint">Use 9+ characters, at least one digit and one uppercase letter.</string>
 </resources>
