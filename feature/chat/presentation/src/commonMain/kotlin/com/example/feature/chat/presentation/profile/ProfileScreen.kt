@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
@@ -146,6 +147,7 @@ fun ProfileScreen(
                 supportingText = stringResource(Res.string.contact_chirp_support_change_email)
             )
         }
+
     }
 }
 
@@ -156,7 +158,8 @@ fun PreviewProfileScreen() {
         ProfileScreen(
             state = ProfileState(
                 username = "Lorem ipsum",
-                imageError = UiText.DynamicString("Lorem ipsum")
+                imageError = UiText.DynamicString("Lorem ipsum"),
+                emailTextState = TextFieldState(initialText = "lorem@ipsum.com")
             ),
             onAction = {}
         )
@@ -172,7 +175,8 @@ fun PreviewDarkProfileScreen() {
         ProfileScreen(
             state = ProfileState(
                 username = "Lorem ipsum",
-                imageError = UiText.DynamicString("Lorem ipsum")
+                imageError = UiText.DynamicString("Lorem ipsum"),
+                emailTextState = TextFieldState(initialText = "lorem@ipsum.com")
             ),
             onAction = {}
         )
