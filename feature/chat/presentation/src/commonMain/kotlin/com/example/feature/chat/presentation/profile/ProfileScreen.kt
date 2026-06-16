@@ -14,8 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.core.designsystem.components.brand.ChirpHorizontalDivider
+import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.presentation.util.clearFocusOnTap
 import com.example.feature.chat.presentation.profile.components.ProfileHeaderSection
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -54,6 +56,32 @@ fun ProfileScreen(
     }
 }
 
+@Preview
+@Composable
+fun PreviewProfileScreen() {
+    ChirpTheme {
+        ProfileScreen(
+            state = ProfileState(
+                username = "Lorem ipsum"
+            ),
+            onAction = {}
+        )
+    }
+}
 
+@Preview
+@Composable
+fun PreviewDarkProfileScreen() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ProfileScreen(
+            state = ProfileState(
+                username = "Lorem ipsum"
+            ),
+            onAction = {}
+        )
+    }
+}
 
 
