@@ -52,7 +52,7 @@ class ChatListViewModel(
                 }
             }
 
-            is ChatListAction.OnUserAvatarClick -> {
+            ChatListAction.OnUserAvatarClick -> {
                 _state.update {
                     it.copy(
                         isUserManuOpen = true
@@ -60,7 +60,9 @@ class ChatListViewModel(
                 }
             }
 
-            is ChatListAction.OnDismissUserMenu -> {
+            ChatListAction.OnProfileSettingsClick,
+            ChatListAction.OnLogoutClick,
+            ChatListAction.OnDismissUserMenu -> {
                 _state.update {
                     it.copy(
                         isUserManuOpen = false
