@@ -49,6 +49,7 @@ import com.example.core.designsystem.components.dialogs.DestructiveConfirmationD
 import com.example.core.designsystem.components.textfields.ChirpPasswordTextField
 import com.example.core.designsystem.components.textfields.ChirpTextField
 import com.example.core.designsystem.theme.ChirpTheme
+import com.example.core.presentation.composableUtil.currentDeviceConfiguration
 import com.example.core.presentation.util.UiText
 import com.example.core.presentation.util.clearFocusOnTap
 import com.example.feature.chat.presentation.profile.components.ProfileHeaderSection
@@ -87,6 +88,8 @@ fun ProfileScreen(
     state: ProfileState,
     onAction: (ProfileAction) -> Unit
 ) = with(state) {
+    val deviceConfiguration = currentDeviceConfiguration()
+
     Column(
         modifier = Modifier
             .clearFocusOnTap()
@@ -222,8 +225,10 @@ fun ProfileScreen(
                 )
             }
         }
-        Spacer(modifier = Modifier.weight(1f))
 
+        if (deviceConfiguration.isMobile) {
+            Spacer(modifier = Modifier.weight(1f))
+        }
     }
 
     if (showDeleteImageConfirmationDialog) {
