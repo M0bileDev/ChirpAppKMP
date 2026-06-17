@@ -8,11 +8,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
@@ -49,7 +52,6 @@ import com.example.core.designsystem.components.dialogs.DestructiveConfirmationD
 import com.example.core.designsystem.components.textfields.ChirpPasswordTextField
 import com.example.core.designsystem.components.textfields.ChirpTextField
 import com.example.core.designsystem.theme.ChirpTheme
-import com.example.core.presentation.composableUtil.currentDeviceConfiguration
 import com.example.core.presentation.util.UiText
 import com.example.core.presentation.util.clearFocusOnTap
 import com.example.feature.chat.presentation.profile.components.ProfileHeaderSection
@@ -88,16 +90,16 @@ fun ProfileScreen(
     state: ProfileState,
     onAction: (ProfileAction) -> Unit
 ) = with(state) {
-    val deviceConfiguration = currentDeviceConfiguration()
 
     Column(
         modifier = Modifier
             .clearFocusOnTap()
-            .fillMaxWidth()
+            .fillMaxSize()
             .background(
                 color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(16.dp)
             )
+            .verticalScroll(rememberScrollState())
     ) {
         ProfileHeaderSection(
             modifier = Modifier
@@ -224,10 +226,6 @@ fun ProfileScreen(
                     isLoading = isChangingPassword
                 )
             }
-        }
-
-        if (deviceConfiguration.isMobile) {
-            Spacer(modifier = Modifier.weight(1f))
         }
     }
 
