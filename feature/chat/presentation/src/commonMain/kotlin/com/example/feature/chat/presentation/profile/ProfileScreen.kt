@@ -222,6 +222,8 @@ fun ProfileScreen(
                 )
             }
         }
+        Spacer(modifier = Modifier.weight(1f))
+
     }
 
     if (showDeleteImageConfirmationDialog) {
