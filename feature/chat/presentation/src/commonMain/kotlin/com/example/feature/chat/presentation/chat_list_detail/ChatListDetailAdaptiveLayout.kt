@@ -136,6 +136,10 @@ fun ChatListDetailAdaptiveLayout(
     DialogSheetScopedViewModel(
         visible = sharedState.dialogState is DialogState.Profile
     ) {
-        ProfileRoot()
+        ProfileRoot(
+            onDismiss = {
+                viewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)
+            }
+        )
     }
 }
