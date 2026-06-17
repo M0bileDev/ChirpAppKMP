@@ -44,6 +44,7 @@ import com.example.core.designsystem.components.avatar.ChirpAvatarPhoto
 import com.example.core.designsystem.components.brand.ChirpHorizontalDivider
 import com.example.core.designsystem.components.buttons.ChirpButton
 import com.example.core.designsystem.components.buttons.ChirpButtonStyle
+import com.example.core.designsystem.components.dialogs.ChirpAdaptiveDialogSheetLayout
 import com.example.core.designsystem.components.dialogs.DestructiveConfirmationDialog
 import com.example.core.designsystem.components.textfields.ChirpPasswordTextField
 import com.example.core.designsystem.components.textfields.ChirpTextField
@@ -60,9 +61,25 @@ import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
 fun ProfileRoot(
+    onDismiss: () -> Unit,
     viewModel: ProfileViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    ChirpAdaptiveDialogSheetLayout(
+        onDismiss = onDismiss
+    ) {
+        ProfileScreen(
+            state = state,
+            onAction = { action ->
+                when (action) {
+                    is ProfileAction.OnDismiss -> onDismiss()
+                    else -> Unit
+                }
+                viewModel.onAction(action)
+            }
+        )
+    }
 }
 
 @Composable
