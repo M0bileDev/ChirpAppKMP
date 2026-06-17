@@ -264,4 +264,44 @@ fun PreviewDarkProfileScreen() {
     }
 }
 
+@Preview
+@Composable
+fun PreviewProfileScreenDeleteProfileImageDialog() {
+    ChirpTheme {
+        ProfileScreen(
+            state = ProfileState(
+                username = "Lorem ipsum",
+                imageError = UiText.DynamicString("Lorem ipsum"),
+                emailTextState = TextFieldState(initialText = "lorem@ipsum.com"),
+                currentPasswordTextState = TextFieldState(initialText = "123456"),
+                isCurrentPasswordVisible = true,
+                currentPasswordError = UiText.DynamicString("Lorem ipsum"),
+                showDeleteImageConfirmationDialog = true
+            ),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkProfileScreenDeleteProfileImageDialog() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ProfileScreen(
+            state = ProfileState(
+                username = "Lorem ipsum",
+                imageError = UiText.DynamicString("Lorem ipsum"),
+                emailTextState = TextFieldState(initialText = "lorem@ipsum.com"),
+                currentPasswordTextState = TextFieldState(initialText = "123456"),
+                isCurrentPasswordVisible = true,
+                currentPasswordError = UiText.DynamicString("Lorem ipsum"),
+                showDeleteImageConfirmationDialog = true
+            ),
+            onAction = {}
+        )
+    }
+}
+
 
