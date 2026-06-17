@@ -24,6 +24,7 @@ import com.example.feature.chat.presentation.chat_detail.ChatDetailRoot
 import com.example.feature.chat.presentation.chat_list.ChatListRoot
 import com.example.feature.chat.presentation.create_chat.CreateChatRoot
 import com.example.feature.chat.presentation.manage_chat.ManageChatRoot
+import com.example.feature.chat.presentation.profile.ProfileRoot
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -130,5 +131,11 @@ fun ChatListDetailAdaptiveLayout(
                 viewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)
             }
         )
+    }
+
+    DialogSheetScopedViewModel(
+        visible = sharedState.dialogState is DialogState.Profile
+    ) {
+        ProfileRoot()
     }
 }
