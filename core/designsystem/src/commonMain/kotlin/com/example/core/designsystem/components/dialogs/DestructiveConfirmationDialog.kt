@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -111,15 +112,19 @@ fun DestructiveConfirmationDialog(
 @Composable
 fun PreviewDestructiveConfirmationDialog() {
     ChirpTheme {
-        DestructiveConfirmationDialog(
-            title = "Lorem ipsum",
-            description = "Lorem ipsum",
-            confirmationButtonText = "Delete",
-            cancelButtonText = "Cancel",
-            onConfirmClick = {},
-            onCancelClick = {},
-            onDismiss = {}
-        )
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ){
+            DestructiveConfirmationDialog(
+                title = "Lorem ipsum",
+                description = "Lorem ipsum",
+                confirmationButtonText = "Delete",
+                cancelButtonText = "Cancel",
+                onConfirmClick = {},
+                onCancelClick = {},
+                onDismiss = {}
+            )
+        }
     }
 }
 
@@ -129,14 +134,18 @@ fun PreviewDarkDestructiveConfirmationDialog() {
     ChirpTheme(
         darkTheme = true
     ) {
-        DestructiveConfirmationDialog(
-            title = "Lorem ipsum",
-            description = "Lorem ipsum",
-            confirmationButtonText = "Delete",
-            cancelButtonText = "Cancel",
-            onConfirmClick = {},
-            onCancelClick = {},
-            onDismiss = {}
-        )
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ){
+            DestructiveConfirmationDialog(
+                title = "Lorem ipsum",
+                description = "Lorem ipsum",
+                confirmationButtonText = "Delete",
+                cancelButtonText = "Cancel",
+                onConfirmClick = {},
+                onCancelClick = {},
+                onDismiss = {}
+            )
+        }
     }
 }
