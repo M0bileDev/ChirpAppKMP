@@ -29,6 +29,8 @@ import chirpappkmp.feature.chat.presentation.generated.resources.cancel
 import chirpappkmp.feature.chat.presentation.generated.resources.contact_chirp_support_change_email
 import chirpappkmp.feature.chat.presentation.generated.resources.current_password
 import chirpappkmp.feature.chat.presentation.generated.resources.delete
+import chirpappkmp.feature.chat.presentation.generated.resources.delete_profile_image
+import chirpappkmp.feature.chat.presentation.generated.resources.delete_profile_image_description
 import chirpappkmp.feature.chat.presentation.generated.resources.email
 import chirpappkmp.feature.chat.presentation.generated.resources.new_password
 import chirpappkmp.feature.chat.presentation.generated.resources.password
@@ -42,6 +44,7 @@ import com.example.core.designsystem.components.avatar.ChirpAvatarPhoto
 import com.example.core.designsystem.components.brand.ChirpHorizontalDivider
 import com.example.core.designsystem.components.buttons.ChirpButton
 import com.example.core.designsystem.components.buttons.ChirpButtonStyle
+import com.example.core.designsystem.components.dialogs.DestructiveConfirmationDialog
 import com.example.core.designsystem.components.textfields.ChirpPasswordTextField
 import com.example.core.designsystem.components.textfields.ChirpTextField
 import com.example.core.designsystem.theme.ChirpTheme
@@ -202,6 +205,24 @@ fun ProfileScreen(
                 )
             }
         }
+    }
+
+    if (showDeleteImageConfirmationDialog) {
+        DestructiveConfirmationDialog(
+            title = stringResource(Res.string.delete_profile_image),
+            description = stringResource(Res.string.delete_profile_image_description),
+            confirmationButtonText = stringResource(Res.string.delete),
+            cancelButtonText = stringResource(Res.string.cancel),
+            onConfirmClick = {
+                onAction(ProfileAction.OnConfirmDeleteClick)
+            },
+            onCancelClick = {
+                onAction(ProfileAction.OnDismissDeleteConfirmationDialogClick)
+            },
+            onDismiss = {
+                onAction(ProfileAction.OnDismissDeleteConfirmationDialogClick)
+            }
+        )
     }
 }
 
