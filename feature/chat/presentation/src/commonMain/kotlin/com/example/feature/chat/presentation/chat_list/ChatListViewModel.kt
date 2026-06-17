@@ -52,6 +52,24 @@ class ChatListViewModel(
                 }
             }
 
+            ChatListAction.OnUserAvatarClick -> {
+                _state.update {
+                    it.copy(
+                        isUserManuOpen = true
+                    )
+                }
+            }
+
+            ChatListAction.OnProfileSettingsClick,
+            ChatListAction.OnLogoutClick,
+            ChatListAction.OnDismissUserMenu -> {
+                _state.update {
+                    it.copy(
+                        isUserManuOpen = false
+                    )
+                }
+            }
+
             else -> Unit
         }
     }

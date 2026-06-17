@@ -8,11 +8,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
@@ -29,6 +32,8 @@ import chirpappkmp.feature.chat.presentation.generated.resources.cancel
 import chirpappkmp.feature.chat.presentation.generated.resources.contact_chirp_support_change_email
 import chirpappkmp.feature.chat.presentation.generated.resources.current_password
 import chirpappkmp.feature.chat.presentation.generated.resources.delete
+import chirpappkmp.feature.chat.presentation.generated.resources.delete_profile_image
+import chirpappkmp.feature.chat.presentation.generated.resources.delete_profile_image_description
 import chirpappkmp.feature.chat.presentation.generated.resources.email
 import chirpappkmp.feature.chat.presentation.generated.resources.new_password
 import chirpappkmp.feature.chat.presentation.generated.resources.password
@@ -42,6 +47,8 @@ import com.example.core.designsystem.components.avatar.ChirpAvatarPhoto
 import com.example.core.designsystem.components.brand.ChirpHorizontalDivider
 import com.example.core.designsystem.components.buttons.ChirpButton
 import com.example.core.designsystem.components.buttons.ChirpButtonStyle
+import com.example.core.designsystem.components.dialogs.ChirpAdaptiveDialogSheetLayout
+import com.example.core.designsystem.components.dialogs.DestructiveConfirmationDialog
 import com.example.core.designsystem.components.textfields.ChirpPasswordTextField
 import com.example.core.designsystem.components.textfields.ChirpTextField
 import com.example.core.designsystem.theme.ChirpTheme
@@ -57,9 +64,25 @@ import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
 fun ProfileRoot(
+    onDismiss: () -> Unit,
     viewModel: ProfileViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    ChirpAdaptiveDialogSheetLayout(
+        onDismiss = onDismiss
+    ) {
+        ProfileScreen(
+            state = state,
+            onAction = { action ->
+                when (action) {
+                    is ProfileAction.OnDismiss -> onDismiss()
+                    else -> Unit
+                }
+                viewModel.onAction(action)
+            }
+        )
+    }
 }
 
 @Composable
@@ -67,14 +90,16 @@ fun ProfileScreen(
     state: ProfileState,
     onAction: (ProfileAction) -> Unit
 ) = with(state) {
+
     Column(
         modifier = Modifier
             .clearFocusOnTap()
-            .fillMaxWidth()
+            .fillMaxSize()
             .background(
                 color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(16.dp)
             )
+            .verticalScroll(rememberScrollState())
     ) {
         ProfileHeaderSection(
             modifier = Modifier
@@ -203,6 +228,24 @@ fun ProfileScreen(
             }
         }
     }
+
+    if (showDeleteImageConfirmationDialog) {
+        DestructiveConfirmationDialog(
+            title = stringResource(Res.string.delete_profile_image),
+            description = stringResource(Res.string.delete_profile_image_description),
+            confirmationButtonText = stringResource(Res.string.delete),
+            cancelButtonText = stringResource(Res.string.cancel),
+            onConfirmClick = {
+                onAction(ProfileAction.OnConfirmDeleteClick)
+            },
+            onCancelClick = {
+                onAction(ProfileAction.OnDismissDeleteConfirmationDialogClick)
+            },
+            onDismiss = {
+                onAction(ProfileAction.OnDismissDeleteConfirmationDialogClick)
+            }
+        )
+    }
 }
 
 @Preview
@@ -237,6 +280,46 @@ fun PreviewDarkProfileScreen() {
                 currentPasswordTextState = TextFieldState(initialText = "123456"),
                 isCurrentPasswordVisible = true,
                 currentPasswordError = UiText.DynamicString("Lorem ipsum")
+            ),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewProfileScreenDeleteProfileImageDialog() {
+    ChirpTheme {
+        ProfileScreen(
+            state = ProfileState(
+                username = "Lorem ipsum",
+                imageError = UiText.DynamicString("Lorem ipsum"),
+                emailTextState = TextFieldState(initialText = "lorem@ipsum.com"),
+                currentPasswordTextState = TextFieldState(initialText = "123456"),
+                isCurrentPasswordVisible = true,
+                currentPasswordError = UiText.DynamicString("Lorem ipsum"),
+                showDeleteImageConfirmationDialog = true
+            ),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDarkProfileScreenDeleteProfileImageDialog() {
+    ChirpTheme(
+        darkTheme = true
+    ) {
+        ProfileScreen(
+            state = ProfileState(
+                username = "Lorem ipsum",
+                imageError = UiText.DynamicString("Lorem ipsum"),
+                emailTextState = TextFieldState(initialText = "lorem@ipsum.com"),
+                currentPasswordTextState = TextFieldState(initialText = "123456"),
+                isCurrentPasswordVisible = true,
+                currentPasswordError = UiText.DynamicString("Lorem ipsum"),
+                showDeleteImageConfirmationDialog = true
             ),
             onAction = {}
         )

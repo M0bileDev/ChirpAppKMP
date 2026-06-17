@@ -3,6 +3,7 @@ package com.example.core.designsystem.components.dialogs
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -28,6 +29,7 @@ fun ChirpDialogContent(
         Surface(
             modifier = modifier
                 .fillMaxWidth()
+                .heightIn(540.dp)
                 .clip(RoundedCornerShape(16.dp)),
             color = MaterialTheme.colorScheme.surface
         ) {
@@ -40,14 +42,16 @@ fun ChirpDialogContent(
 @Composable
 fun PreviewChirpDialogContent() {
     ChirpTheme {
-        ChirpDialogContent(
-            onDismiss = {},
-            content = {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Text(text = "Lorem ipsum", modifier = Modifier.align(Alignment.Center))
+        Box(modifier = Modifier.fillMaxSize()) {
+            ChirpDialogContent(
+                onDismiss = {},
+                content = {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Text(text = "Lorem ipsum", modifier = Modifier.align(Alignment.Center))
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 }
 
@@ -55,13 +59,15 @@ fun PreviewChirpDialogContent() {
 @Composable
 fun PreviewDarkChirpDialogContent() {
     ChirpTheme(darkTheme = true) {
-        ChirpDialogContent(
-            onDismiss = {},
-            content = {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Text(text = "Lorem ipsum", modifier = Modifier.align(Alignment.Center))
+        Box(modifier = Modifier.fillMaxSize()) {
+            ChirpDialogContent(
+                onDismiss = {},
+                content = {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Text(text = "Lorem ipsum", modifier = Modifier.align(Alignment.Center))
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 }
