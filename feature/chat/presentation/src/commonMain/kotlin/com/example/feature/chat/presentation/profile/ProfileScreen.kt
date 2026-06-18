@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import chirpappkmp.feature.chat.presentation.generated.resources.Res
@@ -37,6 +38,7 @@ import chirpappkmp.feature.chat.presentation.generated.resources.delete_profile_
 import chirpappkmp.feature.chat.presentation.generated.resources.email
 import chirpappkmp.feature.chat.presentation.generated.resources.new_password
 import chirpappkmp.feature.chat.presentation.generated.resources.password
+import chirpappkmp.feature.chat.presentation.generated.resources.password_change_successful
 import chirpappkmp.feature.chat.presentation.generated.resources.password_hint
 import chirpappkmp.feature.chat.presentation.generated.resources.profile_image
 import chirpappkmp.feature.chat.presentation.generated.resources.save
@@ -52,6 +54,7 @@ import com.example.core.designsystem.components.dialogs.DestructiveConfirmationD
 import com.example.core.designsystem.components.textfields.ChirpPasswordTextField
 import com.example.core.designsystem.components.textfields.ChirpTextField
 import com.example.core.designsystem.theme.ChirpTheme
+import com.example.core.designsystem.theme.extended
 import com.example.core.presentation.util.UiText
 import com.example.core.presentation.util.clearFocusOnTap
 import com.example.feature.chat.presentation.profile.components.ProfileHeaderSection
@@ -191,8 +194,7 @@ fun ProfileScreen(
                     onAction(ProfileAction.OnToggleCurrentPasswordVisibility)
                 },
                 placeholder = stringResource(Res.string.current_password),
-                isError = currentPasswordError != null,
-                supportingText = currentPasswordError?.asString()
+                isError = newPasswordError != null,
             )
             ChirpPasswordTextField(
                 state = newPasswordTextState,
@@ -205,6 +207,16 @@ fun ProfileScreen(
                 supportingText = newPasswordError?.asString()
                     ?: stringResource(Res.string.password_hint)
             )
+            if (isPasswordChangedSuccessful) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(Res.string.password_change_successful),
+                    color = MaterialTheme.colorScheme.extended.success,
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.End,
+
+                    )
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -259,7 +271,7 @@ fun PreviewProfileScreen() {
                 emailTextState = TextFieldState(initialText = "lorem@ipsum.com"),
                 currentPasswordTextState = TextFieldState(initialText = "123456"),
                 isCurrentPasswordVisible = true,
-                currentPasswordError = UiText.DynamicString("Lorem ipsum")
+                newPasswordError = UiText.DynamicString("Lorem ipsum")
             ),
             onAction = {}
         )
@@ -279,7 +291,7 @@ fun PreviewDarkProfileScreen() {
                 emailTextState = TextFieldState(initialText = "lorem@ipsum.com"),
                 currentPasswordTextState = TextFieldState(initialText = "123456"),
                 isCurrentPasswordVisible = true,
-                currentPasswordError = UiText.DynamicString("Lorem ipsum")
+                isPasswordChangedSuccessful = true
             ),
             onAction = {}
         )
@@ -297,7 +309,7 @@ fun PreviewProfileScreenDeleteProfileImageDialog() {
                 emailTextState = TextFieldState(initialText = "lorem@ipsum.com"),
                 currentPasswordTextState = TextFieldState(initialText = "123456"),
                 isCurrentPasswordVisible = true,
-                currentPasswordError = UiText.DynamicString("Lorem ipsum"),
+                newPasswordError = UiText.DynamicString("Lorem ipsum"),
                 showDeleteImageConfirmationDialog = true
             ),
             onAction = {}
@@ -318,7 +330,6 @@ fun PreviewDarkProfileScreenDeleteProfileImageDialog() {
                 emailTextState = TextFieldState(initialText = "lorem@ipsum.com"),
                 currentPasswordTextState = TextFieldState(initialText = "123456"),
                 isCurrentPasswordVisible = true,
-                currentPasswordError = UiText.DynamicString("Lorem ipsum"),
                 showDeleteImageConfirmationDialog = true
             ),
             onAction = {}

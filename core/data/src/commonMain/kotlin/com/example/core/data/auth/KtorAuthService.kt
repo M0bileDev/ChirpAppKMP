@@ -1,6 +1,7 @@
 package com.example.core.data.auth
 
 import com.example.core.data.dto.AuthInfoSerializable
+import com.example.core.data.dto.change_password.ChangePasswordRequest
 import com.example.core.data.dto.login.LoginRequest
 import com.example.core.data.dto.register.RegisterRequest
 import com.example.core.data.dto.register_success.EmailRequest
@@ -73,6 +74,19 @@ class KtorAuthService(
             body = ResetPasswordRequest(
                 newPassword = newPassword,
                 token = token
+            )
+        )
+    }
+
+    override suspend fun changePassword(
+        currentPassword: String,
+        newPassword: String
+    ): EmptyResult<DataError.Remote> {
+        return httpClient.post(
+            route = "/auth/change-password",
+            body = ChangePasswordRequest(
+                oldPassword = currentPassword,
+                newPassword = newPassword
             )
         )
     }
