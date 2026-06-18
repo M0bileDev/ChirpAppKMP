@@ -81,7 +81,8 @@ class ProfileViewModel(
 
         _state.update {
             it.copy(
-                isChangingPassword = true
+                isChangingPassword = true,
+                isPasswordChangedSuccessful = false
             )
         }
 
@@ -97,7 +98,8 @@ class ProfileViewModel(
 
                 _state.update {
                     it.copy(
-                        newPasswordError = null
+                        newPasswordError = null,
+                        isPasswordChangedSuccessful = true
                     )
                 }
             }.onFailure { error ->
