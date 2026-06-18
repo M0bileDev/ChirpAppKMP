@@ -69,7 +69,8 @@ class ProfileViewModel(
 
     fun onAction(profileAction: ProfileAction) {
         when (profileAction) {
-            is ProfileAction.OnChangePasswordClick -> changePassword()
+            ProfileAction.OnChangePasswordClick -> changePassword()
+            ProfileAction.OnToggleCurrentPasswordVisibility -> toggleCurrentPasswordVisibility()
             else -> Unit
         }
     }
@@ -118,12 +119,19 @@ class ProfileViewModel(
             }
         }
 
-
         _state.update {
             it.copy(
                 isNewPasswordVisible = false,
                 isCurrentPasswordVisible = false,
                 isChangingPassword = false
+            )
+        }
+    }
+
+    private fun toggleCurrentPasswordVisibility() {
+        _state.update {
+            it.copy(
+                isCurrentPasswordVisible = !it.isCurrentPasswordVisible
             )
         }
     }
