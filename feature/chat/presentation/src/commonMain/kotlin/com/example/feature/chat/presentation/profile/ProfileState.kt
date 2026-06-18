@@ -18,5 +18,6 @@ data class ProfileState(
     val isNewPasswordVisible: Boolean = false,
     val isChangingPassword: Boolean = false,
     val newPasswordError: UiText? = null,
-    val canChangePassword: Boolean = false
+    val canChangePassword: Boolean = false,
+    val isPasswordChangedSuccessful: Boolean = false
 )
