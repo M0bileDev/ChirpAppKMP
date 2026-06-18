@@ -191,8 +191,7 @@ fun ProfileScreen(
                     onAction(ProfileAction.OnToggleCurrentPasswordVisibility)
                 },
                 placeholder = stringResource(Res.string.current_password),
-                isError = currentPasswordError != null,
-                supportingText = currentPasswordError?.asString()
+                isError = newPasswordError != null,
             )
             ChirpPasswordTextField(
                 state = newPasswordTextState,
@@ -259,7 +258,7 @@ fun PreviewProfileScreen() {
                 emailTextState = TextFieldState(initialText = "lorem@ipsum.com"),
                 currentPasswordTextState = TextFieldState(initialText = "123456"),
                 isCurrentPasswordVisible = true,
-                currentPasswordError = UiText.DynamicString("Lorem ipsum")
+                newPasswordError = UiText.DynamicString("Lorem ipsum")
             ),
             onAction = {}
         )
@@ -279,7 +278,6 @@ fun PreviewDarkProfileScreen() {
                 emailTextState = TextFieldState(initialText = "lorem@ipsum.com"),
                 currentPasswordTextState = TextFieldState(initialText = "123456"),
                 isCurrentPasswordVisible = true,
-                currentPasswordError = UiText.DynamicString("Lorem ipsum")
             ),
             onAction = {}
         )
@@ -297,7 +295,7 @@ fun PreviewProfileScreenDeleteProfileImageDialog() {
                 emailTextState = TextFieldState(initialText = "lorem@ipsum.com"),
                 currentPasswordTextState = TextFieldState(initialText = "123456"),
                 isCurrentPasswordVisible = true,
-                currentPasswordError = UiText.DynamicString("Lorem ipsum"),
+                newPasswordError = UiText.DynamicString("Lorem ipsum"),
                 showDeleteImageConfirmationDialog = true
             ),
             onAction = {}
@@ -318,7 +316,6 @@ fun PreviewDarkProfileScreenDeleteProfileImageDialog() {
                 emailTextState = TextFieldState(initialText = "lorem@ipsum.com"),
                 currentPasswordTextState = TextFieldState(initialText = "123456"),
                 isCurrentPasswordVisible = true,
-                currentPasswordError = UiText.DynamicString("Lorem ipsum"),
                 showDeleteImageConfirmationDialog = true
             ),
             onAction = {}
