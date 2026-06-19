@@ -14,6 +14,7 @@ import com.example.core.domain.util.onSuccess
 import com.example.core.domain.validation.PasswordValidator
 import com.example.core.presentation.ext.toUiText
 import com.example.core.presentation.util.UiText
+import com.example.feature.chat.domain.participant.ChatParticipantRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -26,7 +27,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
-    private val authService: AuthService
+    private val authService: AuthService,
+    private val chatParticipantRepository: ChatParticipantRepository
 ) : ViewModel() {
     private var hasLoadedInitialData = false
     private val _state = MutableStateFlow(ProfileState())
@@ -34,6 +36,7 @@ class ProfileViewModel(
         .onStart {
             if (!hasLoadedInitialData) {
                 observeCanChangePassword()
+                fetchLocalParticipantDetails()
                 hasLoadedInitialData = true
             }
         }.stateIn(
@@ -65,6 +68,12 @@ class ProfileViewModel(
                 )
             }
         }.launchIn(viewModelScope)
+    }
+
+    private fun fetchLocalParticipantDetails() {
+        viewModelScope.launch {
+            chatParticipantRepository.fetchLocalParticipant()
+        }
     }
 
     fun onAction(profileAction: ProfileAction) {
