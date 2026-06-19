@@ -9,6 +9,7 @@ import com.example.feature.chat.data.message.KtorChatMessageService
 import com.example.feature.chat.data.message.OfflineFirstMessageRepository
 import com.example.feature.chat.data.network.ConnectionRetryHandler
 import com.example.feature.chat.data.network.KtorWebSocketConnector
+import com.example.feature.chat.data.participant.OfflineFirstChatParticipantRepository
 import com.example.feature.chat.database.ChirpDatabaseFactory
 import com.example.feature.chat.domain.chat.ChatConnectionClient
 import com.example.feature.chat.domain.participant.ChatParticipantService
@@ -16,6 +17,7 @@ import com.example.feature.chat.domain.chat.ChatRepository
 import com.example.feature.chat.domain.chat.ChatService
 import com.example.feature.chat.domain.message.ChatMessageService
 import com.example.feature.chat.domain.message.MessageRepository
+import com.example.feature.chat.domain.participant.ChatParticipantRepository
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -31,6 +33,7 @@ val chatDataModule = module {
     singleOf(::KtorChatService) bind ChatService::class
     singleOf(::OfflineFirstChatRepository) bind ChatRepository::class
     singleOf(::OfflineFirstMessageRepository) bind MessageRepository::class
+    singleOf(::OfflineFirstChatParticipantRepository) bind ChatParticipantRepository::class
     singleOf(::WebSocketChatConnectionClient) bind ChatConnectionClient::class
     singleOf(::KtorChatMessageService) bind ChatMessageService::class
     singleOf(::ConnectionRetryHandler)
