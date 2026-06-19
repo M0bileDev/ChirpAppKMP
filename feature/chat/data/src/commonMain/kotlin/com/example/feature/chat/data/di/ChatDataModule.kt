@@ -11,7 +11,7 @@ import com.example.feature.chat.data.network.ConnectionRetryHandler
 import com.example.feature.chat.data.network.KtorWebSocketConnector
 import com.example.feature.chat.database.ChirpDatabaseFactory
 import com.example.feature.chat.domain.chat.ChatConnectionClient
-import com.example.feature.chat.domain.chat.ChatParticipantService
+import com.example.feature.chat.domain.participant.ChatParticipantService
 import com.example.feature.chat.domain.chat.ChatRepository
 import com.example.feature.chat.domain.chat.ChatService
 import com.example.feature.chat.domain.message.ChatMessageService

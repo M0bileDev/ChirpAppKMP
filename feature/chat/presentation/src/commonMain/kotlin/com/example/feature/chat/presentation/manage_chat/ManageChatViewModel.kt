@@ -13,7 +13,7 @@ import com.example.core.domain.util.onFailure
 import com.example.core.domain.util.onSuccess
 import com.example.core.presentation.ext.toUiText
 import com.example.core.presentation.util.UiText
-import com.example.feature.chat.domain.chat.ChatParticipantService
+import com.example.feature.chat.domain.participant.ChatParticipantService
 import com.example.feature.chat.domain.chat.ChatRepository
 import com.example.feature.chat.presentation.mappers.toUi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
