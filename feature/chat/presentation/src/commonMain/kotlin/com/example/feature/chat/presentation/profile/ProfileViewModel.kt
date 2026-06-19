@@ -1,5 +1,6 @@
 package com.example.feature.chat.presentation.profile
 
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,7 @@ import chirpappkmp.feature.chat.presentation.generated.resources.Res
 import chirpappkmp.feature.chat.presentation.generated.resources.error_current_password_equal_to_new_one
 import chirpappkmp.feature.chat.presentation.generated.resources.error_current_password_incorrect
 import com.example.core.domain.auth.AuthService
+import com.example.core.domain.auth.SessionStorage
 import com.example.core.domain.util.DataError
 import com.example.core.domain.util.onFailure
 import com.example.core.domain.util.onSuccess
@@ -28,22 +30,33 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val authService: AuthService,
-    private val chatParticipantRepository: ChatParticipantRepository
+    private val chatParticipantRepository: ChatParticipantRepository,
+    sessionStorage: SessionStorage
 ) : ViewModel() {
     private var hasLoadedInitialData = false
     private val _state = MutableStateFlow(ProfileState())
-    val state = _state
-        .onStart {
-            if (!hasLoadedInitialData) {
-                observeCanChangePassword()
-                fetchLocalParticipantDetails()
-                hasLoadedInitialData = true
-            }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000L),
-            initialValue = ProfileState()
-        )
+    val state = combine(
+        _state,
+        sessionStorage.observeAuthInfo()
+    ) { currentState, authInfo ->
+        authInfo?.let { info ->
+            currentState.copy(
+                username = info.user.username,
+                emailTextState = TextFieldState(initialText = info.user.email),
+                profilePictureUrl = info.user.profilePictureUrl
+            )
+        } ?: currentState
+    }.onStart {
+        if (!hasLoadedInitialData) {
+            observeCanChangePassword()
+            fetchLocalParticipantDetails()
+            hasLoadedInitialData = true
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000L),
+        initialValue = ProfileState()
+    )
 
     private fun observeCanChangePassword() {
         val isCurrentPasswordValidFlow = snapshotFlow {
