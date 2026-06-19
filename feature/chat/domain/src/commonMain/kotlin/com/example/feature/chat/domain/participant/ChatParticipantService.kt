@@ -1,4 +1,4 @@
-package com.example.feature.chat.domain.chat
+package com.example.feature.chat.domain.participant
 
 import com.example.core.domain.util.DataError
 import com.example.core.domain.util.Result
@@ -10,4 +10,5 @@ interface ChatParticipantService {
         query: String
     ): Result<ChatParticipant, DataError.Remote>
 
+    suspend fun getLocalParticipant(): Result<ChatParticipant, DataError.Remote>
 }
