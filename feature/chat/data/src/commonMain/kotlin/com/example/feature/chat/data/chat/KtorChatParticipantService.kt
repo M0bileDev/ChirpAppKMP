@@ -6,8 +6,8 @@ import com.example.core.domain.util.Result
 import com.example.core.domain.util.map
 import com.example.feature.chat.data.dto.ChatParticipantDto
 import com.example.feature.chat.data.mappers.toDomain
-import com.example.feature.chat.domain.model.ChatParticipant
 import com.example.feature.chat.domain.chat.ChatParticipantService
+import com.example.feature.chat.domain.model.ChatParticipant
 import io.ktor.client.HttpClient
 
 class KtorChatParticipantService(
@@ -25,4 +25,11 @@ class KtorChatParticipantService(
         }
     }
 
+    override suspend fun getLocalParticipant(): Result<ChatParticipant, DataError.Remote> {
+        return httpClient.get<ChatParticipantDto>(
+            route = "/participants"
+        ).map { dto ->
+            dto.toDomain()
+        }
+    }
 }
