@@ -17,6 +17,10 @@ class ContentUriParser(
         }
     }
 
+    fun getMimeType(uri: Uri): String? {
+        return context.contentResolver.getType(uri) ?: getMimeTypeFromExtension(uri)
+    }
+
     fun getMimeTypeFromExtension(uri: Uri): String? {
         val extension = uri.toString().substringAfterLast(".", "")
         return if (extension.isNotBlank()) {
