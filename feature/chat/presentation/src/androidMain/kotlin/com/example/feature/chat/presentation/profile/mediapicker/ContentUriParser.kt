@@ -2,6 +2,7 @@ package com.example.feature.chat.presentation.profile.mediapicker
 
 import android.content.Context
 import android.net.Uri
+import android.webkit.MimeTypeMap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -14,5 +15,12 @@ class ContentUriParser(
                 inputStream.readBytes()
             }
         }
+    }
+
+    fun getMimeTypeFromExtension(uri: Uri): String? {
+        val extension = uri.toString().substringAfterLast(".", "")
+        return if (extension.isNotBlank()) {
+            MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        } else null
     }
 }
