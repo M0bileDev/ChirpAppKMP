@@ -1,7 +1,7 @@
 package com.example.feature.chat.data.di
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import com.example.feature.chat.data.chat.KtorChatParticipantService
+import com.example.feature.chat.data.participant.KtorChatParticipantService
 import com.example.feature.chat.data.chat.KtorChatService
 import com.example.feature.chat.data.chat.OfflineFirstChatRepository
 import com.example.feature.chat.data.chat.WebSocketChatConnectionClient
