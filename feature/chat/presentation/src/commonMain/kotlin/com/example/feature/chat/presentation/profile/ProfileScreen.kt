@@ -59,6 +59,7 @@ import com.example.core.presentation.util.UiText
 import com.example.core.presentation.util.clearFocusOnTap
 import com.example.feature.chat.presentation.profile.components.ProfileHeaderSection
 import com.example.feature.chat.presentation.profile.components.ProfileSectionLayout
+import com.example.feature.chat.presentation.profile.mediapicker.rememberImagePicker
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -71,6 +72,14 @@ fun ProfileRoot(
     viewModel: ProfileViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val launcher = rememberImagePicker { pickedImageData ->
+        viewModel.onAction(
+            ProfileAction.OnPictureSelected(
+                pickedImageData.bytes,
+                pickedImageData.mimeType
+            )
+        )
+    }
 
     ChirpAdaptiveDialogSheetLayout(
         onDismiss = onDismiss
@@ -80,6 +89,7 @@ fun ProfileRoot(
             onAction = { action ->
                 when (action) {
                     is ProfileAction.OnDismiss -> onDismiss()
+                    is ProfileAction.OnUploadPictureClick -> launcher.launch()
                     else -> Unit
                 }
                 viewModel.onAction(action)
