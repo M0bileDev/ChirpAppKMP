@@ -1,4 +1,4 @@
-package com.example.feature.chat.data.chat
+package com.example.feature.chat.data.participant
 
 import com.example.core.data.network.get
 import com.example.core.domain.util.DataError
