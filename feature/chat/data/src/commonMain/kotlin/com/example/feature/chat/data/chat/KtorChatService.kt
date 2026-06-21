@@ -9,8 +9,8 @@ import com.example.core.domain.util.Result
 import com.example.core.domain.util.asEmptyResult
 import com.example.core.domain.util.map
 import com.example.feature.chat.data.dto.ChatDto
-import com.example.feature.chat.data.dto.CreateChatRequest
-import com.example.feature.chat.data.dto.ParticipantsRequest
+import com.example.feature.chat.data.dto.request.CreateChatRequest
+import com.example.feature.chat.data.dto.request.ParticipantsRequest
 import com.example.feature.chat.data.mappers.toDomain
 import com.example.feature.chat.domain.chat.ChatService
 import com.example.feature.chat.domain.model.Chat
