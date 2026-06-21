@@ -1,4 +1,4 @@
-package com.example.feature.chat.data.dto
+package com.example.feature.chat.data.dto.request
 
 import kotlinx.serialization.Serializable
 
