@@ -1,13 +1,16 @@
 package com.example.feature.chat.data.participant
 
 import com.example.core.data.network.get
+import com.example.core.data.network.post
 import com.example.core.domain.util.DataError
+import com.example.core.domain.util.EmptyResult
 import com.example.core.domain.util.Result
 import com.example.core.domain.util.map
 import com.example.feature.chat.data.dto.ChatParticipantDto
 import com.example.feature.chat.data.mappers.toDomain
-import com.example.feature.chat.domain.participant.ChatParticipantService
 import com.example.feature.chat.domain.model.ChatParticipant
+import com.example.feature.chat.domain.model.ProfilePictureUploadUrls
+import com.example.feature.chat.domain.participant.ChatParticipantService
 import io.ktor.client.HttpClient
 
 class KtorChatParticipantService(
@@ -31,5 +34,27 @@ class KtorChatParticipantService(
         ).map { dto ->
             dto.toDomain()
         }
+    }
+
+    override suspend fun getProfilePictureUploadUrl(mimeType: String): Result<ProfilePictureUploadUrls, DataError.Remote> {
+        return httpClient.post(
+            route = "/participants/profile-picture-upload",
+            queryParams = mapOf(
+                "mimeType" to mimeType
+            ),
+            body = Unit
+        )
+    }
+
+    override suspend fun uploadProfilePicture(
+        uploadUrl: String,
+        imageBytes: ByteArray,
+        headers: Map<String, String>
+    ): EmptyResult<DataError.Remote> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun confirmProfilePictureUpload(publicUrl: String): EmptyResult<DataError.Remote> {
+        TODO("Not yet implemented")
     }
 }
