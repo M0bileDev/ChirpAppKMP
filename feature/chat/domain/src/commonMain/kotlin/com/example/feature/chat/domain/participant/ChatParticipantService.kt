@@ -12,7 +12,7 @@ interface ChatParticipantService {
         query: String
     ): Result<ChatParticipant, DataError.Remote>
 
-    suspend fun getLocalParticipant(): Result<ProfilePictureUploadUrls, DataError.Remote>
+    suspend fun getLocalParticipant(): Result<ChatParticipant, DataError.Remote>
 
     suspend fun getProfilePictureUploadUrl(
         mimeType: String
