@@ -8,6 +8,7 @@ import com.example.core.domain.util.EmptyResult
 import com.example.core.domain.util.Result
 import com.example.core.domain.util.map
 import com.example.feature.chat.data.dto.ChatParticipantDto
+import com.example.feature.chat.data.dto.request.ConfirmProfilePictureRequest
 import com.example.feature.chat.data.mappers.toDomain
 import com.example.feature.chat.domain.model.ChatParticipant
 import com.example.feature.chat.domain.model.ProfilePictureUploadUrls
@@ -64,6 +65,9 @@ class KtorChatParticipantService(
     }
 
     override suspend fun confirmProfilePictureUpload(publicUrl: String): EmptyResult<DataError.Remote> {
-        TODO("Not yet implemented")
+        return httpClient.post<ConfirmProfilePictureRequest, Unit>(
+            route = "/participants/confirm-profile-picture",
+            body = ConfirmProfilePictureRequest(publicUrl = publicUrl)
+        )
     }
 }
