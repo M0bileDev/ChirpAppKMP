@@ -51,6 +51,15 @@ class OfflineFirstChatParticipantRepository(
 
         return chatParticipantService.confirmProfilePictureUpload(
             publicUrl = uploadUrls.publicUrl
-        )
+        ).onSuccess {
+            val currentAuthInfo = sessionStorage.observeAuthInfo().first()
+            sessionStorage.set(
+                currentAuthInfo?.copy(
+                    user = currentAuthInfo.user.copy(
+                        profilePictureUrl = uploadUrls.publicUrl
+                    )
+                )
+            )
+        }
     }
 }
