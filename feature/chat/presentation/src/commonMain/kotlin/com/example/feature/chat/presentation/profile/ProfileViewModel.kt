@@ -44,7 +44,8 @@ class ProfileViewModel(
             currentState.copy(
                 username = info.user.username,
                 emailTextState = TextFieldState(initialText = info.user.email),
-                profilePictureUrl = info.user.profilePictureUrl
+                profilePictureUrl = info.user.profilePictureUrl,
+                userInitials = info.user.username.take(2)
             )
         } ?: currentState
     }.onStart {
