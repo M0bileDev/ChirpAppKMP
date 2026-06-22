@@ -101,6 +101,7 @@ class ProfileViewModel(
             )
 
             ProfileAction.OnDeletePictureClick -> showDeleteConfirmation()
+            ProfileAction.OnDismissDeleteConfirmationDialogClick -> dismissDeleteConfirmation()
             else -> Unit
         }
     }
@@ -222,6 +223,14 @@ class ProfileViewModel(
         _state.update {
             it.copy(
                 showDeleteImageConfirmationDialog = true
+            )
+        }
+    }
+
+    private fun dismissDeleteConfirmation() {
+        _state.update {
+            it.copy(
+                showDeleteImageConfirmationDialog = false
             )
         }
     }
