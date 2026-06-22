@@ -1,5 +1,6 @@
 package com.example.feature.chat.data.participant
 
+import com.example.core.data.network.delete
 import com.example.core.data.network.get
 import com.example.core.data.network.post
 import com.example.core.data.network.safeCall
@@ -15,6 +16,7 @@ import com.example.feature.chat.domain.model.ChatParticipant
 import com.example.feature.chat.domain.model.ProfilePictureUploadUrls
 import com.example.feature.chat.domain.participant.ChatParticipantService
 import io.ktor.client.HttpClient
+import io.ktor.client.request.delete
 import io.ktor.client.request.header
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
@@ -73,6 +75,12 @@ class KtorChatParticipantService(
         return httpClient.post<ConfirmProfilePictureRequest, Unit>(
             route = "/participants/confirm-profile-picture",
             body = ConfirmProfilePictureRequest(publicUrl = publicUrl)
+        )
+    }
+
+    override suspend fun deleteProfilePicture(): EmptyResult<DataError.Remote> {
+        return httpClient.delete(
+            route = "participants/profile-picture"
         )
     }
 }
