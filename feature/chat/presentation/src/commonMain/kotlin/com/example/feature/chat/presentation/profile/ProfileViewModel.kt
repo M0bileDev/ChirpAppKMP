@@ -100,6 +100,7 @@ class ProfileViewModel(
                 profileAction.mimeType
             )
 
+            ProfileAction.OnDeletePictureClick -> showDeleteConfirmation()
             else -> Unit
         }
     }
@@ -214,6 +215,14 @@ class ProfileViewModel(
                         )
                     }
                 }
+        }
+    }
+
+    private fun showDeleteConfirmation() {
+        _state.update {
+            it.copy(
+                showDeleteImageConfirmationDialog = true
+            )
         }
     }
 }
