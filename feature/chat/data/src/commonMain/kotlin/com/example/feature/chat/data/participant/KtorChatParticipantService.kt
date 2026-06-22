@@ -2,7 +2,7 @@ package com.example.feature.chat.data.participant
 
 import com.example.core.data.network.get
 import com.example.core.data.network.post
-import com.example.core.data.network.put
+import com.example.core.data.network.safeCall
 import com.example.core.domain.util.DataError
 import com.example.core.domain.util.EmptyResult
 import com.example.core.domain.util.Result
@@ -16,6 +16,9 @@ import com.example.feature.chat.domain.model.ProfilePictureUploadUrls
 import com.example.feature.chat.domain.participant.ChatParticipantService
 import io.ktor.client.HttpClient
 import io.ktor.client.request.header
+import io.ktor.client.request.put
+import io.ktor.client.request.setBody
+import io.ktor.client.request.url
 
 class KtorChatParticipantService(
     val httpClient: HttpClient
@@ -55,12 +58,13 @@ class KtorChatParticipantService(
         imageBytes: ByteArray,
         headers: Map<String, String>
     ): EmptyResult<DataError.Remote> {
-        return httpClient.put(
-            route = uploadUrl,
-            body = imageBytes,
-        ) {
-            headers.forEach { (headerName, headerValue) ->
-                header(headerName, headerValue)
+        return safeCall {
+            httpClient.put {
+                url(uploadUrl)
+                headers.forEach { (key, value) ->
+                    header(key, value)
+                }
+                setBody(imageBytes)
             }
         }
     }
