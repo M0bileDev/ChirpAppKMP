@@ -44,7 +44,8 @@ class ProfileViewModel(
             currentState.copy(
                 username = info.user.username,
                 emailTextState = TextFieldState(initialText = info.user.email),
-                profilePictureUrl = info.user.profilePictureUrl
+                profilePictureUrl = info.user.profilePictureUrl,
+                userInitials = info.user.username.take(2)
             )
         } ?: currentState
     }.onStart {
@@ -100,6 +101,9 @@ class ProfileViewModel(
                 profileAction.mimeType
             )
 
+            ProfileAction.OnDeletePictureClick -> showDeleteConfirmation()
+            ProfileAction.OnDismissDeleteConfirmationDialogClick -> dismissDeleteConfirmation()
+            ProfileAction.OnConfirmDeleteClick -> deleteProfilePicture()
             else -> Unit
         }
     }
@@ -211,6 +215,54 @@ class ProfileViewModel(
                         it.copy(
                             imageError = error.toUiText(),
                             isUploadingImage = false
+                        )
+                    }
+                }
+        }
+    }
+
+    private fun showDeleteConfirmation() {
+        _state.update {
+            it.copy(
+                showDeleteImageConfirmationDialog = true
+            )
+        }
+    }
+
+    private fun dismissDeleteConfirmation() {
+        _state.update {
+            it.copy(
+                showDeleteImageConfirmationDialog = false
+            )
+        }
+    }
+
+    private fun deleteProfilePicture() {
+        if (state.value.isDeletingImage || state.value.profilePictureUrl == null) return
+
+        _state.update {
+            it.copy(
+                isDeletingImage = true,
+                imageError = null,
+                showDeleteImageConfirmationDialog = false
+            )
+        }
+
+        viewModelScope.launch {
+            chatParticipantRepository
+                .deleteProfilePicture()
+                .onSuccess {
+                    _state.update {
+                        it.copy(
+                            isDeletingImage = false,
+                        )
+                    }
+                }
+                .onFailure { error ->
+                    _state.update {
+                        it.copy(
+                            isDeletingImage = false,
+                            imageError = error.toUiText()
                         )
                     }
                 }
