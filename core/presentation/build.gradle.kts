@@ -21,7 +21,7 @@ kotlin {
 
         // custom source set for mobile only - notification moko library provide
         // implementation only for Android and iOS
-        val mobileMain by creating{
+        val mobileMain by creating {
             dependencies {
                 implementation(libs.moko.permissions)
                 implementation(libs.moko.permissions.compose)
@@ -31,7 +31,20 @@ kotlin {
             dependsOn(commonMain.get())
         }
         androidMain.get().dependsOn(mobileMain)
-        iosMain.get().dependsOn(mobileMain)
+
+        // recreate iosMain because iosMain.get().dependsOn(mobileMain) makes SourceSet issues
+        val iosMain by creating {
+            dependsOn(mobileMain)
+        }
+        listOf(
+            iosArm64(),
+            iosX64(),
+            iosSimulatorArm64()
+        ).forEach { target ->
+            getByName("${target.name}Main") {
+                dependsOn(iosMain)
+            }
+        }
     }
 
 }
