@@ -23,6 +23,8 @@ actual class PermissionController(
             PermissionState.DENIED
         } catch (_: RequestCanceledException) {
             PermissionState.DENIED
+        } catch (_: Exception){
+            PermissionState.DENIED
         }
     }
 }
