@@ -38,6 +38,8 @@ import com.example.core.designsystem.components.buttons.ChirpFloatingActionButto
 import com.example.core.designsystem.components.dialogs.DestructiveConfirmationDialog
 import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
+import com.example.core.presentation.permissions.Permission
+import com.example.core.presentation.permissions.rememberPermissionController
 import com.example.feature.chat.presentation.chat_list.components.ChatListHeader
 import com.example.feature.chat.presentation.chat_list.components.ChatListItem
 import com.example.feature.chat.presentation.components.EmptySection
@@ -81,6 +83,12 @@ fun ChatListScreen(
     state: ChatListState,
     onAction: (ChatListAction) -> Unit
 ) = with(state) {
+
+    val permissionController = rememberPermissionController()
+    LaunchedEffect(Unit) {
+        permissionController.requestPermission(permission = Permission.NOTIFICATIONS)
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.extended.surfaceLower,
