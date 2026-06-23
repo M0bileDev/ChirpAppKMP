@@ -30,6 +30,8 @@ kotlin {
             // provide dependencies from commonMain
             dependsOn(commonMain.get())
         }
+        androidMain.get().dependsOn(mobileMain)
+        iosMain.get().dependsOn(mobileMain)
     }
 
 }
