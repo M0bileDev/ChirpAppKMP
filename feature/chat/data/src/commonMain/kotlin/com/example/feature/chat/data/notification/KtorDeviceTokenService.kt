@@ -1,5 +1,6 @@
 package com.example.feature.chat.data.notification
 
+import com.example.core.data.network.delete
 import com.example.core.data.network.post
 import com.example.core.domain.util.DataError
 import com.example.core.domain.util.EmptyResult
@@ -25,6 +26,8 @@ class KtorDeviceTokenService(
     }
 
     override suspend fun unregisterToken(token: String): EmptyResult<DataError.Remote> {
-        TODO("Not yet implemented")
+        return httpClient.delete(
+            route = "/notification/$token"
+        )
     }
 }
