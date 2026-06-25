@@ -2,10 +2,14 @@ package com.example.chirpappkmp
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.core.data.util.PlatformUtils
 import com.example.core.domain.auth.SessionStorage
+import com.example.feature.chat.domain.notification.DeviceTokenService
+import com.example.feature.chat.domain.notification.PushNotificationTokenService
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -16,10 +20,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    private val sessionStorage: SessionStorage
+    private val sessionStorage: SessionStorage,
+    private val pushNotificationService: PushNotificationTokenService,
+    private val deviceTokenService: DeviceTokenService
 ) : ViewModel() {
 
     private var previousRefreshToken: String? = null
+    private var previousDeviceToken: String? = null
     private var hasLoadedInitialData = false
     private val _state = MutableStateFlow(MainState())
     val state = _state
@@ -70,6 +77,27 @@ class MainViewModel(
 
                 previousRefreshToken = currentRefreshToken
             }
+            .combine(pushNotificationService.observeDeviceToken()) { authInfo, deviceToken ->
+                if (authInfo != null && deviceToken != previousDeviceToken && deviceToken != null) {
+                    registerTokenService(
+                        token = deviceToken,
+                        platform = PlatformUtils.getOSName()
+                    )
+                }
+            }
             .launchIn(viewModelScope)
+    }
+
+    private fun registerTokenService(
+        token: String,
+        platform: String
+    ) {
+        viewModelScope.launch {
+            deviceTokenService
+                .registerToken(
+                    token = token,
+                    platform = platform
+                )
+        }
     }
 }
