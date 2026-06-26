@@ -38,7 +38,6 @@ kotlin {
         }
         listOf(
             iosArm64(),
-            iosX64(),
             iosSimulatorArm64()
         ).forEach { target ->
             getByName("${target.name}Main") {
