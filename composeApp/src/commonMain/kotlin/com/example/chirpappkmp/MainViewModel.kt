@@ -72,18 +72,24 @@ class MainViewModel(
                             isLoggedIn = false
                         )
                     }
+                    previousDeviceToken?.let { deviceToken ->
+                        deviceTokenService.unregisterToken(deviceToken)
+                    }
                     eventChannel.send(MainEvent.OnSessionExpired)
                 }
 
                 previousRefreshToken = currentRefreshToken
             }
             .combine(pushNotificationService.observeDeviceToken()) { authInfo, deviceToken ->
-                if (authInfo != null && deviceToken != previousDeviceToken && deviceToken != null) {
+                val canRegisterDeviceToken =
+                    authInfo != null && deviceToken != previousDeviceToken && deviceToken != null
+                if (canRegisterDeviceToken) {
                     registerTokenService(
                         token = deviceToken,
                         platform = PlatformUtils.getOSName()
                     )
                 }
+                previousDeviceToken = deviceToken
             }
             .launchIn(viewModelScope)
     }
