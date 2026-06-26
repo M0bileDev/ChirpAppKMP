@@ -43,7 +43,6 @@ fun App(
         }
     }
 
-    DeepLinkListener(navController)
     ChirpTheme {
         if (!state.isCheckingAuth) {
             NavigationRoot(
@@ -54,6 +53,7 @@ fun App(
                     AuthGraphRoutes.Graph
                 }
             )
+            DeepLinkListener(navController)
         }
     }
 }
