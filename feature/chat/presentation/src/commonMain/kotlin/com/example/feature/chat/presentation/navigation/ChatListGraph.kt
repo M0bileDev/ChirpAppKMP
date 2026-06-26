@@ -12,7 +12,7 @@ fun NavGraphBuilder.chatGraph(
     navController: NavController
 ) {
     navigation<ChatGraphRoutes.Graph>(
-        startDestination = ChatGraphRoutes.ChatListDetailRoute
+        startDestination = ChatGraphRoutes.ChatListDetailRoute()
     ) {
         composable<ChatGraphRoutes.ChatListDetailRoute>(
             deepLinks = listOf(
