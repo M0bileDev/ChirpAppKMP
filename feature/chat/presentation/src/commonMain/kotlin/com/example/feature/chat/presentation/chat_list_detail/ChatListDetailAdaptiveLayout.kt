@@ -30,6 +30,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ChatListDetailAdaptiveLayout(
+    initialChatId: String?,
     onLogout: () -> Unit,
     viewModel: ChatListDetailViewModel = koinViewModel<ChatListDetailViewModel>()
 ) {
@@ -39,6 +40,13 @@ fun ChatListDetailAdaptiveLayout(
         scaffoldDirective = paneScaffoldDirective
     )
     val scope = rememberCoroutineScope()
+
+    LaunchedEffect(initialChatId) {
+        initialChatId?.let { chatId ->
+            viewModel.onAction(ChatListDetailAction.OnSelectChat(chatId = chatId))
+            scaffoldNavigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
+        }
+    }
 
     BackHandler(
         enabled = scaffoldNavigator.canNavigateBack()
