@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A78FE9932FF025AA009EE8E6 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = A78FE9922FF025AA009EE8E6 /* FirebaseCore */; };
+		A78FE9952FF025AA009EE8E6 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = A78FE9942FF025AA009EE8E6 /* FirebaseInAppMessaging-Beta */; };
+		A78FE9972FF025AA009EE8E6 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = A78FE9962FF025AA009EE8E6 /* FirebaseMessaging */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		35C5A90596A00955F8B24F38 /* ChirpAppKMP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChirpAppKMP.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -41,6 +47,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A78FE9972FF025AA009EE8E6 /* FirebaseMessaging in Frameworks */,
+				A78FE9932FF025AA009EE8E6 /* FirebaseCore in Frameworks */,
+				A78FE9952FF025AA009EE8E6 /* FirebaseInAppMessaging-Beta in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +94,9 @@
 			);
 			name = iosApp;
 			packageProductDependencies = (
+				A78FE9922FF025AA009EE8E6 /* FirebaseCore */,
+				A78FE9942FF025AA009EE8E6 /* FirebaseInAppMessaging-Beta */,
+				A78FE9962FF025AA009EE8E6 /* FirebaseMessaging */,
 			);
 			productName = iosApp;
 			productReference = 35C5A90596A00955F8B24F38 /* ChirpAppKMP.app */;
@@ -114,6 +126,9 @@
 			);
 			mainGroup = 019BB8A7C434C66996B56438;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A78FE9912FF025AA009EE8E6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C1C5DE875FCC48DE671FA732 /* Products */;
 			projectDirPath = "";
@@ -370,6 +385,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A78FE9912FF025AA009EE8E6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.15.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A78FE9922FF025AA009EE8E6 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A78FE9912FF025AA009EE8E6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		A78FE9942FF025AA009EE8E6 /* FirebaseInAppMessaging-Beta */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A78FE9912FF025AA009EE8E6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseInAppMessaging-Beta";
+		};
+		A78FE9962FF025AA009EE8E6 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A78FE9912FF025AA009EE8E6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FAD55BEBD9650CAFBB5B57F6 /* Project object */;
 }
