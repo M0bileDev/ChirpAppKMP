@@ -35,4 +35,22 @@ class AppDelegate: NSObject, UIApplicationDelegate,
 
         return true
     }
+
+    // called after register for remote notification on the Kotlin side
+    func application(
+        _ application: UIApplication,
+        didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
+    ) {
+        Messaging.messaging().apnsToken = deviceToken
+
+        Task {
+            do {
+                // get token async
+                let fcmToken = try await Messaging.messaging().token()
+                // update user default
+                UserDefaults.standard.set(fcmToken, forKey: "FCM_TOKEN")
+                IosDeviceTokenHolderBridge.shared.updateToken(token: fcmToken)
+            } catch {}
+        }
+    }
 }
