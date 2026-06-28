@@ -114,4 +114,23 @@ class AppDelegate: NSObject, UIApplicationDelegate,
         //.banner -> with banner
         completionHandler([.banner])
     }
+
+    // when user taps notification -> deeplink to detail screen
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping () -> Void
+    ) {
+        //from response -> extract json payload like chatID
+        let userInfo = response.notification.request.content.userInfo
+
+        if let chatId = userInfo["chatId"] as? String {
+            let deepLinkUrl = "chirp://chat_detail/\(chatId)"
+            ExternalUriHandler.shared.onNewUri(uri: deepLinkUrl)
+        }
+
+        // notify iOS that notification tap was successfully handled
+        completionHandler()
+    }
+
 }
