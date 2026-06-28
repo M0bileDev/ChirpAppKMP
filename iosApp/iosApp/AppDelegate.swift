@@ -36,13 +36,41 @@ class AppDelegate: NSObject, UIApplicationDelegate,
         return true
     }
 
-    // called after register for remote notification on the Kotlin side
+    // called after register for remote notification on the Kotlin side -> registerForRemoteNotifications()
     func application(
         _ application: UIApplication,
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {
         Messaging.messaging().apnsToken = deviceToken
 
+        refreshToken()
+    }
+
+    func application(
+        _ application: UIApplication,
+        didFailToRegisterForRemoteNotificationsWithError error: any Error
+    ) {
+        print(
+            "iOS Failed to register for push notifications: \(error.localizedDescription)"
+        )
+    }
+
+    // when new token has received
+    func messaging(
+        _ messaging: Messaging,
+        didReceiveRegistrationToken fcmToken: String?
+    ) {
+        guard let token = fcmToken, !token.isEmpty else {
+            refreshToken()
+            return
+        }
+
+        // when fcmToken is not null, and not empty (guard conditions) -> update user default with refreshed token
+        UserDefaults.standard.set(fcmToken, forKey: "FCM_TOKEN")
+        IosDeviceTokenHolderBridge.shared.updateToken(token: fcmToken)
+    }
+
+    func refreshToken() {
         Task {
             do {
                 // get token async
@@ -50,7 +78,9 @@ class AppDelegate: NSObject, UIApplicationDelegate,
                 // update user default
                 UserDefaults.standard.set(fcmToken, forKey: "FCM_TOKEN")
                 IosDeviceTokenHolderBridge.shared.updateToken(token: fcmToken)
-            } catch {}
+            } catch {
+                print("iOS getting FCM token: \(error.localizedDescription)")
+            }
         }
     }
 }
