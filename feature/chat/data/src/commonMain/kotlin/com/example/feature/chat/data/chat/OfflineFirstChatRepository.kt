@@ -171,4 +171,8 @@ class OfflineFirstChatRepository(
                     }
             }
     }
+
+    override suspend fun deleteAllChats() =
+        chirpChatDatabase.chatDao.deleteAllChats()
+
 }

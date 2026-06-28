@@ -3,6 +3,7 @@ package com.example.core.data.auth
 import com.example.core.data.dto.AuthInfoSerializable
 import com.example.core.data.dto.change_password.ChangePasswordRequest
 import com.example.core.data.dto.login.LoginRequest
+import com.example.core.data.dto.logout.LogoutRequest
 import com.example.core.data.dto.register.RegisterRequest
 import com.example.core.data.dto.register_success.EmailRequest
 import com.example.core.data.dto.reset_password.ResetPasswordRequest
@@ -15,7 +16,10 @@ import com.example.core.domain.util.DataError
 import com.example.core.domain.util.EmptyResult
 import com.example.core.domain.util.Result
 import com.example.core.domain.util.map
+import com.example.core.domain.util.onSuccess
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.auth.authProvider
+import io.ktor.client.plugins.auth.providers.BearerAuthProvider
 
 class KtorAuthService(
     private val httpClient: HttpClient
@@ -89,5 +93,17 @@ class KtorAuthService(
                 newPassword = newPassword
             )
         )
+    }
+
+    override suspend fun logout(refreshToken: String): EmptyResult<DataError.Remote> {
+        return httpClient.post<LogoutRequest, Unit>(
+            route = "/auth/logout",
+            body = LogoutRequest(
+                refreshToken = refreshToken
+            )
+        ).onSuccess {
+            // ktor keeps bearer tokens in cache, so it has to be explicitly cleared
+            httpClient.authProvider<BearerAuthProvider>()?.clearToken()
+        }
     }
 }
