@@ -22,7 +22,7 @@ class AppDelegate: NSObject, UIApplicationDelegate,
     UNUserNotificationCenterDelegate, MessagingDelegate
 {
 
-    // called when should initialize Firebase Messaging on ios side
+    // called when app is initializing, initialize Firebase Messaging on ios side
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication
@@ -46,6 +46,7 @@ class AppDelegate: NSObject, UIApplicationDelegate,
         refreshToken()
     }
 
+    //when registration for fcm token failed
     func application(
         _ application: UIApplication,
         didFailToRegisterForRemoteNotificationsWithError error: any Error
