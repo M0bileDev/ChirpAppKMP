@@ -21,4 +21,5 @@ interface ChatRepository {
         userIds: List<String>
     ): Result<Chat, DataError.Remote>
     fun getActiveParticipantsByChatId(chatId: String):Flow<List<ChatParticipant>>
+    suspend fun deleteAllChats()
 }
