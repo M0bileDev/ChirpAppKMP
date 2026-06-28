@@ -83,4 +83,17 @@ class AppDelegate: NSObject, UIApplicationDelegate,
             }
         }
     }
+    
+    // when push notification was received and app was in the background
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        
+        // forward notification to Firebase
+        // userInfo -> contains raw notification body
+        // Firebase takes userInfo and display notification
+        Messaging.messaging().appDidReceiveMessage(userInfo)
+        
+        // notify iOS that notification was successfully handled
+        completionHandler(.newData)
+        
+    }
 }
