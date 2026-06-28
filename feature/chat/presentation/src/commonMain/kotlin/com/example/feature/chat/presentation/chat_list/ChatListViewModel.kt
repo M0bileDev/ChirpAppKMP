@@ -2,21 +2,33 @@ package com.example.feature.chat.presentation.chat_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.core.domain.auth.AuthService
 import com.example.core.domain.auth.SessionStorage
+import com.example.core.domain.util.onFailure
+import com.example.core.domain.util.onSuccess
+import com.example.core.presentation.ext.toUiText
 import com.example.feature.chat.domain.chat.ChatRepository
+import com.example.feature.chat.domain.notification.DeviceTokenService
 import com.example.feature.chat.presentation.mappers.toUi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ChatListViewModel(
     private val chatRepository: ChatRepository,
-    sessionStorage: SessionStorage
+    private val sessionStorage: SessionStorage,
+    private val deviceTokenService: DeviceTokenService,
+    private val authService: AuthService
 ) : ViewModel() {
+    private val eventChannel = Channel<ChatListEvent>()
+    val events = eventChannel.receiveAsFlow()
     private var hasLoadedInitialData = false
     private val _state = MutableStateFlow(ChatListState())
     val state = combine(
@@ -42,6 +54,12 @@ class ChatListViewModel(
             initialValue = ChatListState()
         )
 
+    private fun loadChats() = with(viewModelScope) {
+        launch {
+            chatRepository.fetchChats()
+        }
+    }
+
     fun onAction(chatListAction: ChatListAction) {
         when (chatListAction) {
             is ChatListAction.OnSelectChat -> {
@@ -61,6 +79,7 @@ class ChatListViewModel(
             }
 
             ChatListAction.OnLogoutClick -> showLogoutConfirmation()
+            ChatListAction.OnConfirmLogout -> logout()
             ChatListAction.OnProfileSettingsClick,
             ChatListAction.OnDismissUserMenu -> {
                 _state.update {
@@ -82,9 +101,33 @@ class ChatListViewModel(
         }
     }
 
-    private fun loadChats() = with(viewModelScope) {
-        launch {
-            chatRepository.fetchChats()
+    private fun logout() {
+        _state.update {
+            it.copy(
+                showLogoutConfirmation = false
+            )
+        }
+
+        viewModelScope.launch {
+            val authInfo = sessionStorage.observeAuthInfo().first()
+            val refreshToken = authInfo?.refreshToken ?: return@launch
+
+            deviceTokenService
+                .unregisterToken(
+                    token = refreshToken
+                ).onSuccess {
+                    authService.logout(
+                        refreshToken = refreshToken
+                    ).onSuccess {
+                        sessionStorage.set(null)
+                        chatRepository.deleteAllChats()
+                        eventChannel.send(ChatListEvent.OnLogoutSuccess)
+                    }.onFailure { error ->
+                        eventChannel.send(ChatListEvent.OnLogoutError(error = error.toUiText()))
+                    }
+                }.onFailure { error ->
+                    eventChannel.send(ChatListEvent.OnLogoutError(error = error.toUiText()))
+                }
         }
     }
 }
