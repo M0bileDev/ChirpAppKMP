@@ -89,6 +89,14 @@ class ChatListViewModel(
                 }
             }
 
+            ChatListAction.OnDismissLogoutDialog -> {
+                _state.update {
+                    it.copy(
+                        showLogoutConfirmation = false
+                    )
+                }
+            }
+
             else -> Unit
         }
     }
