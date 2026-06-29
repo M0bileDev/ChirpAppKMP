@@ -58,7 +58,7 @@ import kotlin.uuid.ExperimentalUuidApi
 fun ChatListRoot(
     selectedChatId: String?,
     onSelectChat: (String?) -> Unit,
-    onLogout: () -> Unit,
+    onSuccessfulLogout: () -> Unit,
     onCreateChatClick: () -> Unit,
     onProfileSettingsClick: () -> Unit,
     viewModel: ChatListViewModel = koinViewModel()
@@ -80,6 +80,8 @@ fun ChatListRoot(
                     )
                 }
             }
+
+            ChatListEvent.OnLogoutSuccess -> onSuccessfulLogout()
         }
     }
 
@@ -89,7 +91,7 @@ fun ChatListRoot(
         onAction = { action ->
             when (action) {
                 is ChatListAction.OnSelectChat -> onSelectChat(action.chatId)
-                ChatListAction.OnConfirmLogout -> onLogout()
+                ChatListAction.OnConfirmLogout -> onSuccessfulLogout()
                 ChatListAction.OnCreateChatClick -> onCreateChatClick()
                 ChatListAction.OnProfileSettingsClick -> onProfileSettingsClick()
                 else -> Unit
