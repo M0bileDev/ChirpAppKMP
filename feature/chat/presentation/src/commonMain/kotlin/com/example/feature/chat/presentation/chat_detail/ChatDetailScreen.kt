@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -278,6 +279,7 @@ fun ChatDetailScreen(
                             MessageBox(
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .imePadding()
                                     .padding(
                                         vertical = 8.dp,
                                         horizontal = 16.dp
@@ -307,6 +309,7 @@ fun ChatDetailScreen(
                         MessageBox(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .imePadding()
                                 .padding(8.dp),
                             messageTextFieldState = messageTextFieldState,
                             isSendButtonEnabled = canSendMessage,
