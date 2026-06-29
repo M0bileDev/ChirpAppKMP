@@ -9,7 +9,8 @@ import androidx.navigation.toRoute
 import com.example.feature.chat.presentation.chat_list_detail.ChatListDetailAdaptiveLayout
 
 fun NavGraphBuilder.chatGraph(
-    navController: NavController
+    navController: NavController,
+    onLogout: () -> Unit,
 ) {
     navigation<ChatGraphRoutes.Graph>(
         startDestination = ChatGraphRoutes.ChatListDetailRoute()
@@ -24,9 +25,7 @@ fun NavGraphBuilder.chatGraph(
             val args = backStackEntry.toRoute<ChatGraphRoutes.ChatListDetailRoute>()
             ChatListDetailAdaptiveLayout(
                 initialChatId = args.chatId,
-                onLogout = {
-                    // TODO: implement logout
-                },
+                onLogout = onLogout
             )
         }
     }
