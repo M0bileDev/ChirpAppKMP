@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -43,9 +44,11 @@ import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import com.example.core.presentation.permissions.Permission
 import com.example.core.presentation.permissions.rememberPermissionController
+import com.example.core.presentation.util.ObserveAsEvents
 import com.example.feature.chat.presentation.chat_list.components.ChatListHeader
 import com.example.feature.chat.presentation.chat_list.components.ChatListItem
 import com.example.feature.chat.presentation.components.EmptySection
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -62,9 +65,22 @@ fun ChatListRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(selectedChatId) {
         viewModel.onAction(ChatListAction.OnSelectChat(selectedChatId))
+    }
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            is ChatListEvent.OnLogoutError -> {
+                scope.launch {
+                    snackbarState.showSnackbar(
+                        message = event.error.asStringAsync()
+                    )
+                }
+            }
+        }
     }
 
     ChatListScreen(
