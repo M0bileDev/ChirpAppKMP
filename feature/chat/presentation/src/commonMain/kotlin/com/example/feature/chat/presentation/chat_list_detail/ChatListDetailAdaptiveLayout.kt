@@ -79,7 +79,7 @@ fun ChatListDetailAdaptiveLayout(
                             scaffoldNavigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
                         }
                     },
-                    onLogout = onLogout,
+                    onSuccessfulLogout = onLogout,
                     onCreateChatClick = {
                         viewModel.onAction(ChatListDetailAction.OnCreateChatClick)
                     },

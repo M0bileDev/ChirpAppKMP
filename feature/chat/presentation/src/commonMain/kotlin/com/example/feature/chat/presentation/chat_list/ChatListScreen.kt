@@ -18,9 +18,13 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -40,9 +44,11 @@ import com.example.core.designsystem.theme.ChirpTheme
 import com.example.core.designsystem.theme.extended
 import com.example.core.presentation.permissions.Permission
 import com.example.core.presentation.permissions.rememberPermissionController
+import com.example.core.presentation.util.ObserveAsEvents
 import com.example.feature.chat.presentation.chat_list.components.ChatListHeader
 import com.example.feature.chat.presentation.chat_list.components.ChatListItem
 import com.example.feature.chat.presentation.components.EmptySection
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -52,23 +58,40 @@ import kotlin.uuid.ExperimentalUuidApi
 fun ChatListRoot(
     selectedChatId: String?,
     onSelectChat: (String?) -> Unit,
-    onLogout: () -> Unit,
+    onSuccessfulLogout: () -> Unit,
     onCreateChatClick: () -> Unit,
     onProfileSettingsClick: () -> Unit,
     viewModel: ChatListViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(selectedChatId) {
         viewModel.onAction(ChatListAction.OnSelectChat(selectedChatId))
     }
 
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            is ChatListEvent.OnLogoutError -> {
+                scope.launch {
+                    snackbarState.showSnackbar(
+                        message = event.error.asStringAsync()
+                    )
+                }
+            }
+
+            ChatListEvent.OnLogoutSuccess -> onSuccessfulLogout()
+        }
+    }
+
     ChatListScreen(
         state = state,
+        snackbarState = snackbarState,
         onAction = { action ->
             when (action) {
                 is ChatListAction.OnSelectChat -> onSelectChat(action.chatId)
-                ChatListAction.OnConfirmLogout -> onLogout()
+                ChatListAction.OnConfirmLogout -> onSuccessfulLogout()
                 ChatListAction.OnCreateChatClick -> onCreateChatClick()
                 ChatListAction.OnProfileSettingsClick -> onProfileSettingsClick()
                 else -> Unit
@@ -81,6 +104,7 @@ fun ChatListRoot(
 @Composable
 fun ChatListScreen(
     state: ChatListState,
+    snackbarState: SnackbarHostState,
     onAction: (ChatListAction) -> Unit
 ) = with(state) {
 
@@ -93,6 +117,9 @@ fun ChatListScreen(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.extended.surfaceLower,
         contentWindowInsets = WindowInsets.safeDrawing,
+        snackbarHost = {
+            SnackbarHost(snackbarState)
+        },
         floatingActionButton = {
             ChirpFloatingActionButton(
                 onClick = {
@@ -201,6 +228,7 @@ fun PreviewChatListScreen() {
     ChirpTheme {
         ChatListScreen(
             state = ChatListState(),
+            snackbarState = SnackbarHostState(),
             onAction = {}
         )
     }
@@ -214,6 +242,7 @@ fun PreviewDarkChatListScreen() {
     ) {
         ChatListScreen(
             state = ChatListState(),
+            snackbarState = SnackbarHostState(),
             onAction = {}
         )
     }
