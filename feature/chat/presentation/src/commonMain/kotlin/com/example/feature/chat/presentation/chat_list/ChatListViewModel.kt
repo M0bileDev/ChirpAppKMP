@@ -9,6 +9,7 @@ import com.example.core.domain.util.onSuccess
 import com.example.core.presentation.ext.toUiText
 import com.example.feature.chat.domain.chat.ChatRepository
 import com.example.feature.chat.domain.notification.DeviceTokenService
+import com.example.feature.chat.domain.participant.ChatParticipantRepository
 import com.example.feature.chat.presentation.mappers.toUi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +26,8 @@ class ChatListViewModel(
     private val chatRepository: ChatRepository,
     private val sessionStorage: SessionStorage,
     private val deviceTokenService: DeviceTokenService,
-    private val authService: AuthService
+    private val authService: AuthService,
+    private val chatParticipantRepository: ChatParticipantRepository
 ) : ViewModel() {
     private val eventChannel = Channel<ChatListEvent>()
     val events = eventChannel.receiveAsFlow()
@@ -46,6 +48,7 @@ class ChatListViewModel(
         .onStart {
             if (!hasLoadedInitialData) {
                 loadChats()
+                fetchLocalUserProfile()
                 hasLoadedInitialData = true
             }
         }.stateIn(
@@ -53,6 +56,13 @@ class ChatListViewModel(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = ChatListState()
         )
+
+    private fun fetchLocalUserProfile() {
+        viewModelScope.launch {
+            chatParticipantRepository
+                .fetchLocalParticipant()
+        }
+    }
 
     private fun loadChats() = with(viewModelScope) {
         launch {
