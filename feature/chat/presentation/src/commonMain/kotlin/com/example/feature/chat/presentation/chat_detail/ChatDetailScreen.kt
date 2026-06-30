@@ -132,6 +132,12 @@ fun ChatDetailRoot(
         viewModel.onAction(ChatDetailAction.OnSelectChat(chatId))
     }
 
+    LaunchedEffect(chatId, state.messages) {
+        if (state.messages.isNotEmpty()) {
+            messageLazyListState.scrollToItem(0)
+        }
+    }
+
     LaunchedEffect(messageLazyListState) {
         snapshotFlow {
             messageLazyListState.firstVisibleItemIndex to messageLazyListState.layoutInfo.totalItemsCount
