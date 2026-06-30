@@ -25,7 +25,17 @@ interface ChatDao {
     suspend fun deleteChatById(chatId: String)
 
     @Transaction
-    @Query("SELECT * FROM chatentity ORDER BY lastActivityAt DESC")
+    @Query("""
+        SELECT c.*
+        FROM chatentity AS c
+        LEFT JOIN (
+            SELECT chatId, MAX(timestamp) as latest_message_time
+            FROM chatmessageentity
+            GROUP BY chatId
+        ) AS last_message 
+        ON c.chatId = last_message.chatId
+        ORDER BY COALESCE(last_message.latest_message_time, c.lastActivityAt) DESC
+    """)
     fun getChatsWithParticipants(): Flow<List<ChatWithParticipants>>
 
     @Transaction
