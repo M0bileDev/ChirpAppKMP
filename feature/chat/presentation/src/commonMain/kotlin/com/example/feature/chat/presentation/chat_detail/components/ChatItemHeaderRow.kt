@@ -14,6 +14,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import chirpappkmp.feature.chat.presentation.generated.resources.Res
 import chirpappkmp.feature.chat.presentation.generated.resources.group_chat
+import chirpappkmp.feature.chat.presentation.generated.resources.only_you
 import chirpappkmp.feature.chat.presentation.generated.resources.you
 import com.example.core.designsystem.components.avatar.ChirpStackedAvatars
 import com.example.core.designsystem.theme.extended
@@ -29,20 +30,23 @@ fun ChatItemHeaderRow(
 ) = with(chatUi) {
 
     val chatName = if (isGroupChat) stringResource(Res.string.group_chat)
-    else otherParticipants.first().username
+    else otherParticipants.firstOrNull()?.username ?: stringResource(Res.string.only_you)
     val you = stringResource(Res.string.you)
     val formattedUsernames = remember(otherParticipants) {
         "$you, " + otherParticipants.joinToString { it.username }
     }
+    val chatParticipantsNotEmpty = otherParticipants.isNotEmpty()
 
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        ChirpStackedAvatars(
-            avatars = otherParticipants
-        )
+        if (chatParticipantsNotEmpty) {
+            ChirpStackedAvatars(
+                avatars = otherParticipants
+            )
+        }
         Column(
             modifier = Modifier
                 .weight(1f),
