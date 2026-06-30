@@ -118,7 +118,7 @@ class ChatDetailViewModel(
             is ChatDetailAction.OnSelectChat -> switchChat(action.chatId)
             ChatDetailAction.OnChatOptionsClick -> chatOptionsClick()
             ChatDetailAction.OnDismissChatOptions -> dismissChatOptions()
-            ChatDetailAction.OnLeaveChatClick -> onLeaveChatClick()
+            ChatDetailAction.OnLeaveChatClick -> leaveChatClick()
             ChatDetailAction.OnSendMessageClick -> sendMessage()
             is ChatDetailAction.OnRetryClick -> retryMessage(action.message)
             is ChatDetailAction.OnDeleteMessageClick -> deleteMessage(action.message)
@@ -158,7 +158,7 @@ class ChatDetailViewModel(
         }
     }
 
-    private fun onLeaveChatClick() = with(viewModelScope) {
+    private fun leaveChatClick() = with(viewModelScope) {
         val chatId = _chatId.value ?: return@with
 
         _state.update {
@@ -180,6 +180,10 @@ class ChatDetailViewModel(
                             bannerState = BannerState()
                         )
                     }
+
+                    eventChannel.send(
+                        ChatDetailEvent.OnChatLeft
+                    )
                 }
                 .onFailure { error ->
                     eventChannel.send(
