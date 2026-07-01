@@ -16,11 +16,15 @@ typealias DataMessageWithSender = MessageWithSender
 typealias DomainMessageWithSender = com.example.feature.chat.domain.model.MessageWithSender
 
 fun ChatDto.toDomain(): Chat {
+    val lastMessageSenderUsername = lastMessage?.let { messageDto ->
+        participants.find { it.userId == messageDto.senderId }?.username
+    }
     return Chat(
         id = id,
         participants = participants.map { it.toDomain() },
         lastActivityAt = Instant.parse(lastActivityAt),
-        lastMessage = lastMessage?.toDomain()
+        lastMessage = lastMessage?.toDomain(),
+        lastMessageSenderUsername = lastMessageSenderUsername
     )
 }
 
@@ -29,7 +33,8 @@ fun ChatWithParticipants.toDomain(): Chat {
         id = chat.chatId,
         participants = participants.map { it.toDomain() },
         lastActivityAt = Instant.fromEpochMilliseconds(chat.lastActivityAt),
-        lastMessage = lastMessage?.toDomain()
+        lastMessage = lastMessage?.toDomain(),
+        lastMessageSenderUsername = lastMessage?.senderUsername
     )
 }
 
@@ -44,11 +49,15 @@ fun ChatEntity.toDomain(
     participants: List<ChatParticipant>,
     lastMessage: ChatMessage? = null
 ): Chat {
+    val lastMessageSenderUsername = lastMessage?.let { messageDto ->
+        participants.find { it.userId == messageDto.senderId }?.username
+    }
     return Chat(
         id = chatId,
         participants = participants,
         lastActivityAt = Instant.fromEpochMilliseconds(lastActivityAt),
-        lastMessage = lastMessage
+        lastMessage = lastMessage,
+        lastMessageSenderUsername = lastMessageSenderUsername
     )
 }
 
@@ -60,7 +69,7 @@ fun DataMessageWithSender.toDomain(): DomainMessageWithSender {
     )
 }
 
-fun ChatInfoEntity.toDomain(): ChatInfo{
+fun ChatInfoEntity.toDomain(): ChatInfo {
     return ChatInfo(
         chat = chat.toDomain(
             participants = this.participants.map { it.toDomain() }
