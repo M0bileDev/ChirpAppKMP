@@ -18,7 +18,7 @@ fun ChatMessageDto.toDomain(): ChatMessage {
         content = content,
         createdAt = Instant.parse(createdAt),
         senderId = senderId,
-        deliveryStatus = ChatMessageDeliveryStatus.SENT
+        deliveryStatus = ChatMessageDeliveryStatus.SENT,
     )
 }
 
@@ -29,7 +29,7 @@ fun LastMessageView.toDomain(): ChatMessage {
         content = content,
         createdAt = Instant.fromEpochMilliseconds(timestamp),
         senderId = senderId,
-        deliveryStatus = ChatMessageDeliveryStatus.valueOf(this.deliveryStatus)
+        deliveryStatus = ChatMessageDeliveryStatus.valueOf(this.deliveryStatus),
     )
 }
 
@@ -51,7 +51,8 @@ fun ChatMessage.toLastMessageView(): LastMessageView {
         senderId = senderId,
         content = content,
         timestamp = createdAt.toEpochMilliseconds(),
-        deliveryStatus = deliveryStatus.name
+        deliveryStatus = deliveryStatus.name,
+        senderUsername = null
     )
 }
 
@@ -62,7 +63,7 @@ fun ChatMessageEntity.toDomain(): ChatMessage {
         content = content,
         createdAt = Instant.fromEpochMilliseconds(timestamp),
         senderId = senderId,
-        deliveryStatus = ChatMessageDeliveryStatus.valueOf(deliveryStatus)
+        deliveryStatus = ChatMessageDeliveryStatus.valueOf(deliveryStatus),
     )
 }
 
