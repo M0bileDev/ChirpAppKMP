@@ -1,4 +1,4 @@
-import com.example.chirpappkmp.convention.configureAndroidTarget
+import com.example.chirpappkmp.convention.configureAndroidLibraryTarget
 import com.example.chirpappkmp.convention.configureIosTargets
 import com.example.chirpappkmp.convention.libs
 import org.gradle.api.Plugin
@@ -19,7 +19,7 @@ class CmpApplicationConventionPlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.plugin.serialization")
             }
 
-            configureAndroidTarget()
+            configureAndroidLibraryTarget()
             configureIosTargets()
 
             dependencies {
