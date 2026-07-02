@@ -9,7 +9,7 @@ class CmpApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             with(pluginManager) {
-                apply("com.example.chirpappkmp.convention.android.application.compose")
+                apply("com.android.kotlin.multiplatform.library")
                 //kmp
                 apply("org.jetbrains.kotlin.multiplatform")
                 //compose library references
@@ -23,7 +23,7 @@ class CmpApplicationConventionPlugin : Plugin<Project> {
             configureIosTargets()
 
             dependencies {
-                "debugImplementation"(libs.findLibrary("androidx-compose-ui-tooling").get())
+                "androidMainImplementation"(libs.findLibrary("androidx-compose-ui-tooling").get())
             }
         }
     }
