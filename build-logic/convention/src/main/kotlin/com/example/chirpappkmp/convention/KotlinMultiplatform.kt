@@ -13,7 +13,7 @@ internal fun Project.configureKotlinMultiplatform(){
     }
 
     //library and application module
-    configureAndroidTarget()
+    configureAndroidLibraryTarget()
 
     extensions.configure<KotlinMultiplatformExtension>{
         listOf(
