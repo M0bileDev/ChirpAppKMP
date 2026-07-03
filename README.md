@@ -1,48 +1,108 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Desktop (JVM).
+# ChirpAppKMP
 
-* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
-    folder is the appropriate location.
+A **Kotlin Multiplatform** chat application that shares its entire UI and business logic across **Android** and **iOS** using **Compose Multiplatform**.
 
-* [/iosApp](./iosApp/iosApp) contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+The app supports account registration and email verification, login and password reset, a chat list with an adaptive list/detail layout, one-to-one and group chats, chat management, and a user profile with avatar media picking.
 
-### Build and Run Android Application
+> **Targets:** Android (`androidMain`) and iOS (`iosArm64`, `iosSimulatorArm64`).
+> The convention plugins do **not** currently configure a Desktop/JVM target.
 
-To build and run the development version of the Android app, use the run configuration from the run widget
-in your IDE’s toolbar or build it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:assembleDebug
+## Tech Stack
+
+| Concern | Library |
+| --- | --- |
+| UI | Compose Multiplatform, Material 3, Compose Navigation, Adaptive layouts |
+| Dependency injection | Koin |
+| Networking | Ktor client (OkHttp on Android, Darwin on iOS) + WebSockets |
+| Local persistence | Room (KMP) + SQLite, DataStore |
+| Serialization | kotlinx.serialization |
+| Async | kotlinx.coroutines |
+| Images | Coil 3 |
+| Logging | Kermit |
+| Build config | BuildKonfig |
+| Firebase | Firebase BOM (Android) |
+
+Versions are centralized in the version catalog at [`gradle/libs.versions.toml`](./gradle/libs.versions.toml).
+
+## Architecture
+
+The project is split into many small Gradle modules following a strict **layered, per-feature** structure. Module dependencies only point **downward**:
+
+```
+presentation → domain ← data → database
+                  ↑
+             core/* (shared by everything)
+```
+
+### Modules
+
+- **`composeApp`** — shared application code and entry point (`App.kt`, `NavigationRoot.kt`). Aggregates every feature/core module and starts Koin via `initKoin()`.
+- **`androidApp`** — the Android application module (Android manifest, launcher, Firebase / Google Services). Depends on `composeApp`.
+- **`iosApp`** — the iOS application entry point (open in Xcode). Consumes the shared Kotlin code as a framework.
+- **`core/`**
+  - `core/domain` — shared domain models and interfaces (no platform deps).
+  - `core/data` — shared data implementations and platform bindings.
+  - `core/presentation` — shared presentation utilities.
+  - `core/designsystem` — reusable `Chirp*` Compose components.
+- **`feature/auth/`** — `presentation`, `domain` (login, register, email verification, forgot/reset password).
+- **`feature/chat/`** — `presentation`, `domain`, `data`, `database` (chat list, chat detail, create/manage chat, profile). `feature/chat/database` is the Room KMP database; exported schemas live in [`feature/chat/database/schemas/`](./feature/chat/database/schemas).
+
+### Convention plugins (`build-logic/`)
+
+Module build files are intentionally tiny because shared configuration lives in `build-logic/convention/` as plugins applied by id:
+
+- `convention.kmp.library` — base KMP library (Android + iOS targets; namespace/framework name derived from the module path).
+- `convention.cmp.library` — KMP library + Compose Multiplatform.
+- `convention.cmp.feature` — `cmp.library` + Koin, Compose navigation/viewmodel, and `core:presentation`/`core:designsystem`. Use for `feature/*/presentation`.
+- `convention.cmp.application` — the `composeApp` itself.
+- `convention.android.application` — the `androidApp` module.
+- `convention.room` — applies KSP + Room; registers `kspAndroid` / `kspIosSimulatorArm64` / `kspIosArm64` and sets the schema dir.
+- `convention.buildkonfig` — generates `BuildKonfig` with `API_KEY` (package derived from the module path).
+
+### Key patterns
+
+- **MVI presentation** — each screen folder contains `XxxViewModel`, `XxxState`, `XxxAction`, and (when needed) `XxxEvent`.
+- **Koin DI** — one module per layer (`coreDataModule`, `chatDataModule`, `chatPresentationModule`, `corePresentationModule`, `authPresentationModule`, …), all registered in `composeApp/.../di/initKoin.kt`. Platform bindings use `expect`/`actual` module declarations.
+- **expect/actual** — common code in `Platform.kt` with `Platform.android.kt` / `Platform.ios.kt` actuals; the iOS data layer also uses a cinterop (`network.def`).
+- **Offline-first repositories** — `OfflineFirst*Repository` read/write the Room cache and reconcile with Ktor/WebSocket services.
+
+## Prerequisites
+
+- JDK 17+
+- Android Studio (latest) with the Kotlin Multiplatform tooling
+- Xcode (for building/running the iOS app)
+- **`API_KEY` in `local.properties`** — `BuildKonfigConventionPlugin` reads it and **fails the build if it is missing**:
+
+  ```properties
+  API_KEY=your_api_key_here
   ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:assembleDebug
-  ```
 
-### Build and Run Desktop (JVM) Application
+## Build & Run
 
-To build and run the development version of the desktop app, use the run configuration from the run widget
-in your IDE’s toolbar or run it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:run
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:run
-  ```
+### Android
 
-### Build and Run iOS Application
+```shell
+./gradlew :composeApp:assembleDebug   # build the Android APK
+```
 
-To build and run the development version of the iOS app, use the run configuration from the run widget
-in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+Or use the run configuration from the run widget in the IDE toolbar.
 
----
+### iOS
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+Open the [`iosApp/`](./iosApp) directory in Xcode and run, or use the IDE run configuration. The shared Kotlin code is exposed as a framework whose `baseName` is derived from the module path (e.g. `:core:domain` → `CoreDomain`).
+
+### Everything
+
+```shell
+./gradlew build
+```
+
+### Validating Room DAOs on iOS
+
+For source sets targeting non-Android platforms, Room requires every `@Query` method to be **either `suspend` or return an observable type (`Flow`)**. Always validate DAO changes with the iOS KSP task, not just the Android build:
+
+```shell
+./gradlew :feature:chat:database:kspKotlinIosSimulatorArm64
+```
+
+Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html) and [Compose Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-multiplatform.html).
